@@ -18,11 +18,165 @@ model File {
 }
 
 model User {
+  id                  Int                    @id @default(autoincrement())
+  email               String                 @unique @db.VarChar(255)
+  password            String                 @db.VarChar(255)
+  firstName           String                 @db.VarChar(255)
+  lastName            String?                @db.VarChar(255)
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @default(now()) @updatedAt
+  sessions            Session[]
+  notes               Note[]
+  notebooks           Notebook[]
+  linkGroups          LinkGroup[]
+  links               Link[]
+  tasks               Task[]
+  comments            Comment[]
+  collaborations      NoteCollaboration[]
+  invitationsSent     Invitation[]           @relation("InvitationsSent")
+  invitationsReceived Invitation[]           @relation("InvitationsReceived")
+  meets               Meet[]
+  meetsShared         MeetSharedWithMember[]
+  resetTokens         ResetToken[]
+}
+
+model Session {
   id        Int      @id @default(autoincrement())
-  email     String   @unique @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  firstName String   @db.VarChar(255)
-  lastName  String?  @db.VarChar(255)
+  token     String
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  updatedAt DateTime @updatedAt
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Note {
+  id             Int                 @id @default(autoincrement())
+  title          String
+  content        String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  userId         Int
+  notebookId     Int?
+  user           User                @relation(fields: [userId], references: [id])
+  notebook       Notebook?           @relation(fields: [notebookId], references: [id])
+  collaborations NoteCollaboration[]
+  tags           Tag[]               @relation("NoteTags")
+  Comment        Comment[]
+}
+
+model Notebook {
+  id     Int    @id @default(autoincrement())
+  title  String
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+  notes  Note[]
+}
+
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  notes Note[] @relation("NoteTags")
+}
+
+model NoteCollaboration {
+  id              Int             @id @default(autoincrement())
+  permissionLevel PermissionLevel
+  noteId          Int
+  userId          Int
+  note            Note            @relation(fields: [noteId], references: [id])
+  user            User            @relation(fields: [userId], references: [id])
+}
+
+enum PermissionLevel {
+  READ
+  WRITE
+  ADMIN
+}
+
+model Link {
+  id          Int       @id @default(autoincrement())
+  url         String
+  description String
+  linkGroupId Int
+  userId      Int
+  linkGroup   LinkGroup @relation(fields: [linkGroupId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model LinkGroup {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  userId      Int
+  user        User   @relation(fields: [userId], references: [id])
+  links       Link[]
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  dueDate     DateTime?
+  completed   Boolean   @default(false)
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model Invitation {
+  id         Int  @id @default(autoincrement())
+  receiverId Int
+  senderId   Int
+  receiver   User @relation("InvitationsReceived", fields: [receiverId], references: [id])
+  sender     User @relation("InvitationsSent", fields: [senderId], references: [id])
+}
+
+model Meet {
+  id          Int                    @id @default(autoincrement())
+  title       String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  isRecurring Boolean                @default(false)
+  recurrence  Recurrence             @default(NONE)
+  location    String
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  userId      Int
+  user        User                   @relation(fields: [userId], references: [id])
+  sharedWith  MeetSharedWithMember[]
+}
+
+enum Recurrence {
+  NONE
+  DAILY
+  WEEKLY
+  MONTHLY
+  ANNUAL
+}
+
+model MeetSharedWithMember {
+  meetId Int
+  userId Int
+  meet   Meet @relation(fields: [meetId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
+
+  @@id([meetId, userId])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  userId    Int
+  noteId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  note      Note     @relation(fields: [noteId], references: [id])
+}
+
+model ResetToken {
+  id              Int      @id @default(autoincrement())
+  token           String
+  validityEndDate DateTime
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
 }
