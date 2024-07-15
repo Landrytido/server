@@ -1,26 +1,26 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-import User from './User';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
+import User from "./User";
 
 @ObjectType()
 export class Task {
-    @Field(() => Int)
-    id: number;
+  @Field(() => Int)
+  id: number;
 
-    @Field()
-    title: string;
+  @Field()
+  title: string;
 
-    @Field()
-    description: string;
+  @Field()
+  description: string;
 
-    @Field({ nullable: true })
-    dueDate?: Date;
+  @Field()
+  dueDate?: Date;
 
-    @Field()
-    completed: boolean;
+  @Field()
+  completed: boolean;
 
-    @Field(() => Int)
-    userId: number;
+  @Field(() => Int)
+  userId: number;
 
-    @Field(() => User)
-    user: User;
+  @Field(() => User)
+  user: User;
 }

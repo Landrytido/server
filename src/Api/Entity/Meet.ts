@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import User from './User';
 import { MeetSharedWithMember } from './MeetSharedWithMember';
 
@@ -51,3 +51,6 @@ export enum Recurrence {
     MONTHLY = 'MONTHLY',
     ANNUAL = 'ANNUAL',
 }
+
+
+registerEnumType(Recurrence, {name: "Recurrence"});

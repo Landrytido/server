@@ -25,7 +25,11 @@ export default class Authenticator {
       throw new Error(`User not found with email "${email}"`);
     }
 
-    if (!(await this.hashable.compare(password, user.password))) {
+    // if (!(await this.hashable.compare(password, user.password))) {
+    //   throw new InvalidUserPasswordException();
+    // }
+
+    if(password !== user.password) {
       throw new InvalidUserPasswordException();
     }
 

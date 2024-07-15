@@ -1,16 +1,17 @@
-import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
-import { ContextualGraphqlRequest } from '../../index';
-import {Session} from "./Session";
-import {Note} from "./Note";
-import {Notebook} from "./Notebook";
-import {LinkGroup} from "./LinkGroup";
-import {Link} from "./Link";
-import {Task} from "./Task";
-import {NoteCollaboration} from "./NoteCollaboration";
-import {Invitation} from "./Invitation";
-import {Meet} from "./Meet";
-import {MeetSharedWithMember} from "./MeetSharedWithMember";
-import {ResetToken} from "./ResetToken";
+import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
+import { ContextualGraphqlRequest } from "../../index";
+import { Session } from "./Session";
+import { Note } from "./Note";
+import { Notebook } from "./Notebook";
+import { LinkGroup } from "./LinkGroup";
+import { Link } from "./Link";
+import { Task } from "./Task";
+import { NoteCollaboration } from "./NoteCollaboration";
+import { Invitation } from "./Invitation";
+import { Meet } from "./Meet";
+import { MeetSharedWithMember } from "./MeetSharedWithMember";
+import { ResetToken } from "./ResetToken";
+import { Comment } from "./Comment";
 
 @ObjectType()
 export default class User {
@@ -35,43 +36,43 @@ export default class User {
   updatedAt: Date;
 
   @Field(() => [Session])
-  sessions: Session[];
+  sessions?: Session[];
 
   @Field(() => [Note])
-  notes: Note[];
+  notes?: Note[];
 
   @Field(() => [Notebook])
-  notebooks: Notebook[];
+  notebooks?: Notebook[];
 
   @Field(() => [LinkGroup])
-  linkGroups: LinkGroup[];
+  linkGroups?: LinkGroup[];
 
   @Field(() => [Link])
-  links: Link[];
+  links?: Link[];
 
   @Field(() => [Task])
-  tasks: Task[];
+  tasks?: Task[];
 
   @Field(() => [Comment])
-  comments: Comment[];
+  comments?: Comment[];
 
   @Field(() => [NoteCollaboration])
-  collaborations: NoteCollaboration[];
+  collaborations?: NoteCollaboration[];
 
   @Field(() => [Invitation])
-  invitationsSent: Invitation[];
+  invitationsSent?: Invitation[];
 
   @Field(() => [Invitation])
-  invitationsReceived: Invitation[];
+  invitationsReceived?: Invitation[];
 
   @Field(() => [Meet])
-  meets: Meet[];
+  meets?: Meet[];
 
   @Field(() => [MeetSharedWithMember])
-  meetsShared: MeetSharedWithMember[];
+  meetsShared?: MeetSharedWithMember[];
 
   @Field(() => [ResetToken])
-  resetTokens: ResetToken[];
+  resetTokens?: ResetToken[];
 
   context?: ContextualGraphqlRequest;
 }
