@@ -11,6 +11,7 @@ import {Invitation} from "./Invitation";
 import {Meet} from "./Meet";
 import {MeetSharedWithMember} from "./MeetSharedWithMember";
 import {ResetToken} from "./ResetToken";
+import {Comment} from "./Comment";
 
 @ObjectType()
 export default class User {
@@ -34,44 +35,44 @@ export default class User {
   @Field(() => GraphQLISODateTime)
   updatedAt: Date;
 
-  @Field(() => [Session])
-  sessions: Session[];
+  @Field(() => [Session], { nullable: true })
+  sessions?: Session[];
 
-  @Field(() => [Note])
-  notes: Note[];
+  @Field(() => [Note], { nullable: true })
+  notes?: Note[];
 
-  @Field(() => [Notebook])
-  notebooks: Notebook[];
+  @Field(() => [Notebook], { nullable: true })
+  notebooks?: Notebook[];
 
-  @Field(() => [LinkGroup])
-  linkGroups: LinkGroup[];
+  @Field(() => [LinkGroup], { nullable: true })
+  linkGroups?: LinkGroup[];
 
-  @Field(() => [Link])
-  links: Link[];
+  @Field(() => [Link], { nullable: true })
+  links?: Link[];
 
-  @Field(() => [Task])
-  tasks: Task[];
+  @Field(() => [Task], { nullable: true })
+  tasks?: Task[];
 
-  @Field(() => [Comment])
-  comments: Comment[];
+  @Field(() => [Comment], { nullable: true })
+  comments?: Comment[];
 
-  @Field(() => [NoteCollaboration])
-  collaborations: NoteCollaboration[];
+  @Field(() => [NoteCollaboration], { nullable: true })
+  collaborations?: NoteCollaboration[];
 
-  @Field(() => [Invitation])
-  invitationsSent: Invitation[];
+  @Field(() => [Invitation], { nullable: true })
+  invitationsSent?: Invitation[];
 
-  @Field(() => [Invitation])
-  invitationsReceived: Invitation[];
+  @Field(() => [Invitation], { nullable: true })
+  invitationsReceived?: Invitation[];
 
-  @Field(() => [Meet])
-  meets: Meet[];
+  @Field(() => [Meet], { nullable: true })
+  meets?: Meet[];
 
-  @Field(() => [MeetSharedWithMember])
-  meetsShared: MeetSharedWithMember[];
+  @Field(() => [MeetSharedWithMember], { nullable: true })
+  meetsShared?: MeetSharedWithMember[];
 
-  @Field(() => [ResetToken])
-  resetTokens: ResetToken[];
+  @Field(() => [ResetToken], { nullable: true })
+  resetTokens?: ResetToken[];
 
   context?: ContextualGraphqlRequest;
 }

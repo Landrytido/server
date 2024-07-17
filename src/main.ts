@@ -27,6 +27,7 @@ async function bootstrapApi() {
   app.useGlobalFilters(new ExceptionCatcher(app.get(ConsoleLogger)));
 
   await app.listen(process.env.API_PORT);
+  console.log('Server is running at http://localhost:3030/graphql');
 }
 
 if (!process.env.APPLICATION_ENVIRONMENT) {

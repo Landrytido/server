@@ -7,14 +7,112 @@ input AuthenticationDto {
   password: String!
 }
 
+type Comment {
+  content: String!
+  createdAt: DateTime!
+  id: Int!
+  note: Note!
+  noteId: Int!
+  user: User!
+  userId: Int!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
+type Invitation {
+  idPrimary: Int!
+  receiver: User!
+  receiverId: Int!
+  sender: User!
+  senderId: Int!
+}
+
+type Link {
+  description: String!
+  id: Int!
+  linkGroup: LinkGroup!
+  linkGroupId: Int!
+  url: String!
+  user: User!
+  userId: Int!
+}
+
+type LinkGroup {
+  description: String!
+  id: Int!
+  links: [Link!]!
+  name: String!
+  user: User!
+  userId: Int!
+}
+
+type Meet {
+  createdAt: DateTime!
+  description: String!
+  endDate: DateTime!
+  id: Int!
+  isRecurring: Boolean!
+  location: String!
+  recurrence: Recurrence!
+  sharedWith: [MeetSharedWithMember!]!
+  startDate: DateTime!
+  title: String!
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
+type MeetSharedWithMember {
+  meet: Meet!
+  meetId: Int!
+  user: User!
+  userId: Int!
+}
+
 type Mutation {
   register(dto: SaveUserDto!): User!
   saveUser(dto: SaveUserDto!): User!
+}
+
+type Note {
+  collaborations: [NoteCollaboration!]!
+  content: String
+  createdAt: DateTime!
+  id: Int!
+  notebook: Notebook
+  notebookId: Int
+  tags: [Tag!]!
+  title: String!
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
+type NoteCollaboration {
+  id: Int!
+  note: Note!
+  noteId: Int!
+  permissionLevel: PermissionLevel!
+  user: User!
+  userId: Int!
+}
+
+type Notebook {
+  id: Int!
+  notes: [Note!]!
+  title: String!
+  user: User!
+  userId: Int!
+}
+
+"""The permission levels for note collaboration"""
+enum PermissionLevel {
+  ADMIN
+  READ
+  WRITE
 }
 
 type Query {
@@ -22,6 +120,23 @@ type Query {
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
   validateToken(dto: TokenValidationDto!): Boolean!
+}
+
+"""The recurrence pattern for events"""
+enum Recurrence {
+  ANNUAL
+  DAILY
+  MONTHLY
+  NONE
+  WEEKLY
+}
+
+type ResetToken {
+  id: Int!
+  token: String!
+  user: User!
+  userId: Int!
+  validityEndDate: DateTime!
 }
 
 input SaveUserDto {
@@ -32,15 +147,53 @@ input SaveUserDto {
   password: String!
 }
 
+type Session {
+  createdAt: DateTime!
+  id: Int!
+  token: String!
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
+type Tag {
+  id: Int!
+  name: String!
+  notes: [Note!]!
+}
+
+type Task {
+  completed: Boolean!
+  description: String!
+  dueDate: DateTime
+  id: Int!
+  title: String!
+  user: User!
+  userId: Int!
+}
+
 input TokenValidationDto {
   token: String!
 }
 
 type User {
+  collaborations: [NoteCollaboration!]
+  comments: [Comment!]
   createdAt: DateTime!
   email: String!
   firstName: String!
   id: Int!
+  invitationsReceived: [Invitation!]
+  invitationsSent: [Invitation!]
   lastName: String!
+  linkGroups: [LinkGroup!]
+  links: [Link!]
+  meets: [Meet!]
+  meetsShared: [MeetSharedWithMember!]
+  notebooks: [Notebook!]
+  notes: [Note!]
+  resetTokens: [ResetToken!]
+  sessions: [Session!]
+  tasks: [Task!]
   updatedAt: DateTime!
 }

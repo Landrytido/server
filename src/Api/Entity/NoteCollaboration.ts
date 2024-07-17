@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import User from './User';
 import { Note } from './Note';
 
@@ -28,3 +28,8 @@ export enum PermissionLevel {
     WRITE = 'WRITE',
     ADMIN = 'ADMIN',
 }
+
+registerEnumType(PermissionLevel, {
+    name: 'PermissionLevel',
+    description: 'The permission levels for note collaboration',
+});
