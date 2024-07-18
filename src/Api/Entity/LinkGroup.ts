@@ -17,8 +17,8 @@ export class LinkGroup {
     userId: number;
 
     @Field(() => User)
-    user: User;
+    user?: User;
 
     @Field(() => [Link])
-    links: Link[];
+    links?: Link[];
 }
