@@ -1,11 +1,10 @@
 import {PrismaService} from "../../Core/Datasource/Prisma";
-import {BadRequestException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
+import {ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
 import {LinkGroup} from "../Entity/LinkGroup";
 import {Prisma} from "@prisma/client";
 import {CreateLinkGroupDto} from "../UseCase/LinkGroup/CreateLinkGroup/CreateLinkGroupDto";
-import {ContextualGraphqlRequest} from "../../index";
 import {UpdateLinkGroupDto} from "../UseCase/LinkGroup/UpdateLinkGroup/UpdateLinkGroupDto";
-import {use} from "passport";
+
 
 
 @Injectable()
