@@ -1,17 +1,17 @@
 import { ContextualGraphqlRequest, UseCase } from "src";
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { Notebook } from "src/Api/Entity/Notebook";
-import { NotebookRepository } from "src/Api/Repository/NotebookRepository";
-import { CreateOrUpdateNotebook } from "../../../Dto/CreateOrUpdateNoteBook";
+import Notebook from "src/Api/Entity/Notebook";
+import NotebookRepository from "src/Api/Repository/NotebookRepository";
+import SaveNotebookDto from "src/Api/Dto/SaveNotebookDto";
 
 @Injectable()
 export class CreateNotebookUseCase
-  implements UseCase<Promise<Notebook>, [dto: CreateOrUpdateNotebook]>
+  implements UseCase<Promise<Notebook>, [dto: SaveNotebookDto]>
 {
   constructor(private readonly notebookRepository: NotebookRepository) {}
   handle(
     context: ContextualGraphqlRequest,
-    dto: CreateOrUpdateNotebook
+    dto: SaveNotebookDto
   ): Promise<Notebook> {
     try {
       return this.notebookRepository.create(context.userId, dto);

@@ -1,28 +1,34 @@
-Object.assign(global, { WebSocket: require('ws') });
-import { NestFactory } from '@nestjs/core';
-import { graphqlUploadExpress } from 'graphql-upload';
-import { json } from 'express';
-import { ApiModule } from './Api/ApiModule';
-import { ExceptionCatcher } from './Core/ExceptionCatcher';
-import ConsoleLogger from './Core/Logging/ConsoleLogger';
-import InitializationLogger from './Core/Logging/InitializationLogger';
+Object.assign(global, { WebSocket: require("ws") });
+import { NestFactory } from "@nestjs/core";
+import { graphqlUploadExpress } from "graphql-upload";
+import { json } from "express";
+import { ApiModule } from "./Api/ApiModule";
+import { ExceptionCatcher } from "./Core/ExceptionCatcher";
+import ConsoleLogger from "./Core/Logging/ConsoleLogger";
+import InitializationLogger from "./Core/Logging/InitializationLogger";
+import { registerEnumType } from "@nestjs/graphql";
+import { Recurrence } from "./Api/Entity/Meet";
+import { PermissionLevel } from "./Api/Entity/NoteCollaboration";
 
 /* @Bugfix it fixes issues with maxListeners due in ElasticSearch package */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-require('events').EventEmitter.defaultMaxListeners = 0;
+require("events").EventEmitter.defaultMaxListeners = 0;
+
+registerEnumType(Recurrence, { name: "Recurrence" });
+registerEnumType(PermissionLevel, { name: "PermissionLevel" });
 
 export let app;
 
 async function bootstrapApi() {
   app = await NestFactory.create(ApiModule, {
-    logger: new InitializationLogger('NestFactory')
+    logger: new InitializationLogger("NestFactory"),
   });
 
   app.useLogger(app.get(ConsoleLogger));
 
-  app.enableCors({ origin: '*' });
+  app.enableCors({ origin: "*" });
   app.use(graphqlUploadExpress({ maxFileSize: 15000000, maxFiles: 1 }));
-  app.use(json({ limit: '1mb' }));
+  app.use(json({ limit: "1mb" }));
 
   app.useGlobalFilters(new ExceptionCatcher(app.get(ConsoleLogger)));
 

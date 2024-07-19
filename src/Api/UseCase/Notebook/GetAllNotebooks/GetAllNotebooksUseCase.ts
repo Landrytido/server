@@ -1,7 +1,7 @@
 import { ContextualGraphqlRequest, UseCase } from "src";
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { Notebook } from "src/Api/Entity/Notebook";
-import { NotebookRepository } from "src/Api/Repository/NotebookRepository";
+import Notebook from "src/Api/Entity/Notebook";
+import NotebookRepository from "src/Api/Repository/NotebookRepository";
 
 @Injectable()
 export class GetAllNotebooksUseCase

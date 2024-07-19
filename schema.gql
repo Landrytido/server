@@ -17,10 +17,6 @@ type Comment {
   userId: Int!
 }
 
-input CreateOrUpdateNotebook {
-  title: String!
-}
-
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -77,11 +73,11 @@ type MeetSharedWithMember {
 }
 
 type Mutation {
-  createNotebook(dto: CreateOrUpdateNotebook!): Notebook!
+  createNotebook(dto: SaveNotebookDto!): Notebook!
   deleteNotebook(notebookId: Int!): Notebook!
   register(dto: SaveUserDto!): User!
   saveUser(dto: SaveUserDto!): User!
-  updateNotebook(dto: CreateOrUpdateNotebook!, notebookId: Int!): Notebook!
+  updateNotebook(dto: SaveNotebookDto!, notebookId: Int!): Notebook!
 }
 
 type Note {
@@ -144,6 +140,10 @@ type ResetToken {
   user: User!
   userId: Int!
   validityEndDate: DateTime!
+}
+
+input SaveNotebookDto {
+  title: String!
 }
 
 input SaveUserDto {

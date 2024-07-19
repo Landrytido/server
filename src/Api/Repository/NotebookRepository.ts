@@ -1,12 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/Core/Datasource/Prisma";
 import { Notebook } from "@prisma/client";
-import UserRepository from "./UserRepository";
 import InsufficientPermissionException from "src/Core/Exception/InsufficientPermissionException";
-import { CreateOrUpdateNotebook } from "../Dto/CreateOrUpdateNoteBook";
+import SaveNotebookDto from "../Dto/SaveNotebookDto";
 
 @Injectable()
-export class NotebookRepository {
+export default class NotebookRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
@@ -34,7 +33,7 @@ export class NotebookRepository {
    * @param context
    * @returns
    */
-  async create(userId: number, dto: CreateOrUpdateNotebook): Promise<Notebook> {
+  async create(userId: number, dto: SaveNotebookDto): Promise<Notebook> {
     return await this.prisma.notebook.create({
       data: { title: dto.title, userId: userId },
     });
@@ -66,7 +65,7 @@ export class NotebookRepository {
   async update(
     userId: number,
     notebookId: number,
-    dto: CreateOrUpdateNotebook
+    dto: SaveNotebookDto
   ): Promise<Notebook> {
     const notebook = await this.prisma.notebook.findUnique({
       where: { id: notebookId },
