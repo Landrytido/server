@@ -1,6 +1,7 @@
-import { Field, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import MeetSharedWithMember from "./MeetSharedWithMember";
+import { ContextualGraphqlRequest } from "src";
 
 @ObjectType()
 export default class Meet {
@@ -42,6 +43,8 @@ export default class Meet {
 
   @Field(() => [MeetSharedWithMember])
   sharedWith: MeetSharedWithMember[];
+
+  context?: ContextualGraphqlRequest;
 }
 
 export enum Recurrence {
