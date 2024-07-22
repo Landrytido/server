@@ -5,7 +5,7 @@ import NotebookRepository from "src/Api/Repository/NotebookRepository";
 import SaveNotebookDto from "src/Api/Dto/SaveNotebookDto";
 
 @Injectable()
-export class CreateNotebookUseCase
+export default class CreateNotebookUseCase
   implements UseCase<Promise<Notebook>, [dto: SaveNotebookDto]>
 {
   constructor(private readonly notebookRepository: NotebookRepository) {}
@@ -14,7 +14,7 @@ export class CreateNotebookUseCase
     dto: SaveNotebookDto
   ): Promise<Notebook> {
     try {
-      return this.notebookRepository.create(context.userId, dto);
+      return this.notebookRepository.save(context.userId, dto);
     } catch (error) {
       throw new BadRequestException("Failed to create notebook", error.message);
     }

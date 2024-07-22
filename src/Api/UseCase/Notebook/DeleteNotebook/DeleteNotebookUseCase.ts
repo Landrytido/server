@@ -1,10 +1,15 @@
 import { ContextualGraphqlRequest, UseCase } from "src";
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import Notebook from "src/Api/Entity/Notebook";
 import NotebookRepository from "src/Api/Repository/NotebookRepository";
+import InsufficientPermissionException from "src/Core/Exception/InsufficientPermissionException";
 
 @Injectable()
-export class DeleteNotebookUseCase
+export default class DeleteNotebookUseCase
   implements UseCase<Promise<Notebook>, [notebookId: number]>
 {
   constructor(private readonly notebookRepository: NotebookRepository) {}
@@ -13,6 +18,15 @@ export class DeleteNotebookUseCase
     notebookId: number
   ): Promise<Notebook> {
     try {
+      const notebook = await this.notebookRepository.findById(notebookId);
+
+      if (!notebook) throw new NotFoundException("Aucun carnet n'a été trouvé");
+
+      if (notebook.userId !== context.userId)
+        throw new InsufficientPermissionException(
+          "Ce carnet ne vous appartient pas, vous ne pouvez donc pas le supprimer"
+        );
+
       return await this.notebookRepository.remove(notebookId, context.userId);
     } catch (error) {
       throw new BadRequestException("Failed to delete notebook", error.message);

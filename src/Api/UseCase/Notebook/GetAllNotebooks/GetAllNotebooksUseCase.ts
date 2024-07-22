@@ -4,7 +4,7 @@ import Notebook from "src/Api/Entity/Notebook";
 import NotebookRepository from "src/Api/Repository/NotebookRepository";
 
 @Injectable()
-export class GetAllNotebooksUseCase
+export default class GetAllNotebooksUseCase
   implements UseCase<Promise<Notebook[]>, []>
 {
   constructor(private readonly notebookRepository: NotebookRepository) {}
