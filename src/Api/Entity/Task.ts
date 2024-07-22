@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 
 @ObjectType()
@@ -12,7 +12,7 @@ export default class Task {
   @Field()
   description: string;
 
-  @Field()
+  @Field(() => GraphQLISODateTime)
   dueDate?: Date;
 
   @Field()
