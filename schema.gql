@@ -121,6 +121,7 @@ type Query {
   getLoggedUser: User!
   getNotebook(notebookId: Int!): Notebook!
   getNotebooks: [Notebook!]!
+  getNotebooksByUserId: [Notebook!]!
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
   validateToken(dto: TokenValidationDto!): Boolean!

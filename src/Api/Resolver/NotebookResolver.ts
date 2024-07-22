@@ -11,18 +11,13 @@ import { UpdateNotebookUseCase } from "../UseCase/Notebook/UpdateNotebook/Update
 import { GetNotebookUseCase } from "../UseCase/Notebook/GetNotebook/GetNotebookUseCase";
 import { GetAllNotebooksUseCase } from "../UseCase/Notebook/GetAllNotebooks/GetAllNotebooksUseCase";
 import SaveNotebookDto from "../Dto/SaveNotebookDto";
+import { GetNotebooksByUserIdUseCase } from "../UseCase/Notebook/GetNotebooksByUserId/GetNotebooksByUserIdUseCase";
 
 @Resolver(Notebook)
 @UseGuards(GraphqlAuthGuard) // Only for connected users
 export class NotebookResolver {
   constructor(private readonly serviceFactory: UseCaseFactory) {}
 
-  /**
-   * Create a notebook resolver
-   * @param context
-   * @param dto
-   * @returns
-   */
   @Mutation(() => Notebook)
   async createNotebook(
     @ContextualRequest() context: ContextualGraphqlRequest,
@@ -34,12 +29,6 @@ export class NotebookResolver {
     );
   }
 
-  /**
-   * Delete a notebook resolver
-   * @param context
-   * @param id
-   * @returns
-   */
   @Mutation(() => Notebook)
   async deleteNotebook(
     @ContextualRequest() context: ContextualGraphqlRequest,
@@ -51,13 +40,6 @@ export class NotebookResolver {
     );
   }
 
-  /**
-   * Update a notebook
-   * @param context
-   * @param notebookId
-   * @param dto
-   * @returns
-   */
   @Mutation(() => Notebook)
   async updateNotebook(
     @ContextualRequest() context: ContextualGraphqlRequest,
@@ -89,5 +71,14 @@ export class NotebookResolver {
     return (await this.serviceFactory.create(GetAllNotebooksUseCase)).handle(
       context
     );
+  }
+
+  @Query(() => [Notebook])
+  async getNotebooksByUserId(
+    @ContextualRequest() context: ContextualGraphqlRequest
+  ): Promise<Notebook[]> {
+    return (
+      await this.serviceFactory.create(GetNotebooksByUserIdUseCase)
+    ).handle(context);
   }
 }
