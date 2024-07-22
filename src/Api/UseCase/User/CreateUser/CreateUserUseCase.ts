@@ -6,11 +6,11 @@ import UserRepository from "../../../Repository/UserRepository";
 
 @Injectable()
 export default class CreateUserUseCase
-  implements UncontextualUseCase<Promise<Partial<User>>, [dto: SaveUserDto]>
+  implements UncontextualUseCase<Promise<User>, [dto: SaveUserDto]>
 {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async handle(dto: SaveUserDto): Promise<Partial<User>> {
+  async handle(dto: SaveUserDto): Promise<User> {
     try {
       return this.userRepository.saveUser(dto);
     } catch (error) {
