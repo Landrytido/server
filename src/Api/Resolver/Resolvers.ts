@@ -1,7 +1,4 @@
-import { NotebookResolver } from "./NotebookResolver";
+import NotebookResolver from "./NotebookResolver";
 import UserResolver from "./UserResolver";
 
-export const Resolvers = [
-    UserResolver,
-    NotebookResolver
-]
+export const Resolvers = [UserResolver, NotebookResolver];
