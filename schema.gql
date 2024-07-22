@@ -17,10 +17,18 @@ type Comment {
   userId: Int!
 }
 
+input CreateLinkDto {
+  description: String!
+  linkGroupId: Int!
+  name: String!
+  url: String!
+  userId: Int
+}
+
 input CreateLinkGroupDto {
   description: String
   name: String!
-  userId: Int!
+  userId: Int
 }
 
 """
@@ -39,10 +47,11 @@ type Invitation {
 type Link {
   description: String!
   id: Int!
-  linkGroup: LinkGroup!
+  linkGroup: LinkGroup
   linkGroupId: Int!
+  name: String!
   url: String!
-  user: User!
+  user: User
   userId: Int!
 }
 
@@ -79,10 +88,13 @@ type MeetSharedWithMember {
 }
 
 type Mutation {
+  createLink(dto: CreateLinkDto!): Link!
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
+  deleteLink(id: Int!): Link!
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
   register(dto: SaveUserDto!): User!
   saveUser(dto: SaveUserDto!): User!
+  updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: UpdateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
 }
 
@@ -125,8 +137,11 @@ enum PermissionLevel {
 }
 
 type Query {
+  findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
   findLinkGroupsByUserId(userId: Int!): [LinkGroup!]!
+  findLinksByLinkGroupId(linkGroupId: Int!): [Link!]!
+  findLinksByUserId(userId: Int!): [Link!]!
   getAllLinkGroups: [LinkGroup!]!
   getLoggedUser: User!
   login(dto: AuthenticationDto!): String!
@@ -188,10 +203,17 @@ input TokenValidationDto {
   token: String!
 }
 
+input UpdateLinkDto {
+  description: String
+  name: String!
+  url: String
+  userId: Int
+}
+
 input UpdateLinkGroupDto {
   description: String
   name: String!
-  userId: Int!
+  userId: Int
 }
 
 type User {

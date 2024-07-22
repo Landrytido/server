@@ -95,6 +95,7 @@ enum PermissionLevel {
 
 model Link {
   id          Int       @id @default(autoincrement())
+  name        String
   url         String
   description String
   linkGroupId Int

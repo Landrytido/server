@@ -11,10 +11,9 @@ export class CreateLinkGroupDto {
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
-    description: string;
+    description?: string;
 
-    @Field(() => Int)
-    @IsNotEmpty()
+    @Field(() => Int, { nullable: true })
     @IsInt()
-    userId: number;
+    userId?: number;
 }

@@ -13,8 +13,8 @@ export class UpdateLinkGroupDto {
     @IsString()
     description: string;
 
-    @Field(() => Int)
-    @IsNotEmpty()
+    @Field(() => Int, { nullable: true })
     @IsInt()
-    userId: number;
+    userId?: number;
+
 }

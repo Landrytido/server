@@ -62,7 +62,7 @@ export class LinkGroupResolver {
         @ContextualRequest() context: ContextualGraphqlRequest,
         @Args('userId', { type: () => Int }) userId: number,
     ): Promise<LinkGroup[]> {
-        return (await this.serviceFactory.create(GetLinkGroupsByUserIdUseCase)).handle(context, userId);
+        return (await this.serviceFactory.create(GetLinkGroupsByUserIdUseCase)).handle(context);
     }
 
     @Mutation(() => LinkGroup)

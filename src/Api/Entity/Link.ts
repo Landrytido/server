@@ -8,6 +8,9 @@ export class Link {
     id: number;
 
     @Field()
+    name: string;
+
+    @Field()
     url: string;
 
     @Field()
@@ -19,9 +22,9 @@ export class Link {
     @Field(() => Int)
     userId: number;
 
-    @Field(() => LinkGroup)
-    linkGroup: LinkGroup;
+    @Field(() => LinkGroup, { nullable: true })
+    linkGroup?: LinkGroup;
 
-    @Field(() => User)
-    user: User;
+    @Field(() => User, { nullable: true })
+    user?: User;
 }
