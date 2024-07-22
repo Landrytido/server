@@ -1,8 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/Core/Datasource/Prisma";
-import InsufficientPermissionException from "src/Core/Exception/InsufficientPermissionException";
-import SaveNotebookDto from "../Dto/SaveNotebookDto";
 import Notebook from "../Entity/Notebook";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export default class NotebookRepository {
@@ -28,36 +27,38 @@ export default class NotebookRepository {
     });
   }
 
-  async create(userId: number, dto: SaveNotebookDto): Promise<Notebook> {
-    return await this.prisma.notebook.create({
-      data: { title: dto.title, userId: userId },
+  async save(
+    userId: number,
+    data:
+      | Prisma.XOR<
+          Prisma.NotebookCreateInput,
+          Prisma.NotebookUncheckedCreateInput
+        >
+      | Prisma.XOR<
+          Prisma.NotebookUpdateInput,
+          Prisma.NotebookUncheckedUpdateInput
+        >
+  ): Promise<Notebook> {
+    if (!data.id) {
+      return await this.prisma.notebook.create({
+        data: {
+          title: data.title as string,
+          userId: userId,
+        },
+      });
+    }
+
+    return await this.prisma.notebook.update({
+      where: {
+        id: data.id as number,
+      },
+      data: {
+        title: data.title as string,
+      },
     });
   }
 
   async remove(notebookId: number, userId: number): Promise<Notebook> {
-    const notebook = await this.prisma.notebook.findUnique({
-      where: { id: notebookId },
-    });
-
-    if (notebook.userId !== userId) throw new InsufficientPermissionException();
-
     return this.prisma.notebook.delete({ where: { id: +notebookId } });
-  }
-
-  async update(
-    userId: number,
-    notebookId: number,
-    dto: SaveNotebookDto
-  ): Promise<Notebook> {
-    const notebook = await this.prisma.notebook.findUnique({
-      where: { id: notebookId },
-    });
-
-    if (notebook.userId !== userId) throw new InsufficientPermissionException();
-
-    return await this.prisma.notebook.update({
-      where: { id: notebookId },
-      data: { title: dto.title },
-    });
   }
 }
