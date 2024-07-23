@@ -21,7 +21,7 @@ export default class GetNotebookUseCase
       if (!notebook) throw new NotFoundException("Notebook not found");
       return notebook;
     } catch (error) {
-      throw new BadRequestException("Failed to get notebook", error.message);
+      throw new BadRequestException("GetNotebookUseCaseFailed", error.message);
     }
   }
 }

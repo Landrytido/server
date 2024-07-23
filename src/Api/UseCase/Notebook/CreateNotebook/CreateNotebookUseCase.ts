@@ -16,7 +16,10 @@ export default class CreateNotebookUseCase
     try {
       return this.notebookRepository.save(context.userId, dto);
     } catch (error) {
-      throw new BadRequestException("Failed to create notebook", error.message);
+      throw new BadRequestException(
+        "CreateNotebookUseCaseFailed",
+        error.message
+      );
     }
   }
 }

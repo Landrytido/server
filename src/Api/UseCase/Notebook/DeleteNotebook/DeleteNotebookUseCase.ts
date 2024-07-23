@@ -20,16 +20,19 @@ export default class DeleteNotebookUseCase
     try {
       const notebook = await this.notebookRepository.findById(notebookId);
 
-      if (!notebook) throw new NotFoundException("Aucun carnet n'a été trouvé");
+      if (!notebook) throw new NotFoundException("Notebook not found");
 
       if (notebook.userId !== context.userId)
         throw new InsufficientPermissionException(
-          "Ce carnet ne vous appartient pas, vous ne pouvez donc pas le supprimer"
+          "You don't have permission to delete this notebook"
         );
 
       return await this.notebookRepository.remove(notebookId, context.userId);
     } catch (error) {
-      throw new BadRequestException("Failed to delete notebook", error.message);
+      throw new BadRequestException(
+        "DeleteNotebookUseCaseFailed",
+        error.message
+      );
     }
   }
 }

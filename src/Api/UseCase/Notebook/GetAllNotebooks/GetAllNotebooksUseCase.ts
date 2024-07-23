@@ -12,7 +12,10 @@ export default class GetAllNotebooksUseCase
     try {
       return this.notebookRepository.findMany();
     } catch (error) {
-      throw new BadRequestException("Failed to get notebooks", error.message);
+      throw new BadRequestException(
+        "GetAllNotebooksUseCaseFailed",
+        error.message
+      );
     }
   }
 }

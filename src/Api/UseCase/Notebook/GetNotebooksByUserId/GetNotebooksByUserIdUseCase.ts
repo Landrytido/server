@@ -12,7 +12,10 @@ export default class GetNotebooksByUserIdUseCase
     try {
       return this.notebookRepository.findByUserId(context.userId);
     } catch (error) {
-      throw new BadRequestException("Failed to get notebooks", error.message);
+      throw new BadRequestException(
+        "GetNotebooksByUserIdUseCaseFailed",
+        error.message
+      );
     }
   }
 }
