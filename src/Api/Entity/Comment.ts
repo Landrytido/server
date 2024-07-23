@@ -10,9 +10,6 @@ export class Comment {
     @Field()
     content: string;
 
-    @Field()
-    createdAt: Date;
-
     @Field(() => Int)
     userId: number;
 
@@ -24,4 +21,7 @@ export class Comment {
 
     @Field(() => Note)
     note: Note;
+
+    @Field()
+    createdAt: Date;
 }

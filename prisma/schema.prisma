@@ -166,11 +166,11 @@ model MeetSharedWithMember {
 model Comment {
   id        Int      @id @default(autoincrement())
   content   String
-  createdAt DateTime @default(now())
   userId    Int
   noteId    Int
   user      User     @relation(fields: [userId], references: [id])
   note      Note     @relation(fields: [noteId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 model ResetToken {

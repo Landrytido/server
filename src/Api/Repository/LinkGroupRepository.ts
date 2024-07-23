@@ -1,26 +1,23 @@
-import {PrismaService} from "../../Core/Datasource/Prisma";
-import {ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
-import {LinkGroup} from "../Entity/LinkGroup";
-import {Prisma} from "@prisma/client";
-import {CreateLinkGroupDto} from "../UseCase/LinkGroup/CreateLinkGroup/CreateLinkGroupDto";
-import {UpdateLinkGroupDto} from "../UseCase/LinkGroup/UpdateLinkGroup/UpdateLinkGroupDto";
-
-
+import { PrismaService } from "../../Core/Datasource/Prisma";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { LinkGroup } from "../Entity/LinkGroup";
+import { Prisma } from "@prisma/client";
+import CreateLinkGroupDto from "../UseCase/LinkGroup/CreateLinkGroup/CreateLinkGroupDto";
+import UpdateLinkGroupDto from "../UseCase/LinkGroup/UpdateLinkGroup/UpdateLinkGroupDto";
 
 @Injectable()
 export class LinkGroupRepository {
     constructor(private readonly prisma: PrismaService) {}
-
     async findById(id: number) {
         return  this.prisma.linkGroup.findUnique({
             where: { id },
-            include: {user: true},
+            include: { user: true },
         });
     }
 
     async findByUserId(userId: number): Promise<LinkGroup[]> {
         return this.prisma.linkGroup.findMany({
-            where: {userId},
+            where: { userId },
             include: {
                 links: {
                     include: {
@@ -33,7 +30,7 @@ export class LinkGroupRepository {
         }) as unknown as LinkGroup[];
     }
 
-    async findAll():Promise<LinkGroup[]> {
+    async findAll(): Promise<LinkGroup[]> {
         return this.prisma.linkGroup.findMany({
             include: { user: true },
         });
@@ -56,10 +53,11 @@ export class LinkGroupRepository {
         });
     }
 
-    async update(linkGroupId: number, userId: number, dto: UpdateLinkGroupDto):Promise<LinkGroup> {
+    async update(linkGroupId: number, userId: number, dto: UpdateLinkGroupDto): Promise<LinkGroup> {
         const linkGroup = await this.prisma.linkGroup.findUnique({
             where: { id: linkGroupId },
         });
+
         if (!linkGroup) {
             throw new NotFoundException("LinkGroup with ID ${linkGroupId} not found");
         }
@@ -81,6 +79,7 @@ export class LinkGroupRepository {
         const LinkGroup = await this.prisma.linkGroup.findUnique({
             where: { id: linkGroupId },
         });
+
         if (!LinkGroup) {
             throw new NotFoundException("LinkGroup with ID ${linkGroupId} not found");
         }

@@ -4,4 +4,5 @@ import {LinkGroupRepository} from "./LinkGroupRepository";
 export const Repositories = [
     UserRepository,
     LinkGroupRepository,
+
 ]

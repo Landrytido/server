@@ -4,7 +4,7 @@ import User from './User';
 @ObjectType()
 export class Invitation {
     @Field(() => Int)
-    idPrimary: number;
+    id: number;
 
     @Field(() => Int)
     receiverId: number;

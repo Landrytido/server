@@ -1,10 +1,10 @@
-import {BadRequestException, Injectable} from "@nestjs/common";
-import {LinkGroupRepository} from "../../../Repository/LinkGroupRepository";
-import {ContextualGraphqlRequest} from "../../../../index";
-import {LinkGroup} from "../../../Entity/LinkGroup";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { LinkGroupRepository } from "../../../Repository/LinkGroupRepository";
+import {ContextualGraphqlRequest, UseCase} from "../../../../index";
+import { LinkGroup } from "../../../Entity/LinkGroup";
 
 @Injectable()
-export class DeleteLinkGroupUseCase {
+export default class DeleteLinkGroupUseCase implements UseCase<Promise<LinkGroup>,[LinkGroupId:number]> {
     constructor(private readonly linkGroupRepository: LinkGroupRepository) {}
 
     async handle(context: ContextualGraphqlRequest, linkGroupId: number): Promise<LinkGroup> {

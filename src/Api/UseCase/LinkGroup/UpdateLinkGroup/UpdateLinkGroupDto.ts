@@ -1,20 +1,13 @@
-import {InputType, Field, Int} from '@nestjs/graphql';
-import {IsString, IsOptional, IsNotEmpty, IsInt} from 'class-validator';
+import { InputType, Field, Int } from '@nestjs/graphql';
 
 @InputType()
-export class UpdateLinkGroupDto {
+export default class UpdateLinkGroupDto {
     @Field()
-    @IsString()
-    @IsNotEmpty()
     name: string;
 
     @Field({ nullable: true })
-    @IsOptional()
-    @IsString()
     description: string;
 
     @Field(() => Int)
-    @IsNotEmpty()
-    @IsInt()
     userId: number;
 }
