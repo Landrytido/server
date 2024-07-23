@@ -2,6 +2,7 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import { ContextualGraphqlRequest } from "src";
+import { Recurrence } from "src/main";
 
 @ObjectType()
 export default class Meet {
@@ -45,12 +46,4 @@ export default class Meet {
   sharedWith: MeetSharedWithMember[];
 
   context?: ContextualGraphqlRequest;
-}
-
-export enum Recurrence {
-  NONE = "NONE",
-  DAILY = "DAILY",
-  WEEKLY = "WEEKLY",
-  MONTHLY = "MONTHLY",
-  ANNUAL = "ANNUAL",
 }

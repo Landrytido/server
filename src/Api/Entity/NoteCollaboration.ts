@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import User from "./User";
 import Note from "./Note";
+import { PermissionLevel } from "src/main";
 
 @ObjectType()
 export default class NoteCollaboration {
@@ -21,10 +22,4 @@ export default class NoteCollaboration {
 
   @Field(() => User)
   user: User;
-}
-
-export enum PermissionLevel {
-  READ = "READ",
-  WRITE = "WRITE",
-  ADMIN = "ADMIN",
 }
