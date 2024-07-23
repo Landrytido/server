@@ -37,7 +37,12 @@ export class LinkGroupResolver {
         @ContextualRequest() context: ContextualGraphqlRequest,
     ): Promise<LinkGroup[]>{
         const useCase = await this.serviceFactory.create(GetAllLinkGroupsUseCase);
-        return useCase.handle(context);
+        const groups = await useCase.handle(context);
+
+        return groups.map(group => ({
+            ...group,
+            links: group.links || [],
+        }));
     }
 
     @Mutation(() => LinkGroup)
@@ -54,7 +59,16 @@ export class LinkGroupResolver {
         @ContextualRequest() context: ContextualGraphqlRequest,
         @Args('linkGroupId', { type: () => Int }) linkGroupId: number,
     ): Promise<LinkGroup> {
-        return (await this.serviceFactory.create(GetLinkGroupByIdUseCase)).handle(context, linkGroupId);
+        const group = await (await this.serviceFactory.create(GetLinkGroupByIdUseCase)).handle(context, linkGroupId);
+
+        if (!group) {
+            throw new Error('LinkGroup not found');
+        }
+
+        return {
+            ...group,
+            links: group.links || [],
+        };
     }
 
     @Query(() => [LinkGroup])
@@ -62,7 +76,13 @@ export class LinkGroupResolver {
         @ContextualRequest() context: ContextualGraphqlRequest,
         @Args('userId', { type: () => Int }) userId: number,
     ): Promise<LinkGroup[]> {
-        return (await this.serviceFactory.create(GetLinkGroupsByUserIdUseCase)).handle(context);
+        const useCase = await this.serviceFactory.create(GetLinkGroupsByUserIdUseCase);
+        const groups = await useCase.handle(context);
+
+        return groups.map(group => ({
+            ...group,
+            links: group.links || [],
+        }));
     }
 
     @Mutation(() => LinkGroup)
