@@ -22,8 +22,6 @@ export enum PermissionLevel {
   ADMIN = "ADMIN",
 }
 
-/* @Bugfix it fixes issues with maxListeners due in ElasticSearch package */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 require("events").EventEmitter.defaultMaxListeners = 0;
 
 registerEnumType(Recurrence, { name: "Recurrence" });

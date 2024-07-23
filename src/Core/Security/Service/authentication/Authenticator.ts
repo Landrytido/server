@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import UserRepository from '../../../../Api/Repository/UserRepository';
-import EmptyFieldException from './exceptions/EmptyFieldException';
-import InvalidUserPasswordException from './exceptions/InvalidUserPasswordException';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JwtService } from "@nestjs/jwt";
+import UserRepository from "../../../../Api/Repository/UserRepository";
+import EmptyFieldException from "./exceptions/EmptyFieldException";
+import InvalidUserPasswordException from "./exceptions/InvalidUserPasswordException";
 
 @Injectable()
 export default class Authenticator {
@@ -15,7 +15,7 @@ export default class Authenticator {
   ) {}
 
   async authenticate(email: string, password: string): Promise<any> {
-    if (email === '' || password === '') {
+    if (email === "" || password === "") {
       throw new EmptyFieldException();
     }
 
@@ -25,11 +25,7 @@ export default class Authenticator {
       throw new Error(`User not found with email "${email}"`);
     }
 
-    // if (!(await this.hashable.compare(password, user.password))) {
-    //   throw new InvalidUserPasswordException();
-    // }
-
-    if(password !== user.password) {
+    if (password !== user.password) {
       throw new InvalidUserPasswordException();
     }
 
@@ -42,7 +38,7 @@ export default class Authenticator {
         email: this.formatEmail(user.email.toLowerCase()),
         userId: user.id,
       },
-      { secret: this.configService.get('JWT_SECRET') }
+      { secret: this.configService.get("JWT_SECRET") }
     );
   }
 
