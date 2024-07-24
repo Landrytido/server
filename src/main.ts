@@ -6,10 +6,16 @@ import { ApiModule } from './Api/ApiModule';
 import { ExceptionCatcher } from './Core/ExceptionCatcher';
 import ConsoleLogger from './Core/Logging/ConsoleLogger';
 import InitializationLogger from './Core/Logging/InitializationLogger';
+import { registerEnumType } from '@nestjs/graphql';
+import { PermissionLevel } from './Api/Entity/NoteCollaboration';
+import { Recurrence } from './Api/Entity/Meet';
 
 /* @Bugfix it fixes issues with maxListeners due in ElasticSearch package */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('events').EventEmitter.defaultMaxListeners = 0;
+
+registerEnumType(Recurrence, { name: "Recurrence" });
+registerEnumType(PermissionLevel, { name: "PermissionLevel" });
 
 export let app;
 

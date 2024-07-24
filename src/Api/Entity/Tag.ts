@@ -10,5 +10,5 @@ export class Tag {
     name: string;
 
     @Field(() => [Note])
-    notes: Note[];
+    notes?: Note[];
 }
