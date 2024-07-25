@@ -1,3 +1,16 @@
 import CreateNoteUseCase from "./CreateNote/CreateNoteUseCase";
+import DeleteNoteUseCase from "./DeleteNote/DeleteNoteUseCase";
+import GetAllNotesUseCase from "./GetAllNotes/GetAllNoteUseCase";
+import GetNoteUseCase from "./GetNote/GetNoteUseCase";
+import GetNotesByUserIdUseCase from "./GetNotesByUserId/GetNotesByUserIdUseCase";
+import UpdateNoteUseCase from "./UpdateNote/UpdateNoteUseCase";
 
-export type AvailableNoteUseCases = CreateNoteUseCase;
+type AvailableNoteUseCases =
+  | CreateNoteUseCase
+  | UpdateNoteUseCase
+  | DeleteNoteUseCase
+  | GetNoteUseCase
+  | GetAllNotesUseCase
+  | GetNotesByUserIdUseCase;
+
+export default AvailableNoteUseCases;
