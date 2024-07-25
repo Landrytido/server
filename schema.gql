@@ -73,11 +73,14 @@ type MeetSharedWithMember {
 }
 
 type Mutation {
-  create(dto: SaveNotebookDto!): Notebook!
-  delete(notebookId: Int!): Notebook!
+  createNote(dto: SaveNoteDto!): Note!
+  createNotebook(dto: SaveNotebookDto!): Notebook!
+  deleteNote(noteId: Int!): Note!
+  deleteNotebook(notebookId: Int!): Notebook!
   register(dto: SaveUserDto!): User!
   saveUser(dto: SaveUserDto!): User!
-  update(dto: SaveNotebookDto!, notebookId: Int!): Notebook!
+  updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
+  updateNotebook(dto: SaveNotebookDto!, notebookId: Int!): Notebook!
 }
 
 type Note {
@@ -118,9 +121,12 @@ enum PermissionLevel {
 }
 
 type Query {
-  findById(notebookId: Int!): Notebook!
-  findByUserId: [Notebook!]!
-  findMany: [Notebook!]!
+  findNoteById(noteId: Int!): Note!
+  findNotebookById(notebookId: Int!): Notebook!
+  findNotebooks: [Notebook!]!
+  findNotebooksByUserId: [Notebook!]!
+  findNotes: [Note!]!
+  findNotesByUserId: [Note!]!
   getLoggedUser: User!
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
@@ -141,6 +147,12 @@ type ResetToken {
   user: User!
   userId: Int!
   validityEndDate: DateTime!
+}
+
+input SaveNoteDto {
+  content: String
+  notebookId: Int
+  title: String!
 }
 
 input SaveNotebookDto {
