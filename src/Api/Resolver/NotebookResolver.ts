@@ -19,7 +19,7 @@ export default class NotebookResolver {
   constructor(private readonly serviceFactory: UseCaseFactory) {}
 
   @Mutation(() => Notebook)
-  async create(
+  async createNotebook(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("dto") dto: SaveNotebookDto
   ): Promise<Notebook> {
@@ -30,7 +30,7 @@ export default class NotebookResolver {
   }
 
   @Mutation(() => Notebook)
-  async update(
+  async updateNotebook(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("notebookId", { type: () => Int }) notebookId: number,
     @Args("dto") dto: SaveNotebookDto
@@ -43,7 +43,7 @@ export default class NotebookResolver {
   }
 
   @Mutation(() => Notebook)
-  async delete(
+  async deleteNotebook(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("notebookId", { type: () => Int }) notebookId: number
   ): Promise<Notebook> {
@@ -54,7 +54,7 @@ export default class NotebookResolver {
   }
 
   @Query(() => Notebook)
-  async findById(
+  async findNotebookById(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("notebookId", { type: () => Int }) notebookId: number
   ): Promise<Notebook> {
@@ -65,7 +65,7 @@ export default class NotebookResolver {
   }
 
   @Query(() => [Notebook])
-  async findMany(
+  async findNotebooks(
     @ContextualRequest() context: ContextualGraphqlRequest
   ): Promise<Notebook[]> {
     return (await this.serviceFactory.create(GetAllNotebooksUseCase)).handle(
@@ -74,7 +74,7 @@ export default class NotebookResolver {
   }
 
   @Query(() => [Notebook])
-  async findByUserId(
+  async findNotebooksByUserId(
     @ContextualRequest() context: ContextualGraphqlRequest
   ): Promise<Notebook[]> {
     return (
