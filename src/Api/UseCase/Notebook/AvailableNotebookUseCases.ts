@@ -5,12 +5,10 @@ import GetNotebookUseCase from "./GetNotebook/GetNotebookUseCase";
 import GetNotebooksByUserIdUseCase from "./GetNotebooksByUserId/GetNotebooksByUserIdUseCase";
 import UpdateNotebookUseCase from "./UpdateNotebook/UpdateNotebookUseCase";
 
-type AvailableNotebookUseCases =
+export type AvailableNotebookUseCases =
   | CreateNotebookUseCase
   | GetNotebookUseCase
   | GetAllNotebooksUseCase
   | UpdateNotebookUseCase
   | DeleteNotebookUseCase
   | GetNotebooksByUserIdUseCase;
-
-export default AvailableNotebookUseCases;

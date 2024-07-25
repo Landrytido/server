@@ -5,12 +5,10 @@ import GetNoteUseCase from "./GetNote/GetNoteUseCase";
 import GetNotesByUserIdUseCase from "./GetNotesByUserId/GetNotesByUserIdUseCase";
 import UpdateNoteUseCase from "./UpdateNote/UpdateNoteUseCase";
 
-type AvailableNoteUseCases =
+export type AvailableNoteUseCases =
   | CreateNoteUseCase
   | UpdateNoteUseCase
   | DeleteNoteUseCase
   | GetNoteUseCase
   | GetAllNotesUseCase
   | GetNotesByUserIdUseCase;
-
-export default AvailableNoteUseCases;

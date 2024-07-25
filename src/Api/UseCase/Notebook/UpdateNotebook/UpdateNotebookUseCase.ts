@@ -28,7 +28,7 @@ export default class UpdateNotebookUseCase
 
       if (notebook.userId !== context.userId)
         throw new InsufficientPermissionException(
-          "Ce carnet ne vous appartient pas, vous ne pouvez donc pas le modifier"
+          "This notebook does not belong to you, you cannot update it"
         );
 
       return this.notebookRepository.save(context.userId, {
@@ -36,7 +36,10 @@ export default class UpdateNotebookUseCase
         ...dto,
       });
     } catch (error) {
-      throw new BadRequestException("Failed to update notebook", error.message);
+      throw new BadRequestException(
+        "UpdateNotebookUseCaseFailed",
+        error.message
+      );
     }
   }
 }

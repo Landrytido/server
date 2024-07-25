@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import Note from "./Note";
+import { ContextualGraphqlRequest } from "src";
 
 @ObjectType()
 export default class Notebook {
@@ -18,4 +19,6 @@ export default class Notebook {
 
   @Field(() => [Note])
   notes?: Note[];
+
+  context?: ContextualGraphqlRequest;
 }
