@@ -12,12 +12,12 @@ export default class GetNotebookUseCase
   implements UseCase<Promise<Notebook>, [notebookId: number]>
 {
   constructor(private readonly notebookRepository: NotebookRepository) {}
-  handle(
+  async handle(
     context: ContextualGraphqlRequest,
     notebookId: number
   ): Promise<Notebook> {
     try {
-      const notebook = this.notebookRepository.findById(notebookId);
+      const notebook = await this.notebookRepository.findById(notebookId);
       if (!notebook) throw new NotFoundException("Notebook not found");
       return notebook;
     } catch (error) {

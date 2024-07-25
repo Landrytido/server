@@ -9,12 +9,12 @@ export default class CreateNotebookUseCase
   implements UseCase<Promise<Notebook>, [dto: SaveNotebookDto]>
 {
   constructor(private readonly notebookRepository: NotebookRepository) {}
-  handle(
+  async handle(
     context: ContextualGraphqlRequest,
     dto: SaveNotebookDto
   ): Promise<Notebook> {
     try {
-      return this.notebookRepository.save(context.userId, dto);
+      return await this.notebookRepository.save(context.userId, dto);
     } catch (error) {
       throw new BadRequestException(
         "CreateNotebookUseCaseFailed",

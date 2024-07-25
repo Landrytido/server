@@ -8,9 +8,9 @@ export default class GetNotebooksByUserIdUseCase
   implements UseCase<Promise<Notebook[]>, []>
 {
   constructor(private readonly notebookRepository: NotebookRepository) {}
-  handle(context: ContextualGraphqlRequest): Promise<Notebook[]> {
+  async handle(context: ContextualGraphqlRequest): Promise<Notebook[]> {
     try {
-      return this.notebookRepository.findByUserId(context.userId);
+      return await this.notebookRepository.findByUserId(context.userId);
     } catch (error) {
       throw new BadRequestException(
         "GetNotebooksByUserIdUseCaseFailed",
