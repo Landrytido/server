@@ -6,13 +6,17 @@ import { ApiModule } from './Api/ApiModule';
 import { ExceptionCatcher } from './Core/ExceptionCatcher';
 import ConsoleLogger from './Core/Logging/ConsoleLogger';
 import InitializationLogger from './Core/Logging/InitializationLogger';
+import { registerEnumType } from '@nestjs/graphql';
+// import { Recurrence } from './Api/Entity/Meet';
+import { PermissionLevel } from './Api/Entity/NoteCollaboration';
 
 /* @Bugfix it fixes issues with maxListeners due in ElasticSearch package */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('events').EventEmitter.defaultMaxListeners = 0;
 
 export let app;
-
+// registerEnumType(Recurrence, { name: "Recurrence" });
+registerEnumType(PermissionLevel, { name: "PermissionLevel" });
 async function bootstrapApi() {
   app = await NestFactory.create(ApiModule, {
     logger: new InitializationLogger('NestFactory')

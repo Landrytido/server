@@ -9,6 +9,14 @@ import {Repositories} from "./Repository/Repositories";
 import {Resolvers} from "./Resolver/Resolvers";
 import UseCaseFactory from "./UseCase/UseCaseFactory";
 import UncontextualUseCaseFactory from "./UseCase/UncontextualUseCaseFactory";
+import MeetResolver from './Resolver/MeetResolver';
+import CreateMeetUseCase from './UseCase/Meet/CreateMeetUseCase';
+import MeetRepository from './Repository/MeetRepository';
+import UpdateMeetUseCase from './UseCase/Meet/UpdateMeetUseCase';
+import GetMeetUseCase from './UseCase/Meet/GetMeetUseCase';
+import DeleteMeetUseCase from './UseCase/Meet/DeleteMeetUseCase';
+import GetAllMeetUseCase from './UseCase/Meet/GetAllMeetUseCase';
+
 
 @Module({
   imports: [
@@ -32,6 +40,13 @@ import UncontextualUseCaseFactory from "./UseCase/UncontextualUseCaseFactory";
   providers: [
     UseCaseFactory,
     UncontextualUseCaseFactory,
+    MeetResolver,
+    UpdateMeetUseCase,
+    CreateMeetUseCase,
+    MeetRepository,
+    GetMeetUseCase,
+    GetAllMeetUseCase,
+    DeleteMeetUseCase,
     ...Repositories,
     ...Resolvers
   ]

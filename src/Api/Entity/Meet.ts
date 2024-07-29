@@ -17,16 +17,16 @@ export class Meet {
     startDate: Date;
 
     @Field()
-    endDate: Date;
+    endDate?: Date;
 
     @Field()
-    isRecurring: boolean;
+    isRecurring?: boolean;
 
-    @Field(() => Recurrence)
-    recurrence: Recurrence;
+    // @Field(() => Recurrence)
+    // recurrence?: Recurrence;
 
     @Field()
-    location: string;
+    location?: string;
 
     @Field()
     createdAt: Date;
@@ -35,19 +35,19 @@ export class Meet {
     updatedAt: Date;
 
     @Field(() => Int)
-    userId: number;
+    userId?: number;
 
     @Field(() => User)
-    user: User;
+    user?: User;
 
     @Field(() => [MeetSharedWithMember])
-    sharedWith: MeetSharedWithMember[];
+    sharedWith?: MeetSharedWithMember[];
 }
 
-export enum Recurrence {
-    NONE = 'NONE',
-    DAILY = 'DAILY',
-    WEEKLY = 'WEEKLY',
-    MONTHLY = 'MONTHLY',
-    ANNUAL = 'ANNUAL',
-}
+// export enum Recurrence {
+//     NONE = 'NONE',
+//     DAILY = 'DAILY',
+//     WEEKLY = 'WEEKLY',
+//     MONTHLY = 'MONTHLY',
+//     ANNUAL = 'ANNUAL',
+// }
