@@ -24,7 +24,7 @@ export default class UpdateNotebookUseCase
     try {
       const notebook = await this.notebookRepository.findById(notebookId);
 
-      if (!notebook) throw new NotFoundException("Aucun carnet n'a été trouvé");
+      if (!notebook) throw new NotFoundException("Notebook not found");
 
       if (notebook.userId !== context.userId)
         throw new InsufficientPermissionException(
