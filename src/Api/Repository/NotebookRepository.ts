@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/Core/Datasource/Prisma";
-import Notebook from "../Entity/Notebook";
-import { Prisma } from "@prisma/client";
+import { Notebook, Prisma } from "@prisma/client";
 
 @Injectable()
 export default class NotebookRepository {

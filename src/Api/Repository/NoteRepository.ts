@@ -15,6 +15,9 @@ export default class NoteRepository {
   async findByUserId(userId: number): Promise<Note[]> {
     return await this.prisma.note.findMany({
       where: { userId },
+      include: {
+        collaborations: true,
+      },
     });
   }
 
