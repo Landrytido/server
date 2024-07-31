@@ -22,6 +22,31 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Event {
+  createdAt: DateTime!
+  description: String!
+  endDate: DateTime!
+  id: Int!
+  isRecurring: Boolean!
+  location: String!
+  sharedWith: [MeetSharedWithMember!]!
+  startDate: DateTime!
+  title: String!
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
+input EventDto {
+  description: String!
+  endDate: DateTime!
+  id: Int
+  location: String!
+  startDate: DateTime!
+  title: String!
+  userId: Int!
+}
+
 type Invitation {
   idPrimary: Int!
   receiver: User!
@@ -49,41 +74,18 @@ type LinkGroup {
   userId: Int!
 }
 
-type Meet {
-  createdAt: DateTime!
-  description: String!
-  endDate: DateTime!
-  id: Int!
-  isRecurring: Boolean!
-  location: String!
-  sharedWith: [MeetSharedWithMember!]!
-  startDate: DateTime!
-  title: String!
-  updatedAt: DateTime!
-  user: User!
-  userId: Int!
-}
-
-input MeetDto {
-  description: String!
-  endDate: DateTime!
-  startDate: DateTime!
-  title: String!
-}
-
 type MeetSharedWithMember {
-  meet: Meet!
+  meet: Event!
   meetId: Int!
   user: User!
   userId: Int!
 }
 
 type Mutation {
-  createMeet(meetDto: MeetDto!): Meet!
-  deleteMeet(id: Float!): Meet!
+  deleteEvent(id: Float!): Event!
   register(dto: SaveUserDto!): User!
+  saveEvent(dto: EventDto!): Event!
   saveUser(dto: SaveUserDto!): User!
-  updateMeet(id: Float!, meetDto: MeetDto!): Meet!
 }
 
 type Note {
@@ -124,9 +126,9 @@ enum PermissionLevel {
 }
 
 type Query {
-  getAllMeet: [Meet!]!
+  getAllEvent: [Event!]!
+  getEvent(id: Float!): Event!
   getLoggedUser: User!
-  getMeet(id: Float!): Meet!
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
   validateToken(dto: TokenValidationDto!): Boolean!
@@ -189,7 +191,7 @@ type User {
   lastName: String!
   linkGroups: [LinkGroup!]!
   links: [Link!]!
-  meets: [Meet!]!
+  meets: [Event!]!
   meetsShared: [MeetSharedWithMember!]!
   notebooks: [Notebook!]!
   notes: [Note!]!

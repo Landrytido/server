@@ -35,8 +35,8 @@ model User {
   collaborations      NoteCollaboration[]
   invitationsSent     Invitation[]           @relation("InvitationsSent")
   invitationsReceived Invitation[]           @relation("InvitationsReceived")
-  meets               Meet[]
-  meetsShared         MeetSharedWithMember[]
+  events               Event[]
+  eventsShared         EventSharedWithMember[]
   resetTokens         ResetToken[]
 }
 
@@ -130,20 +130,20 @@ model Invitation {
   sender     User @relation("InvitationsSent", fields: [senderId], references: [id])
 }
 
-model Meet {
-  id          Int                    @id @default(autoincrement())
+model Event {
+  id          Int                       @id @default(autoincrement())
   title       String
   description String
   startDate   DateTime
   endDate     DateTime
-  isRecurring Boolean                @default(false)
-  recurrence  Recurrence             @default(NONE)
+  isRecurring Boolean?                  @default(false)
+  recurrence  Recurrence?               @default(NONE)
   location    String
-  createdAt   DateTime               @default(now())
-  updatedAt   DateTime               @updatedAt
+  createdAt   DateTime                  @default(now())
+  updatedAt   DateTime                  @updatedAt
   userId      Int
-  user        User                   @relation(fields: [userId], references: [id])
-  sharedWith  MeetSharedWithMember[]
+  user        User                      @relation(fields: [userId], references: [id])
+  sharedWith  EventSharedWithMember[]
 }
 
 enum Recurrence {
@@ -154,13 +154,13 @@ enum Recurrence {
   ANNUAL
 }
 
-model MeetSharedWithMember {
-  meetId Int
+model EventSharedWithMember {
+  eventId Int
   userId Int
-  meet   Meet @relation(fields: [meetId], references: [id])
+  event   Event @relation(fields: [eventId], references: [id])
   user   User @relation(fields: [userId], references: [id])
 
-  @@id([meetId, userId])
+  @@id([eventId, userId])
 }
 
 model Comment {

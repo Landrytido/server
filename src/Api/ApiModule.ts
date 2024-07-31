@@ -9,15 +9,12 @@ import {Repositories} from "./Repository/Repositories";
 import {Resolvers} from "./Resolver/Resolvers";
 import UseCaseFactory from "./UseCase/UseCaseFactory";
 import UncontextualUseCaseFactory from "./UseCase/UncontextualUseCaseFactory";
-import MeetResolver from './Resolver/MeetResolver';
-import CreateMeetUseCase from './UseCase/Meet/CreateMeetUseCase';
-import MeetRepository from './Repository/MeetRepository';
-import UpdateMeetUseCase from './UseCase/Meet/UpdateMeetUseCase';
-import GetMeetUseCase from './UseCase/Meet/GetMeetUseCase';
-import DeleteMeetUseCase from './UseCase/Meet/DeleteMeetUseCase';
-import GetAllMeetUseCase from './UseCase/Meet/GetAllMeetUseCase';
-
-
+import EventResolver from './Resolver/EventResolver';
+import EventRepository from './Repository/EventRepository';
+import GetEventUseCase from './UseCase/Event/GetEventUseCase';
+import DeleteEventUseCase from './UseCase/Event/DeleteEventUseCase';
+import GetAllEventUseCase from './UseCase/Event/GetAllEventUseCase';
+import SaveEventUseCase from './UseCase/Event/SaveEventUseCase';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -40,13 +37,12 @@ import GetAllMeetUseCase from './UseCase/Meet/GetAllMeetUseCase';
   providers: [
     UseCaseFactory,
     UncontextualUseCaseFactory,
-    MeetResolver,
-    UpdateMeetUseCase,
-    CreateMeetUseCase,
-    MeetRepository,
-    GetMeetUseCase,
-    GetAllMeetUseCase,
-    DeleteMeetUseCase,
+    EventResolver,
+    SaveEventUseCase,
+    EventRepository,
+    GetEventUseCase,
+    GetAllEventUseCase,
+    DeleteEventUseCase,
     ...Repositories,
     ...Resolvers
   ]

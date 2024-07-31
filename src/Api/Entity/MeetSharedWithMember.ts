@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import User from './User';
-import { Meet } from './Meet';
+import { Event } from './Event';
 
 @ObjectType()
 export class MeetSharedWithMember {
@@ -10,8 +10,8 @@ export class MeetSharedWithMember {
     @Field(() => Int)
     userId: number;
 
-    @Field(() => Meet)
-    meet: Meet;
+    @Field(() => Event)
+    meet: Event;
 
     @Field(() => User)
     user: User;
