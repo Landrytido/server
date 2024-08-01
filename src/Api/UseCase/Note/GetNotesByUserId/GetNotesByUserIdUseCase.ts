@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
+import { Note } from "@prisma/client";
 import { ContextualGraphqlRequest, UseCase } from "src";
-import Note from "src/Api/Entity/Note";
 import NoteRepository from "src/Api/Repository/NoteRepository";
 
 @Injectable()

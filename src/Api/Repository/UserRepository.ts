@@ -1,18 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../Core/Datasource/Prisma";
-import { Prisma, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export default class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findById(id: number): Promise<User> {
+  async findById(id: number) {
     return this.prisma.user.findUnique({
       where: { id },
     });
   }
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: { email },
     });
@@ -22,7 +22,7 @@ export default class UserRepository {
     data:
       | Prisma.XOR<Prisma.UserCreateInput, Prisma.UserUncheckedCreateInput>
       | Prisma.XOR<Prisma.UserUpdateInput, Prisma.UserUncheckedUpdateInput>
-  ): Promise<User> {
+  ) {
     if (!data.id) {
       return this.prisma.user.create({
         data: data as Prisma.XOR<

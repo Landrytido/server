@@ -1,18 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/Core/Datasource/Prisma";
-import { Note, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export default class NoteRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findById(noteId: number): Promise<Note> {
+  async findById(noteId: number) {
     return await this.prisma.note.findUnique({
       where: { id: noteId },
     });
   }
 
-  async findByUserId(userId: number): Promise<Note[]> {
+  async findByUserId(userId: number) {
     return await this.prisma.note.findMany({
       where: { userId },
       include: {
@@ -21,7 +21,7 @@ export default class NoteRepository {
     });
   }
 
-  async findMany(): Promise<Note[]> {
+  async findMany() {
     return await this.prisma.note.findMany();
   }
 
@@ -30,7 +30,7 @@ export default class NoteRepository {
     data:
       | Prisma.XOR<Prisma.NoteCreateInput, Prisma.NoteUncheckedCreateInput>
       | Prisma.XOR<Prisma.NoteUpdateInput, Prisma.NoteUncheckedUpdateInput>
-  ): Promise<Note> {
+  ) {
     if (!data.id) {
       return await this.prisma.note.create({
         data: {
@@ -54,7 +54,7 @@ export default class NoteRepository {
     });
   }
 
-  async remove(noteId: number, userId: number): Promise<Note> {
+  async remove(noteId: number, userId: number) {
     return this.prisma.note.delete({ where: { id: noteId } });
   }
 }

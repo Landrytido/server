@@ -28,7 +28,7 @@ export default class UpdateNotebookUseCase
 
       if (notebook.userId !== context.userId)
         throw new InsufficientPermissionException(
-          "This notebook does not belong to you, you cannot update it"
+          "You don't have permission to perform this action"
         );
 
       return this.notebookRepository.save(context.userId, {
