@@ -27,7 +27,7 @@ export default class DeleteNotebookUseCase
           "You don't have permission to delete this notebook"
         );
 
-      return await this.notebookRepository.remove(notebookId, context.userId);
+      return await this.notebookRepository.remove(notebookId);
     } catch (error) {
       throw new BadRequestException(
         "DeleteNotebookUseCaseFailed",

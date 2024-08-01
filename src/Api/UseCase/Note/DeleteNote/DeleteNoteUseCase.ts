@@ -27,7 +27,7 @@ export default class DeleteNoteUseCase
           "You don't have permission to delete this note"
         );
 
-      return await this.noteRepository.remove(noteId, context.userId);
+      return await this.noteRepository.remove(noteId);
     } catch (error) {
       throw new BadRequestException("DeleteNoteUseCaseFailed", error.message);
     }

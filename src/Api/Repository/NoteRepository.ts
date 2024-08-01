@@ -26,19 +26,16 @@ export default class NoteRepository {
   }
 
   async save(
-    userId: number,
     data:
       | Prisma.XOR<Prisma.NoteCreateInput, Prisma.NoteUncheckedCreateInput>
       | Prisma.XOR<Prisma.NoteUpdateInput, Prisma.NoteUncheckedUpdateInput>
   ) {
     if (!data.id) {
       return await this.prisma.note.create({
-        data: {
-          title: data.title as string,
-          content: data.content as string,
-          notebookId: data.notebookId as number,
-          userId: userId,
-        },
+        data: data as Prisma.XOR<
+          Prisma.NoteCreateInput,
+          Prisma.NoteUncheckedCreateInput
+        >,
       });
     }
 
@@ -46,15 +43,14 @@ export default class NoteRepository {
       where: {
         id: data.id as number,
       },
-      data: {
-        title: data.title as string,
-        content: data.content as string,
-        notebookId: data.notebookId as number,
-      },
+      data: data as Prisma.XOR<
+        Prisma.NoteUpdateInput,
+        Prisma.NoteUncheckedUpdateInput
+      >,
     });
   }
 
-  async remove(noteId: number, userId: number) {
+  async remove(noteId: number) {
     return this.prisma.note.delete({ where: { id: noteId } });
   }
 }

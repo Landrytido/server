@@ -27,12 +27,13 @@ export default class UpdateNoteUseCase
 
       if (note.userId !== context.userId)
         throw new InsufficientPermissionException(
-          "This note does not belong to you, you cannot update it"
+          "You don't have permission to perform this action"
         );
 
-      return this.noteRepository.save(context.userId, {
-        id: noteId,
+      return this.noteRepository.save({
         ...dto,
+        id: noteId,
+        userId: context.userId,
       });
     } catch (error) {
       throw new BadRequestException("UpdateNoteUseCaseFailed", error.message);

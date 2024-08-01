@@ -6,28 +6,27 @@ import { Notebook, Prisma } from "@prisma/client";
 export default class NotebookRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findById(notebookId: number): Promise<Notebook> {
+  async findById(notebookId: number) {
     return await this.prisma.notebook.findUnique({
       where: { id: notebookId },
       include: { user: true },
     });
   }
 
-  async findByUserId(userId: number): Promise<Notebook[]> {
+  async findByUserId(userId: number) {
     return await this.prisma.notebook.findMany({
       where: { userId },
       include: { user: true },
     });
   }
 
-  async findMany(): Promise<Notebook[]> {
+  async findMany() {
     return await this.prisma.notebook.findMany({
       include: { user: true },
     });
   }
 
   async save(
-    userId: number,
     data:
       | Prisma.XOR<
           Prisma.NotebookCreateInput,
@@ -37,13 +36,13 @@ export default class NotebookRepository {
           Prisma.NotebookUpdateInput,
           Prisma.NotebookUncheckedUpdateInput
         >
-  ): Promise<Notebook> {
+  ) {
     if (!data.id) {
       return await this.prisma.notebook.create({
-        data: {
-          title: data.title as string,
-          userId: userId,
-        },
+        data: data as Prisma.XOR<
+          Prisma.NotebookCreateInput,
+          Prisma.NotebookUncheckedCreateInput
+        >,
       });
     }
 
@@ -51,13 +50,14 @@ export default class NotebookRepository {
       where: {
         id: data.id as number,
       },
-      data: {
-        title: data.title as string,
-      },
+      data: data as Prisma.XOR<
+        Prisma.NotebookUpdateInput,
+        Prisma.NotebookUncheckedUpdateInput
+      >,
     });
   }
 
-  async remove(notebookId: number, userId: number): Promise<Notebook> {
+  async remove(notebookId: number) {
     return this.prisma.notebook.delete({ where: { id: +notebookId } });
   }
 }

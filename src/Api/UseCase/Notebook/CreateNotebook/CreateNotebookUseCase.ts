@@ -14,7 +14,10 @@ export default class CreateNotebookUseCase
     dto: SaveNotebookDto
   ): Promise<Notebook> {
     try {
-      return await this.notebookRepository.save(context.userId, dto);
+      return await this.notebookRepository.save({
+        ...dto,
+        userId: context.userId,
+      });
     } catch (error) {
       throw new BadRequestException(
         "CreateNotebookUseCaseFailed",

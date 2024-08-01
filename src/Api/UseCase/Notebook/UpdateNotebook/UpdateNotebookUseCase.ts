@@ -31,9 +31,10 @@ export default class UpdateNotebookUseCase
           "You don't have permission to perform this action"
         );
 
-      return this.notebookRepository.save(context.userId, {
-        id: notebookId,
+      return this.notebookRepository.save({
         ...dto,
+        id: notebookId,
+        userId: context.userId,
       });
     } catch (error) {
       throw new BadRequestException(

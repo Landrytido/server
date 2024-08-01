@@ -14,7 +14,10 @@ export default class CreateNoteUseCase
     dto: SaveNoteDto
   ): Promise<Note> {
     try {
-      return await this.noteRepository.save(context.userId, dto);
+      return await this.noteRepository.save({
+        ...dto,
+        userId: context.userId,
+      });
     } catch (error) {
       throw new BadRequestException("CreateNoteUseCaseFailed", error.message);
     }
