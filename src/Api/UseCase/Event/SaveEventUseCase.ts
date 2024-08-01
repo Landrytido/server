@@ -11,9 +11,8 @@ export default class SaveEventUseCase implements UseCase<Promise<Event>, [dto : 
 
     async handle(context : ContextualGraphqlRequest, dto: SaveEventDto): Promise<Event> {
         try {
-            if (dto.id && context.userId !== dto.id) {
-                throw new ForbiddenException("Not authorized");
-                
+            if (dto.id && context.userId !== dto.userId) {
+                throw new ForbiddenException("Not authorized"); 
                 }
             return this.eventRepository.saveEvent(dto)
         } catch (error) {
