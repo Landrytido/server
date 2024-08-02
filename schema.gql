@@ -20,7 +20,6 @@ type Comment {
 input CreateLinkGroupDto {
   description: String
   name: String!
-  userId: Int!
 }
 
 """
@@ -83,7 +82,7 @@ type Mutation {
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
   register(dto: SaveUserDto!): User!
   saveUser(dto: SaveUserDto!): User!
-  updateLinkGroup(dto: UpdateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
+  updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
 }
 
 type Note {
@@ -117,7 +116,6 @@ type Notebook {
   userId: Int!
 }
 
-"""The permission levels for note collaboration"""
 enum PermissionLevel {
   ADMIN
   READ
@@ -134,7 +132,6 @@ type Query {
   validateToken(dto: TokenValidationDto!): Boolean!
 }
 
-"""The recurrence pattern for events"""
 enum Recurrence {
   ANNUAL
   DAILY
@@ -186,12 +183,6 @@ type Task {
 
 input TokenValidationDto {
   token: String!
-}
-
-input UpdateLinkGroupDto {
-  description: String
-  name: String!
-  userId: Int!
 }
 
 type User {

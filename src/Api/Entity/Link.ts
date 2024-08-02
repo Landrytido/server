@@ -11,7 +11,7 @@ export class Link {
     url: string;
 
     @Field()
-    description: string;
+    description?: string;
 
     @Field(() => Int)
     linkGroupId: number;

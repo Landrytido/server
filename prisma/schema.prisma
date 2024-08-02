@@ -96,7 +96,7 @@ enum PermissionLevel {
 model Link {
   id          Int       @id @default(autoincrement())
   url         String
-  description String
+  description String?
   linkGroupId Int
   userId      Int
   linkGroup   LinkGroup @relation(fields: [linkGroupId], references: [id])
@@ -106,7 +106,7 @@ model Link {
 model LinkGroup {
   id          Int    @id @default(autoincrement())
   name        String
-  description String
+  description String?
   userId      Int
   user        User   @relation(fields: [userId], references: [id])
   links       Link[]

@@ -5,5 +5,4 @@ import GetLinkGroupByIdUseCase from "./GetLinkGroupById/GetLinkGroupByIdUseCase"
 import DeleteLinkGroupUseCase from "./DeleteLinkGroup/DeleteLinkGroupUseCase";
 import GetLinkGroupsByUserIdUseCase from "./GetLinkGroupByUserId/GetLinkGroupByUserIdUseCase";
 
-
 export type AvailableLinkGroupUseCases = CreateLinkGroupUseCase | GetAllLinkGroupsUseCase | UpdateLinkGroupUseCase | GetLinkGroupByIdUseCase | DeleteLinkGroupUseCase | GetLinkGroupsByUserIdUseCase;
