@@ -11,7 +11,7 @@ export class UpdateLinkUseCase {
 
     async handle(context:ContextualGraphqlRequest, id: number, dto: UpdateLinkDto): Promise<Link> {
         try {
-            return await this.linkRepository.update(context.userId, id, dto);
+            return await this.linkRepository.update(id, context.userId, dto);
         } catch (error) {
             throw new BadRequestException('Failed to update link', error.message);
         }

@@ -7,9 +7,9 @@ import {ContextualGraphqlRequest} from "../../../../index";
 export class GetLinksByUserIdUseCase {
     constructor(private readonly linkRepository: LinkRepository) {}
 
-    async handle(context:ContextualGraphqlRequest, userId: number): Promise<Link[]> {
+    async handle(context: ContextualGraphqlRequest): Promise<Link[]> {
         try {
-            return await this.linkRepository.findByUserId(userId);
+            return await this.linkRepository.findByUserId(context.userId);
         } catch (error) {
             throw new BadRequestException('Failed to find links by user ID', error.message);
         }

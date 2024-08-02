@@ -21,16 +21,8 @@ export class LinkGroupRepository {
     async findByUserId(userId: number): Promise<LinkGroup[]> {
         return this.prisma.linkGroup.findMany({
             where: {userId},
-            include: {
-                links: {
-                    include: {
-                        linkGroup: true,
-                        user: true
-                    }
-                },
-                user: true,
-            }
-        }) as unknown as LinkGroup[];
+            include: {user: true},
+        });
     }
 
     async findAll():Promise<LinkGroup[]> {
@@ -67,6 +59,7 @@ export class LinkGroupRepository {
         if (linkGroup.userId !== userId) {
             throw new ForbiddenException('You do not have permission to update this link group');
         }
+        console.log('Updating LinkGroup with data:', dto);
         const data: Prisma.LinkGroupUpdateInput = {
             name: dto.name,
             description: dto.description ?? null,

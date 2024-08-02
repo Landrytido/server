@@ -1,5 +1,4 @@
-// @ts-ignore
-import {Args, Context, Int, Mutation, Query, Resolver} from "@nestjs/graphql";
+import {Args, Int, Mutation, Query, Resolver} from "@nestjs/graphql";
 import {LinkGroup} from "../Entity/LinkGroup";
 import {UseGuards} from "@nestjs/common";
 import GraphqlAuthGuard from "../../Core/Security/Guard/GraphqlAuthGuard";
@@ -51,6 +50,8 @@ export class LinkGroupResolver {
         @Args('linkGroupId',{ type:() => Int }) linkGroupId: number,
         @Args('dto') dto: UpdateLinkGroupDto,
     ): Promise<LinkGroup> {
+        console.log('Received linkGroupId:', linkGroupId);
+        console.log('Received dto:', dto);
         return (await this.serviceFactory.create(UpdateLinkGroupUseCase)).handle(context, linkGroupId, dto)
     }
 
@@ -74,7 +75,6 @@ export class LinkGroupResolver {
     @Query(() => [LinkGroup])
     async findLinkGroupsByUserId(
         @ContextualRequest() context: ContextualGraphqlRequest,
-        @Args('userId', { type: () => Int }) userId: number,
     ): Promise<LinkGroup[]> {
         const useCase = await this.serviceFactory.create(GetLinkGroupsByUserIdUseCase);
         const groups = await useCase.handle(context);

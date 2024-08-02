@@ -55,7 +55,7 @@ export class LinkRepository {
         });
     }
 
-    async update(id: number, userId:number, updateLinkDto: UpdateLinkDto): Promise<Link> {
+    async update(id: number, userId:number, dto: UpdateLinkDto): Promise<Link> {
         const link = await this.prisma.link.findUnique({
             where: { id },
         });
@@ -65,10 +65,11 @@ export class LinkRepository {
         if (link.userId !== userId) {
             throw new ForbiddenException('You do not have permission to update this link group');
         }
-
+        console.log('Updating LinkGroup with data:', dto);
         const data: Prisma.LinkUpdateInput = {
-            name: updateLinkDto.name,
-            description: updateLinkDto.description ?? null,
+            name: dto.name,
+            description: dto.description ?? null,
+            url: dto.url ?? null,
         }
 
 

@@ -41,9 +41,8 @@ export class LinkResolver {
     @Query(() => [Link])
     async findLinksByUserId(
         @ContextualRequest() context: ContextualGraphqlRequest,
-        @Args('userId', { type: () => Int }) userId: number,
     ): Promise<Link[]> {
-        return (await this.serviceFactory.create(GetLinksByUserIdUseCase)).handle(context,userId);
+        return (await this.serviceFactory.create(GetLinksByUserIdUseCase)).handle(context);
     }
 
     @Query(() => [Link])
@@ -60,6 +59,8 @@ export class LinkResolver {
         @Args('id', { type: () => Int }) id: number,
         @Args('dto') dto: UpdateLinkDto,
     ): Promise<Link> {
+        console.log('Received id:', id);
+        console.log('Received dto:', dto);
         return (await this.serviceFactory.create(UpdateLinkUseCase)).handle(context, id, dto);
     }
 

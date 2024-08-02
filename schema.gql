@@ -139,9 +139,9 @@ enum PermissionLevel {
 type Query {
   findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
-  findLinkGroupsByUserId(userId: Int!): [LinkGroup!]!
+  findLinkGroupsByUserId: [LinkGroup!]!
   findLinksByLinkGroupId(linkGroupId: Int!): [Link!]!
-  findLinksByUserId(userId: Int!): [Link!]!
+  findLinksByUserId: [Link!]!
   getAllLinkGroups: [LinkGroup!]!
   getLoggedUser: User!
   login(dto: AuthenticationDto!): String!
