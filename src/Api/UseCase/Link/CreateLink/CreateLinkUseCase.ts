@@ -8,7 +8,7 @@ import { ContextualGraphqlRequest, UseCase } from "../../../../index";
 export default class CreateLinkUseCase implements UseCase<Promise<Link>, [dto: CreateLinkDto]> {
     constructor(private readonly linkRepository: LinkRepository) {}
 
-    async handle( context: ContextualGraphqlRequest, dto: CreateLinkDto): Promise<Link> {
+    async handle(context: ContextualGraphqlRequest, dto: CreateLinkDto): Promise<Link> {
         try {
             return await this.linkRepository.save(context.userId, dto);
         } catch (error) {

@@ -9,7 +9,15 @@ export default class LinkGroupRepository {
     async findById(id: number) {
         return this.prisma.linkGroup.findUnique({
             where: { id },
-            include: { user: true },
+            include: {
+                user: true,
+                links:{
+                    include:{
+                        linkGroup: true,
+                        user: true,
+                    }
+                }
+            },
         });
     }
 
@@ -30,7 +38,15 @@ export default class LinkGroupRepository {
 
     async findAll(): Promise<LinkGroup[]> {
         return this.prisma.linkGroup.findMany({
-            include: { user: true },
+            include: {
+                user: true,
+                links: {
+                    include:{
+                        linkGroup: true,
+                        user: true
+                    }
+                }
+            },
         });
     }
 
@@ -80,6 +96,6 @@ export default class LinkGroupRepository {
     }
 
     async delete(linkGroupId: number, userId: number):Promise<LinkGroup> {
-        return this.prisma.linkGroup.delete({ where: { id: +linkGroupId } });
+        return this.prisma.linkGroup.delete({ where: { id: linkGroupId } });
     }
 }

@@ -9,9 +9,12 @@ export class CreateLinkDto {
     @Field()
     url: string;
 
-    @Field()
+    @Field({ nullable: true })
     description?: string;
 
     @Field(() => Int)
     linkGroupId: number;
+
+    @Field(() => Int, { nullable: true })
+    userId?: number;
 }

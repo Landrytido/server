@@ -1,14 +1,22 @@
-import {ContextualGraphqlRequest} from "../../../../index";
-import {LinkRepository} from "../../../Repository/LinkRepository";
-import {Link} from "@prisma/client";
-import {BadRequestException, Injectable} from "@nestjs/common";
+import { ContextualGraphqlRequest, UseCase } from "../../../../index";
+import { LinkRepository } from "../../../Repository/LinkRepository";
+import { Link } from "@prisma/client";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import InsufficientPermissionException from "../../../../Core/Exception/InsufficientPermissionException";
 
 @Injectable()
-export class DeleteLinkUseCase {
+export default class DeleteLinkUseCase implements UseCase<Promise<Link>, [id:number]> {
     constructor(private readonly linkRepository: LinkRepository) {}
 
     async handle(context: ContextualGraphqlRequest, id: number): Promise<Link> {
         try {
+            const link = await this.linkRepository.findById(id);
+
+            if (!link) throw new NotFoundException('Failed to find link with id ' + id);
+
+            if (link.userId !== context.userId)
+                throw new InsufficientPermissionException(`Access denied: User with ID ${context.userId} cannot modify link owned by user with ID ${link.userId}.`);
+
             return await this.linkRepository.delete(id, context.userId);
         } catch (error) {
             throw new BadRequestException('Failed to delete link', error.message);

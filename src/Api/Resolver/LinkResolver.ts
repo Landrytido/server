@@ -7,15 +7,14 @@ import { ContextualRequest } from "../../Core/Decorator/ContextualRequest";
 import { ContextualGraphqlRequest } from "../../index";
 import { CreateLinkDto } from "../UseCase/Link/CreateLink/CreateLinkDto";
 import CreateLinkUseCase from "../UseCase/Link/CreateLink/CreateLinkUseCase";
-import { GetLinkByIdUseCase } from "../UseCase/Link/GetLinkById/GetLinkByIdUseCase";
-import { GetLinksByUserIdUseCase } from "../UseCase/Link/GetLinksByUserId/GetLinksByUserIdUseCase";
-import { UpdateLinkUseCase } from "../UseCase/Link/UpdateLink/UpdateLinkUseCase";
+import GetLinkByIdUseCase from "../UseCase/Link/GetLinkById/GetLinkByIdUseCase";
+import GetLinksByUserIdUseCase from "../UseCase/Link/GetLinksByUserId/GetLinksByUserIdUseCase";
+import UpdateLinkUseCase from "../UseCase/Link/UpdateLink/UpdateLinkUseCase";
 import { UpdateLinkDto } from "../UseCase/Link/UpdateLink/UpdateLinkDto";
-import { DeleteLinkUseCase } from "../UseCase/Link/DeleteLink/DeleteLinkUseCase";
-import { GetLinksByLinkGroupIdUseCase } from "../UseCase/Link/GetLinksByLinkGroupId/GetLinksByLinkGroupIdUseCase";
+import DeleteLinkUseCase from "../UseCase/Link/DeleteLink/DeleteLinkUseCase";
+import GetLinksByLinkGroupIdUseCase from "../UseCase/Link/GetLinksByLinkGroupId/GetLinksByLinkGroupIdUseCase";
 
-
-@Resolver(() => Link)
+@Resolver(Link)
 export default class LinkResolver {
     constructor(private readonly serviceFactory: UseCaseFactory) {}
 
@@ -28,6 +27,7 @@ export default class LinkResolver {
         return (await this.serviceFactory.create(CreateLinkUseCase)).handle(context, dto);
     }
 
+    @UseGuards(GraphqlAuthGuard)
     @Query(() => Link)
     async findLinkById(
         @ContextualRequest() context: ContextualGraphqlRequest,
@@ -36,6 +36,7 @@ export default class LinkResolver {
         return (await this.serviceFactory.create(GetLinkByIdUseCase)).handle(context, id);
     }
 
+    @UseGuards(GraphqlAuthGuard)
     @Query(() => [Link])
     async findLinksByUserId(
         @ContextualRequest() context: ContextualGraphqlRequest,
@@ -43,6 +44,7 @@ export default class LinkResolver {
         return (await this.serviceFactory.create(GetLinksByUserIdUseCase)).handle(context);
     }
 
+    @UseGuards(GraphqlAuthGuard)
     @Query(() => [Link])
     async findLinksByLinkGroupId(
         @ContextualRequest() context: ContextualGraphqlRequest,
@@ -51,6 +53,7 @@ export default class LinkResolver {
         return (await this.serviceFactory.create(GetLinksByLinkGroupIdUseCase)).handle(context, linkGroupId);
     }
 
+    @UseGuards(GraphqlAuthGuard)
     @Mutation(() => Link)
     async updateLink(
         @ContextualRequest() context: ContextualGraphqlRequest,
@@ -60,6 +63,7 @@ export default class LinkResolver {
         return (await this.serviceFactory.create(UpdateLinkUseCase)).handle(context, id, dto);
     }
 
+    @UseGuards(GraphqlAuthGuard)
     @Mutation(() => Link)
     async deleteLink(
         @ContextualRequest() context: ContextualGraphqlRequest,

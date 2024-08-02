@@ -18,7 +18,7 @@ type Comment {
 }
 
 input CreateLinkDto {
-  description: String!
+  description: String
   linkGroupId: Int!
   name: String!
   url: String!
@@ -28,7 +28,6 @@ input CreateLinkDto {
 input CreateLinkGroupDto {
   description: String
   name: String!
-  userId: Int!
 }
 
 """
@@ -37,7 +36,7 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Invitation {
-  idPrimary: Int!
+  id: Int!
   receiver: User!
   receiverId: Int!
   sender: User!
@@ -45,21 +44,22 @@ type Invitation {
 }
 
 type Link {
-  description: String!
+  description: String
   id: Int!
-  linkGroup: LinkGroup!
+  linkGroup: LinkGroup
   linkGroupId: Int!
+  name: String!
   url: String!
-  user: User!
+  user: User
   userId: Int!
 }
 
 type LinkGroup {
-  description: String!
+  description: String
   id: Int!
-  links: [Link!]!
+  links: [Link]!
   name: String!
-  user: User!
+  user: User
   userId: Int!
 }
 
@@ -87,14 +87,14 @@ type MeetSharedWithMember {
 }
 
 type Mutation {
-  createLink(dto: CreateLinkDto!): Link!
+  create(dto: CreateLinkDto!): Link!
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
   deleteLink(id: Int!): Link!
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
   register(dto: SaveUserDto!): User!
   saveUser(dto: SaveUserDto!): User!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
-  updateLinkGroup(dto: UpdateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
+  updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
 }
 
 type Note {
@@ -128,7 +128,6 @@ type Notebook {
   userId: Int!
 }
 
-"""The permission levels for note collaboration"""
 enum PermissionLevel {
   ADMIN
   READ
@@ -148,7 +147,6 @@ type Query {
   validateToken(dto: TokenValidationDto!): Boolean!
 }
 
-"""The recurrence pattern for events"""
 enum Recurrence {
   ANNUAL
   DAILY
@@ -206,13 +204,6 @@ input UpdateLinkDto {
   description: String
   name: String!
   url: String
-  userId: Int
-}
-
-input UpdateLinkGroupDto {
-  description: String
-  name: String!
-  userId: Int
 }
 
 type User {

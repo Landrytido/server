@@ -10,15 +10,15 @@ export class LinkGroup {
     @Field()
     name: string;
 
-    @Field()
+    @Field({ nullable: true })
     description?: string;
 
     @Field(() => Int)
     userId: number;
 
-    @Field(() => User)
+    @Field(() => User, { nullable: true })
     user?: User;
 
-    @Field(() => [Link])
+    @Field(() => [Link], { nullable: 'items' })
     links?: Link[];
 }

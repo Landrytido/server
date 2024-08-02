@@ -13,7 +13,7 @@ export class Link {
     @Field()
     url: string;
 
-    @Field()
+    @Field({ nullable: true })
     description?: string;
 
     @Field(() => Int)
