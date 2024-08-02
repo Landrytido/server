@@ -31,7 +31,7 @@ export default class UserResolver {
 
   @UseGuards(GraphqlAuthGuard)
   @Mutation(() => User)
-  async saveUser(@ContextualRequest() context: ContextualGraphqlRequest, @Args('dto') dto: SaveUserDto): Promise<Partial<User>> {
+  async saveUser(@ContextualRequest() context: ContextualGraphqlRequest, @Args('dto') dto: SaveUserDto): Promise<User> {
     return (await this.serviceFactory.create(SaveUserUseCase)).handle(context, dto);
   }
 }

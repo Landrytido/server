@@ -14,8 +14,8 @@ export class Notebook {
     userId: number;
 
     @Field(() => User)
-    user: User;
+    user?: User;
 
     @Field(() => [Note])
-    notes: Note[];
+    notes?: Note[];
 }

@@ -1,96 +1,73 @@
-import {Args, Int, Mutation, Query, Resolver} from "@nestjs/graphql";
-import {LinkGroup} from "../Entity/LinkGroup";
-import {UseGuards} from "@nestjs/common";
+import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { LinkGroup } from "../Entity/LinkGroup";
+import { UseGuards } from "@nestjs/common";
 import GraphqlAuthGuard from "../../Core/Security/Guard/GraphqlAuthGuard";
 import UseCaseFactory from "../UseCase/UseCaseFactory";
-import {ContextualRequest} from "../../Core/Decorator/ContextualRequest";
-import {CreateLinkGroupDto} from "../UseCase/LinkGroup/CreateLinkGroup/CreateLinkGroupDto";
-import {CreateLinkGroupUseCase} from "../UseCase/LinkGroup/CreateLinkGroup/CreateLinkGroupUseCase";
-import {ContextualGraphqlRequest} from "../../index";
-import {
-    GetAllLinkGroupsUseCase
-} from "../UseCase/LinkGroup/GetAllLinkGroups/GetAllLinkGroupsUseCase";
-import {UpdateLinkGroupDto} from "../UseCase/LinkGroup/UpdateLinkGroup/UpdateLinkGroupDto";
-import {UpdateLinkGroupUseCase} from "../UseCase/LinkGroup/UpdateLinkGroup/UpdateLinkGroupUseCase";
-import {GetLinkGroupByIdUseCase} from "../UseCase/LinkGroup/GetLinkGroupById/GetLinkGroupByIdUseCase";
-import {DeleteLinkGroupUseCase} from "../UseCase/LinkGroup/DeleteLinkGroup/DeleteLinkGroupUseCase";
-import {GetLinkGroupsByUserIdUseCase} from "../UseCase/LinkGroup/GetLinkGroupByUserId/GetLinkGroupByUserIdUseCase";
-
+import { ContextualRequest } from "../../Core/Decorator/ContextualRequest";
+import CreateLinkGroupUseCase from "../UseCase/LinkGroup/CreateLinkGroup/CreateLinkGroupUseCase";
+import { ContextualGraphqlRequest } from "../../index";
+import GetAllLinkGroupsUseCase from "../UseCase/LinkGroup/GetAllLinkGroups/GetAllLinkGroupsUseCase";
+import UpdateLinkGroupUseCase from "../UseCase/LinkGroup/UpdateLinkGroup/UpdateLinkGroupUseCase";
+import GetLinkGroupByIdUseCase from "../UseCase/LinkGroup/GetLinkGroupById/GetLinkGroupByIdUseCase";
+import DeleteLinkGroupUseCase from "../UseCase/LinkGroup/DeleteLinkGroup/DeleteLinkGroupUseCase";
+import GetLinkGroupsByUserIdUseCase from "../UseCase/LinkGroup/GetLinkGroupByUserId/GetLinkGroupByUserIdUseCase";
+import CreateLinkGroupDto from "../UseCase/LinkGroup/CreateLinkGroup/CreateLinkGroupDto";
 
 @Resolver(LinkGroup)
-@UseGuards(GraphqlAuthGuard)
-export class LinkGroupResolver {
+export default class LinkGroupResolver {
     constructor(private readonly serviceFactory: UseCaseFactory) {}
 
-
+    @UseGuards(GraphqlAuthGuard)
     @Mutation(() => LinkGroup)
     async createLinkGroup(
         @ContextualRequest() context: ContextualGraphqlRequest,
         @Args('dto') dto: CreateLinkGroupDto
     ): Promise<LinkGroup> {
-        return (await this.serviceFactory.create(CreateLinkGroupUseCase)).handle(context, dto)
+        return (await this.serviceFactory.create(CreateLinkGroupUseCase)).handle(context, dto);
     }
 
-    @Query(() => [LinkGroup])
-    async getAllLinkGroups(
-        @ContextualRequest() context: ContextualGraphqlRequest,
-    ): Promise<LinkGroup[]>{
-        const useCase = await this.serviceFactory.create(GetAllLinkGroupsUseCase);
-        const groups = await useCase.handle(context);
-
-        return groups.map(group => ({
-            ...group,
-            links: group.links || [],
-        }));
-    }
-
+    @UseGuards(GraphqlAuthGuard)
     @Mutation(() => LinkGroup)
     async updateLinkGroup(
         @ContextualRequest() context: ContextualGraphqlRequest,
-        @Args('linkGroupId',{ type:() => Int }) linkGroupId: number,
-        @Args('dto') dto: UpdateLinkGroupDto,
+        @Args('linkGroupId', { type:() => Int }) linkGroupId: number,
+        @Args('dto') dto: CreateLinkGroupDto,
     ): Promise<LinkGroup> {
-        console.log('Received linkGroupId:', linkGroupId);
-        console.log('Received dto:', dto);
-        return (await this.serviceFactory.create(UpdateLinkGroupUseCase)).handle(context, linkGroupId, dto)
+        return (await this.serviceFactory.create(UpdateLinkGroupUseCase)).handle(context, linkGroupId, dto);
     }
 
-    @Query(() => LinkGroup)
-    async findLinkGroupById(
-        @ContextualRequest() context: ContextualGraphqlRequest,
-        @Args('linkGroupId', { type: () => Int }) linkGroupId: number,
-    ): Promise<LinkGroup> {
-        const group = await (await this.serviceFactory.create(GetLinkGroupByIdUseCase)).handle(context, linkGroupId);
-
-        if (!group) {
-            throw new Error('LinkGroup not found');
-        }
-
-        return {
-            ...group,
-            links: group.links || [],
-        };
-    }
-
-    @Query(() => [LinkGroup])
-    async findLinkGroupsByUserId(
-        @ContextualRequest() context: ContextualGraphqlRequest,
-    ): Promise<LinkGroup[]> {
-        const useCase = await this.serviceFactory.create(GetLinkGroupsByUserIdUseCase);
-        const groups = await useCase.handle(context);
-
-        return groups.map(group => ({
-            ...group,
-            links: group.links || [],
-        }));
-    }
-
+    @UseGuards(GraphqlAuthGuard)
     @Mutation(() => LinkGroup)
     async deleteLinkGroup(
         @ContextualRequest() context: ContextualGraphqlRequest,
         @Args('linkGroupId', { type: () => Int }) linkGroupId: number,
     ): Promise<LinkGroup> {
         return (await this.serviceFactory.create(DeleteLinkGroupUseCase)).handle(context, linkGroupId);
+    }
+
+    @UseGuards(GraphqlAuthGuard)
+    @Query(() => [LinkGroup])
+    async getAllLinkGroups(
+        @ContextualRequest() context: ContextualGraphqlRequest,
+    ): Promise<LinkGroup[]>{
+        return (await this.serviceFactory.create(GetAllLinkGroupsUseCase)).handle(context);
+    }
+
+    @UseGuards(GraphqlAuthGuard)
+    @Query(() => LinkGroup)
+    async findLinkGroupById(
+        @ContextualRequest() context: ContextualGraphqlRequest,
+        @Args('linkGroupId', { type: () => Int }) linkGroupId: number,
+    ): Promise<LinkGroup> {
+        return (await this.serviceFactory.create(GetLinkGroupByIdUseCase)).handle(context, linkGroupId);
+    }
+
+    @UseGuards(GraphqlAuthGuard)
+    @Query(() => [LinkGroup])
+    async findLinkGroupsByUserId(
+        @ContextualRequest() context: ContextualGraphqlRequest,
+    ): Promise<LinkGroup[]> {
+        return (await this.serviceFactory.create(GetLinkGroupsByUserIdUseCase)).handle(context);
     }
 }
 

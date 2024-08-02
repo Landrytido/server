@@ -11,7 +11,7 @@ export class LinkGroup {
     name: string;
 
     @Field()
-    description: string;
+    description?: string;
 
     @Field(() => Int)
     userId: number;

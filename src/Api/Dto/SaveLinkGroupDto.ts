@@ -1,17 +1,13 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
 
 @InputType()
-export class CreateLinkDto {
-
+export default class SaveLinkGroupDto {
     @Field()
     name: string;
 
-    @Field()
-    url: string;
-
-    @Field()
+    @Field({ nullable: true })
     description?: string;
 
     @Field(() => Int)
-    linkGroupId: number;
+    userId: number;
 }

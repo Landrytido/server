@@ -28,7 +28,7 @@ input CreateLinkDto {
 input CreateLinkGroupDto {
   description: String
   name: String!
-  userId: Int
+  userId: Int!
 }
 
 """
@@ -47,11 +47,10 @@ type Invitation {
 type Link {
   description: String!
   id: Int!
-  linkGroup: LinkGroup
+  linkGroup: LinkGroup!
   linkGroupId: Int!
-  name: String!
   url: String!
-  user: User
+  user: User!
   userId: Int!
 }
 

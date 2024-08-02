@@ -1,16 +1,27 @@
-import {BadRequestException, Injectable} from "@nestjs/common";
-import {LinkGroupRepository} from "../../../Repository/LinkGroupRepository";
-import {UpdateLinkGroupDto} from "./UpdateLinkGroupDto";
-import {LinkGroup} from "../../../Entity/LinkGroup";
-import {ContextualGraphqlRequest} from "../../../../index";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import LinkGroupRepository from "../../../Repository/LinkGroupRepository";
+import { LinkGroup } from "../../../Entity/LinkGroup";
+import { ContextualGraphqlRequest, UseCase } from "../../../../index";
+import CreateLinkGroupDto from "../CreateLinkGroup/CreateLinkGroupDto";
+import InsufficientPermissionException from "../../../../Core/Exception/InsufficientPermissionException";
 
 @Injectable()
-export class UpdateLinkGroupUseCase {
+export default class UpdateLinkGroupUseCase implements UseCase<Promise<LinkGroup>, [LinkGroupId: number, dto: CreateLinkGroupDto]> {
     constructor(private readonly linkGroupRepository: LinkGroupRepository) {}
 
-    async handle(context:ContextualGraphqlRequest,  linkGroupId: number, dto: UpdateLinkGroupDto): Promise<LinkGroup> {
+    async handle(context:ContextualGraphqlRequest,  linkGroupId: number, dto: CreateLinkGroupDto): Promise<LinkGroup> {
         try {
-            return await this.linkGroupRepository.update(linkGroupId, context.userId, dto);
+            const linkGroup = await this.linkGroupRepository.findById(linkGroupId);
+
+            if (!linkGroup) throw new NotFoundException("Link group does not exist");
+
+            if (linkGroup.userId !== context.userId)
+                throw new InsufficientPermissionException("You do not have permission to access or modify this link group.");
+
+            return await this.linkGroupRepository.save(context.userId, {
+                id: linkGroupId,
+                ...dto
+            });
         } catch (error) {
             throw new BadRequestException('Failed to update link group', error.message);
         }

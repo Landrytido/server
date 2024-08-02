@@ -97,7 +97,7 @@ model Link {
   id          Int       @id @default(autoincrement())
   name        String
   url         String
-  description String
+  description String?
   linkGroupId Int
   userId      Int
   linkGroup   LinkGroup @relation(fields: [linkGroupId], references: [id])
@@ -107,7 +107,7 @@ model Link {
 model LinkGroup {
   id          Int    @id @default(autoincrement())
   name        String
-  description String
+  description String?
   userId      Int
   user        User   @relation(fields: [userId], references: [id])
   links       Link[]
@@ -167,11 +167,11 @@ model MeetSharedWithMember {
 model Comment {
   id        Int      @id @default(autoincrement())
   content   String
-  createdAt DateTime @default(now())
   userId    Int
   noteId    Int
   user      User     @relation(fields: [userId], references: [id])
   note      Note     @relation(fields: [noteId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 model ResetToken {

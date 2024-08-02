@@ -1,6 +1,8 @@
 import { Field, Int, ObjectType, registerEnumType} from '@nestjs/graphql';
 import User from './User';
 import { MeetSharedWithMember } from './MeetSharedWithMember';
+import {ContextualGraphqlRequest} from "../../index";
+import { Recurrence } from "src/main";
 
 @ObjectType()
 export class Meet {
@@ -42,16 +44,9 @@ export class Meet {
 
     @Field(() => [MeetSharedWithMember])
     sharedWith: MeetSharedWithMember[];
+
+    context?: ContextualGraphqlRequest;
 }
 
-export enum Recurrence {
-    NONE = 'NONE',
-    DAILY = 'DAILY',
-    WEEKLY = 'WEEKLY',
-    MONTHLY = 'MONTHLY',
-    ANNUAL = 'ANNUAL',
-}
-registerEnumType(Recurrence, {
-    name: 'Recurrence',
-    description: 'The recurrence pattern for events',
-});
+
+

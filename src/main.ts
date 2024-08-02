@@ -6,10 +6,26 @@ import { ApiModule } from './Api/ApiModule';
 import { ExceptionCatcher } from './Core/ExceptionCatcher';
 import ConsoleLogger from './Core/Logging/ConsoleLogger';
 import InitializationLogger from './Core/Logging/InitializationLogger';
+import {registerEnumType} from "@nestjs/graphql";
 
-/* @Bugfix it fixes issues with maxListeners due in ElasticSearch package */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+export enum Recurrence {
+  NONE = 'NONE',
+  DAILY = 'DAILY',
+  WEEKLY = 'WEEKLY',
+  MONTHLY = 'MONTHLY',
+  ANNUAL = 'ANNUAL',
+}
+
+export enum PermissionLevel {
+  READ = 'READ',
+  WRITE = 'WRITE',
+  ADMIN = 'ADMIN',
+}
+
 require('events').EventEmitter.defaultMaxListeners = 0;
+
+registerEnumType(Recurrence, { name: 'Recurrence' });
+registerEnumType(PermissionLevel, { name: 'PermissionLevel'});
 
 export let app;
 
@@ -27,7 +43,6 @@ async function bootstrapApi() {
   app.useGlobalFilters(new ExceptionCatcher(app.get(ConsoleLogger)));
 
   await app.listen(process.env.API_PORT);
-  console.log('Server is running at http://localhost:3030/graphql');
 }
 
 if (!process.env.APPLICATION_ENVIRONMENT) {
