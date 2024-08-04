@@ -1,5 +1,5 @@
-import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
-import { GraphQLJSONObject } from 'graphql-type-json';
+import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
+import { GraphQLJSONObject } from "graphql-type-json";
 
 @ObjectType()
 export default class EventEntity {

@@ -1,4 +1,12 @@
-import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from "@nestjs/graphql";
 import { LinkGroup } from "../Entity/LinkGroup";
 import { UseGuards } from "@nestjs/common";
 import GraphqlAuthGuard from "../../Core/Security/Guard/GraphqlAuthGuard";
@@ -12,63 +20,94 @@ import GetLinkGroupByIdUseCase from "../UseCase/LinkGroup/GetLinkGroupById/GetLi
 import DeleteLinkGroupUseCase from "../UseCase/LinkGroup/DeleteLinkGroup/DeleteLinkGroupUseCase";
 import GetLinkGroupsByUserIdUseCase from "../UseCase/LinkGroup/GetLinkGroupByUserId/GetLinkGroupByUserIdUseCase";
 import CreateLinkGroupDto from "../UseCase/LinkGroup/CreateLinkGroup/CreateLinkGroupDto";
+import User from "../Entity/User";
+import { Link } from "../Entity/Link";
+import { PrismaService } from "../../Core/Datasource/Prisma";
 
 @Resolver(LinkGroup)
 export default class LinkGroupResolver {
-    constructor(private readonly serviceFactory: UseCaseFactory) {}
+  constructor(
+    private readonly serviceFactory: UseCaseFactory,
+    private readonly prisma: PrismaService,
+  ) {}
 
-    @UseGuards(GraphqlAuthGuard)
-    @Mutation(() => LinkGroup)
-    async createLinkGroup(
-        @ContextualRequest() context: ContextualGraphqlRequest,
-        @Args('dto') dto: CreateLinkGroupDto
-    ): Promise<LinkGroup> {
-        return (await this.serviceFactory.create(CreateLinkGroupUseCase)).handle(context, dto);
-    }
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => LinkGroup)
+  async createLinkGroup(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("dto") dto: CreateLinkGroupDto,
+  ): Promise<LinkGroup> {
+    return (await this.serviceFactory.create(CreateLinkGroupUseCase)).handle(
+      context,
+      dto,
+    );
+  }
 
-    @UseGuards(GraphqlAuthGuard)
-    @Mutation(() => LinkGroup)
-    async updateLinkGroup(
-        @ContextualRequest() context: ContextualGraphqlRequest,
-        @Args('linkGroupId', { type:() => Int }) linkGroupId: number,
-        @Args('dto') dto: CreateLinkGroupDto,
-    ): Promise<LinkGroup> {
-        return (await this.serviceFactory.create(UpdateLinkGroupUseCase)).handle(context, linkGroupId, dto);
-    }
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => LinkGroup)
+  async updateLinkGroup(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("linkGroupId", { type: () => Int }) linkGroupId: number,
+    @Args("dto") dto: CreateLinkGroupDto,
+  ): Promise<LinkGroup> {
+    return (await this.serviceFactory.create(UpdateLinkGroupUseCase)).handle(
+      context,
+      linkGroupId,
+      dto,
+    );
+  }
 
-    @UseGuards(GraphqlAuthGuard)
-    @Mutation(() => LinkGroup)
-    async deleteLinkGroup(
-        @ContextualRequest() context: ContextualGraphqlRequest,
-        @Args('linkGroupId', { type: () => Int }) linkGroupId: number,
-    ): Promise<LinkGroup> {
-        return (await this.serviceFactory.create(DeleteLinkGroupUseCase)).handle(context, linkGroupId);
-    }
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => LinkGroup)
+  async deleteLinkGroup(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("linkGroupId", { type: () => Int }) linkGroupId: number,
+  ): Promise<LinkGroup> {
+    return (await this.serviceFactory.create(DeleteLinkGroupUseCase)).handle(
+      context,
+      linkGroupId,
+    );
+  }
 
-    @UseGuards(GraphqlAuthGuard)
-    @Query(() => [LinkGroup])
-    async getAllLinkGroups(
-        @ContextualRequest() context: ContextualGraphqlRequest,
-    ): Promise<LinkGroup[]>{
-        return (await this.serviceFactory.create(GetAllLinkGroupsUseCase)).handle(context);
-    }
+  @UseGuards(GraphqlAuthGuard)
+  @Query(() => [LinkGroup])
+  async getAllLinkGroups(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+  ): Promise<LinkGroup[]> {
+    return (await this.serviceFactory.create(GetAllLinkGroupsUseCase)).handle(
+      context,
+    );
+  }
 
-    @UseGuards(GraphqlAuthGuard)
-    @Query(() => LinkGroup)
-    async findLinkGroupById(
-        @ContextualRequest() context: ContextualGraphqlRequest,
-        @Args('linkGroupId', { type: () => Int }) linkGroupId: number,
-    ): Promise<LinkGroup> {
-        return (await this.serviceFactory.create(GetLinkGroupByIdUseCase)).handle(context, linkGroupId);
-    }
+  @UseGuards(GraphqlAuthGuard)
+  @Query(() => LinkGroup)
+  async findLinkGroupById(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("linkGroupId", { type: () => Int }) linkGroupId: number,
+  ): Promise<LinkGroup> {
+    return (await this.serviceFactory.create(GetLinkGroupByIdUseCase)).handle(
+      context,
+      linkGroupId,
+    );
+  }
 
-    @UseGuards(GraphqlAuthGuard)
-    @Query(() => [LinkGroup])
-    async findLinkGroupsByUserId(
-        @ContextualRequest() context: ContextualGraphqlRequest,
-    ): Promise<LinkGroup[]> {
-        return (await this.serviceFactory.create(GetLinkGroupsByUserIdUseCase)).handle(context);
-    }
+  @UseGuards(GraphqlAuthGuard)
+  @Query(() => [LinkGroup])
+  async findLinkGroupsByUserId(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+  ): Promise<LinkGroup[]> {
+    return (
+      await this.serviceFactory.create(GetLinkGroupsByUserIdUseCase)
+    ).handle(context);
+  }
+
+  @ResolveField(() => User)
+  async user(@Parent() linkGroup: LinkGroup) {
+    return this.prisma.user.findUnique({ where: { id: linkGroup.userId } });
+  }
+
+  @ResolveField(() => [Link])
+  async links(@Parent() linkGroup: LinkGroup) {
+    return this.prisma.link.findMany({ where: { linkGroupId: linkGroup.id } });
+  }
 }
-
-

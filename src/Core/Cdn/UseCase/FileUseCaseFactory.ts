@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import ServiceFactory from '../../Factory/ServiceFactory';
-import GetFileByIdUseCase from './GetFileById/GetFileByIdUseCase';
-import UploadFileUseCase from './UploadFile/UploadFileUseCase';
+import { Injectable } from "@nestjs/common";
+import ServiceFactory from "../../Factory/ServiceFactory";
+import GetFileByIdUseCase from "./GetFileById/GetFileByIdUseCase";
+import UploadFileUseCase from "./UploadFile/UploadFileUseCase";
 
 type AvailableUseCase = UploadFileUseCase | GetFileByIdUseCase;
 

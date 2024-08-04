@@ -57,7 +57,7 @@ type Link {
 type LinkGroup {
   description: String
   id: Int!
-  links: [Link]!
+  links: [Link!]!
   name: String!
   user: User
   userId: Int!
@@ -207,23 +207,23 @@ input UpdateLinkDto {
 }
 
 type User {
-  collaborations: [NoteCollaboration!]
-  comments: [Comment!]
+  collaborations: [NoteCollaboration!]!
+  comments: [Comment!]!
   createdAt: DateTime!
   email: String!
   firstName: String!
   id: Int!
-  invitationsReceived: [Invitation!]
-  invitationsSent: [Invitation!]
+  invitationsReceived: [Invitation!]!
+  invitationsSent: [Invitation!]!
   lastName: String!
-  linkGroups: [LinkGroup!]
-  links: [Link!]
-  meets: [Meet!]
-  meetsShared: [MeetSharedWithMember!]
-  notebooks: [Notebook!]
-  notes: [Note!]
-  resetTokens: [ResetToken!]
-  sessions: [Session!]
-  tasks: [Task!]
+  linkGroups: [LinkGroup!]!
+  links: [Link!]!
+  meets: [Meet!]!
+  meetsShared: [MeetSharedWithMember!]!
+  notebooks: [Notebook!]!
+  notes: [Note!]!
+  resetTokens: [ResetToken!]!
+  sessions: [Session!]!
+  tasks: [Task!]!
   updatedAt: DateTime!
 }

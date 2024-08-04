@@ -1,5 +1,5 @@
 export default class NoSuchFilenameException extends Error {
   constructor() {
-    super('An uploaded file must have a name');
+    super("An uploaded file must have a name");
   }
 }

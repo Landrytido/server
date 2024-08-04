@@ -1,41 +1,41 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-import User from './User';
-import { Notebook } from './Notebook';
-import { NoteCollaboration } from './NoteCollaboration';
-import { Tag } from './Tag';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
+import User from "./User";
+import { Notebook } from "./Notebook";
+import { NoteCollaboration } from "./NoteCollaboration";
+import { Tag } from "./Tag";
 
 @ObjectType()
 export class Note {
-    @Field(() => Int)
-    id: number;
+  @Field(() => Int)
+  id: number;
 
-    @Field()
-    title: string;
+  @Field()
+  title: string;
 
-    @Field({ nullable: true })
-    content?: string;
+  @Field({ nullable: true })
+  content?: string;
 
-    @Field()
-    createdAt: Date;
+  @Field()
+  createdAt: Date;
 
-    @Field()
-    updatedAt: Date;
+  @Field()
+  updatedAt: Date;
 
-    @Field(() => Int)
-    userId: number;
+  @Field(() => Int)
+  userId: number;
 
-    @Field(() => Int, { nullable: true })
-    notebookId?: number;
+  @Field(() => Int, { nullable: true })
+  notebookId?: number;
 
-    @Field(() => User)
-    user: User;
+  @Field(() => User)
+  user: User;
 
-    @Field(() => Notebook, { nullable: true })
-    notebook?: Notebook;
+  @Field(() => Notebook, { nullable: true })
+  notebook?: Notebook;
 
-    @Field(() => [NoteCollaboration])
-    collaborations: NoteCollaboration[];
+  @Field(() => [NoteCollaboration])
+  collaborations: NoteCollaboration[];
 
-    @Field(() => [Tag])
-    tags: Tag[];
+  @Field(() => [Tag])
+  tags: Tag[];
 }

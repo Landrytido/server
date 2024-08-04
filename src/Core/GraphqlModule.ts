@@ -1,13 +1,13 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { GraphQLModule } from "@nestjs/graphql";
 
 export default GraphQLModule.forRoot<ApolloDriverConfig>({
-  autoSchemaFile: './schema.gql',
+  autoSchemaFile: "./schema.gql",
   sortSchema: true,
   driver: ApolloDriver,
-  playground: process.env.GRAPHQL_PLAYGROUND_ENABLED === 'true',
+  playground: process.env.GRAPHQL_PLAYGROUND_ENABLED === "true",
   buildSchemaOptions: {
-    dateScalarMode: 'isoDate'
+    dateScalarMode: "isoDate",
   },
   installSubscriptionHandlers: true,
   context: async (context) => {
@@ -20,9 +20,9 @@ export default GraphQLModule.forRoot<ApolloDriverConfig>({
         ...context.extra.request,
         headers: {
           ...context.extra.request.headers,
-          'authorization': `Bearer ${context.connectionParams.authToken}`
-        }
-      }
+          authorization: `Bearer ${context.connectionParams.authToken}`,
+        },
+      },
     };
-  }
+  },
 });

@@ -19,6 +19,6 @@ export class LinkGroup {
     @Field(() => User, { nullable: true })
     user?: User;
 
-    @Field(() => [Link], { nullable: 'items' })
+    @Field(() => [Link])
     links?: Link[];
 }

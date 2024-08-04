@@ -1,6 +1,6 @@
-import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { PrismaClient } from '@prisma/client';
+import { Injectable, OnModuleInit } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { PrismaClient } from "@prisma/client";
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
@@ -8,15 +8,15 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     super({
       datasources: {
         db: {
-          url: configService.get<any>('DATABASE_URL')
-        }
+          url: configService.get<any>("DATABASE_URL"),
+        },
       },
       log: [
         {
-          emit: 'event',
-          level: 'query'
-        }
-      ]
+          emit: "event",
+          level: "query",
+        },
+      ],
     });
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -5,16 +5,16 @@ import { UncontextualUseCase } from "../../../../index";
 import UserRepository from "../../../Repository/UserRepository";
 
 @Injectable()
-export default class CreateUserUseCase implements UncontextualUseCase<Promise<User>, [dto: SaveUserDto]> {
-    constructor(
-        private readonly userRepository: UserRepository,
-    ) {}
+export default class CreateUserUseCase
+  implements UncontextualUseCase<Promise<User>, [dto: SaveUserDto]>
+{
+  constructor(private readonly userRepository: UserRepository) {}
 
-    async handle(dto: SaveUserDto): Promise<User> {
-        try {
-            return this.userRepository.saveUser(dto);
-        } catch (error) {
-            throw new BadRequestException(error.message)
-        }
+  async handle(dto: SaveUserDto): Promise<User> {
+    try {
+      return this.userRepository.saveUser(dto);
+    } catch (error) {
+      throw new BadRequestException(error.message);
     }
+  }
 }

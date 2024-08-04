@@ -1,7 +1,7 @@
 import { Field, Int, ObjectType, registerEnumType} from '@nestjs/graphql';
 import User from './User';
 import { MeetSharedWithMember } from './MeetSharedWithMember';
-import {ContextualGraphqlRequest} from "../../index";
+import { ContextualGraphqlRequest } from "../../index";
 import { Recurrence } from "src/main";
 
 @ObjectType()

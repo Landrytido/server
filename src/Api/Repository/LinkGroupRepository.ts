@@ -5,97 +5,62 @@ import { Prisma } from "@prisma/client";
 
 @Injectable()
 export default class LinkGroupRepository {
-    constructor(private readonly prisma: PrismaService) {}
-    async findById(id: number) {
-        return this.prisma.linkGroup.findUnique({
-            where: { id },
-            include: {
-                user: true,
-                links:{
-                    include:{
-                        linkGroup: true,
-                        user: true,
-                    }
-                }
-            },
-        });
+  constructor(private readonly prisma: PrismaService) {}
+  async findById(id: number) {
+    return this.prisma.linkGroup.findUnique({
+      where: { id },
+    });
+  }
+
+  async findByUserId(userId: number): Promise<LinkGroup[]> {
+    return this.prisma.linkGroup.findMany({
+      where: { userId },
+    });
+  }
+
+  async findAll(): Promise<LinkGroup[]> {
+    return this.prisma.linkGroup.findMany();
+  }
+
+  async save(
+    userId: number,
+    data:
+      | Prisma.XOR<
+          Prisma.LinkGroupCreateInput,
+          Prisma.LinkGroupUncheckedCreateInput
+        >
+      | Prisma.XOR<
+          Prisma.LinkGroupUpdateInput,
+          Prisma.LinkGroupUncheckedUpdateInput
+        >,
+  ): Promise<LinkGroup> {
+    if (!data.id) {
+      return this.prisma.linkGroup.create({
+        data: {
+          name: data.name as string,
+          description: data.description as string,
+          user: {
+            connect: { id: userId },
+          },
+          links: {
+            create: [],
+          },
+        },
+      });
     }
 
-    async findByUserId(userId: number): Promise<LinkGroup[]> {
-        return this.prisma.linkGroup.findMany({
-            where: { userId },
-            include: {
-                links: {
-                    include: {
-                        linkGroup: true,
-                        user: true
-                    }
-                },
-                user: true,
-            }
-        })
-    }
+    return this.prisma.linkGroup.update({
+      where: {
+        id: data.id as number,
+      },
+      data: {
+        name: data.name,
+        description: data.description as string,
+      },
+    });
+  }
 
-    async findAll(): Promise<LinkGroup[]> {
-        return this.prisma.linkGroup.findMany({
-            include: {
-                user: true,
-                links: {
-                    include:{
-                        linkGroup: true,
-                        user: true
-                    }
-                }
-            },
-        });
-    }
-
-    async save(userId: number, data: Prisma.XOR<Prisma.LinkGroupCreateInput, Prisma.LinkGroupUncheckedCreateInput> | Prisma.XOR<Prisma.LinkGroupUpdateInput, Prisma.LinkGroupUncheckedUpdateInput>): Promise<LinkGroup> {
-        if (!data.id) {
-            return this.prisma.linkGroup.create({
-                data: {
-                    name: data.name as string,
-                    description: data.description as string,
-                    user: {
-                        connect: { id: userId },
-                    },
-                    links: {
-                        create: [],
-                    },
-                },
-                include: {
-                    user: true,
-                    links: {
-                        include: {
-                            user: true,
-                            linkGroup: true
-                        }
-                    }
-                },
-            });
-        }
-
-        return this.prisma.linkGroup.update({
-            where: {
-                id: data.id as number,
-            },
-            data: {
-                name: data.name,
-                description: data.description as string,
-            },
-            include: {
-                user: true,
-                links: {
-                    include: {
-                        user: true,
-                        linkGroup: true
-                    }
-                }
-            },
-        });
-    }
-
-    async delete(linkGroupId: number, userId: number):Promise<LinkGroup> {
-        return this.prisma.linkGroup.delete({ where: { id: linkGroupId } });
-    }
+  async delete(linkGroupId: number): Promise<LinkGroup> {
+    return this.prisma.linkGroup.delete({ where: { id: linkGroupId } });
+  }
 }

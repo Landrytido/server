@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { LinkRepository } from "../../../Repository/LinkRepository";
+import LinkRepository from "../../../Repository/LinkRepository";
 import { CreateLinkDto } from "./CreateLinkDto";
 import { Link } from "@prisma/client";
 import { ContextualGraphqlRequest, UseCase } from "../../../../index";

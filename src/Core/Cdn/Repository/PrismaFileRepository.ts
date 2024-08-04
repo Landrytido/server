@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../Datasource/Prisma';
-import { UploadedFile } from './S3FileRepository';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../Datasource/Prisma";
+import { UploadedFile } from "./S3FileRepository";
 
 @Injectable()
 export default class PrismaFileRepository {
@@ -16,8 +16,8 @@ export default class PrismaFileRepository {
         uri: file.uri,
         filename: file.filename,
         initialFilename: file.initialFilename,
-        path: file.path
-      }
+        path: file.path,
+      },
     });
   }
 }

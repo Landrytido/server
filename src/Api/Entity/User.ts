@@ -1,5 +1,5 @@
-import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
-import { ContextualGraphqlRequest } from '../../index';
+import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
+import { ContextualGraphqlRequest } from "../../index";
 import { Session } from "./Session";
 import { Note } from "./Note";
 import { Notebook } from "./Notebook";
@@ -7,7 +7,7 @@ import { LinkGroup } from "./LinkGroup";
 import { Link } from "./Link";
 import { Task } from "./Task";
 import { NoteCollaboration } from "./NoteCollaboration";
-import { Invitation } from "./Invitation";
+import Invitation from "./Invitation";
 import { Meet } from "./Meet";
 import { MeetSharedWithMember } from "./MeetSharedWithMember";
 import { ResetToken } from "./ResetToken";
@@ -29,43 +29,43 @@ export default class User {
   @Field()
   lastName: string;
 
-  @Field(() => [Session], { nullable: true })
+  @Field(() => [Session])
   sessions?: Session[];
 
-  @Field(() => [Note], { nullable: true })
+  @Field(() => [Note])
   notes?: Note[];
 
-  @Field(() => [Notebook], { nullable: true })
+  @Field(() => [Notebook])
   notebooks?: Notebook[];
 
-  @Field(() => [LinkGroup], { nullable: true })
+  @Field(() => [LinkGroup])
   linkGroups?: LinkGroup[];
 
-  @Field(() => [Link], { nullable: true })
+  @Field(() => [Link])
   links?: Link[];
 
-  @Field(() => [Task], { nullable: true })
+  @Field(() => [Task])
   tasks?: Task[];
 
-  @Field(() => [Comment], { nullable: true })
+  @Field(() => [Comment])
   comments?: Comment[];
 
-  @Field(() => [NoteCollaboration], { nullable: true })
+  @Field(() => [NoteCollaboration])
   collaborations?: NoteCollaboration[];
 
-  @Field(() => [Invitation], { nullable: true })
+  @Field(() => [Invitation])
   invitationsSent?: Invitation[];
 
-  @Field(() => [Invitation], { nullable: true })
+  @Field(() => [Invitation])
   invitationsReceived?: Invitation[];
 
-  @Field(() => [Meet], { nullable: true })
+  @Field(() => [Meet])
   meets?: Meet[];
 
-  @Field(() => [MeetSharedWithMember], { nullable: true })
+  @Field(() => [MeetSharedWithMember])
   meetsShared?: MeetSharedWithMember[];
 
-  @Field(() => [ResetToken], { nullable: true })
+  @Field(() => [ResetToken])
   resetTokens?: ResetToken[];
 
   @Field(() => GraphQLISODateTime)

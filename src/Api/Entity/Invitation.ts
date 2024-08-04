@@ -1,20 +1,23 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-import User from './User';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
+import User from "./User";
+import { ContextualGraphqlRequest } from "../../index";
 
 @ObjectType()
-export class Invitation {
-    @Field(() => Int)
-    id: number;
+export default class Invitation {
+  @Field(() => Int)
+  id: number;
 
-    @Field(() => Int)
-    receiverId: number;
+  @Field(() => Int)
+  receiverId: number;
 
-    @Field(() => Int)
-    senderId: number;
+  @Field(() => Int)
+  senderId: number;
 
-    @Field(() => User)
-    receiver: User;
+  @Field(() => User)
+  receiver: User;
 
-    @Field(() => User)
-    sender: User;
+  @Field(() => User)
+  sender: User;
+
+  context?: ContextualGraphqlRequest;
 }
