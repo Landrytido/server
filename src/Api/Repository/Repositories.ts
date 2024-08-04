@@ -3,7 +3,7 @@ import LinkGroupRepository from "./LinkGroupRepository";
 import LinkRepository from "./LinkRepository";
 
 export const Repositories = [
-    UserRepository,
-    LinkGroupRepository,
-    LinkRepository,
-]
+  UserRepository,
+  LinkGroupRepository,
+  LinkRepository,
+];

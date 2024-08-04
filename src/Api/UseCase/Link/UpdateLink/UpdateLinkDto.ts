@@ -1,7 +1,7 @@
 import { InputType, Field } from "@nestjs/graphql";
 
 @InputType()
-export class UpdateLinkDto {
+export default class UpdateLinkDto {
   @Field()
   name: string;
 

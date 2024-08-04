@@ -6,7 +6,7 @@ import {
 import LinkRepository from "../../../Repository/LinkRepository";
 import { Link } from "@prisma/client";
 import { ContextualGraphqlRequest, UseCase } from "../../../../index";
-import { UpdateLinkDto } from "./UpdateLinkDto";
+import UpdateLinkDto from "./UpdateLinkDto";
 import InsufficientPermissionException from "../../../../Core/Exception/InsufficientPermissionException";
 
 @Injectable()

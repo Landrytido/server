@@ -1,24 +1,24 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-import User from './User';
-import { Link } from './Link';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
+import User from "./User";
+import { Link } from "./Link";
 
 @ObjectType()
 export class LinkGroup {
-    @Field(() => Int)
-    id: number;
+  @Field(() => Int)
+  id: number;
 
-    @Field()
-    name: string;
+  @Field()
+  name: string;
 
-    @Field({ nullable: true })
-    description?: string;
+  @Field({ nullable: true })
+  description?: string;
 
-    @Field(() => Int)
-    userId: number;
+  @Field(() => Int)
+  userId: number;
 
-    @Field(() => User, { nullable: true })
-    user?: User;
+  @Field(() => User, { nullable: true })
+  user?: User;
 
-    @Field(() => [Link])
-    links?: Link[];
+  @Field(() => [Link])
+  links?: Link[];
 }
