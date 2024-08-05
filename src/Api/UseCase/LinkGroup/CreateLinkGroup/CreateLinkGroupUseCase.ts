@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { LinkGroup } from "../../../Entity/LinkGroup";
+import LinkGroup from "../../../Entity/LinkGroup";
 import LinkGroupRepository from "../../../Repository/LinkGroupRepository";
 import { ContextualGraphqlRequest, UseCase } from "../../../../index";
 import CreateLinkGroupDto from "./CreateLinkGroupDto";

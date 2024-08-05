@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import LinkGroupRepository from "../../../Repository/LinkGroupRepository";
 import { ContextualGraphqlRequest, UseCase } from "../../../../index";
-import { LinkGroup } from "../../../Entity/LinkGroup";
+import LinkGroup from "../../../Entity/LinkGroup";
 
 @Injectable()
 export default class GetAllLinkGroupsUseCase

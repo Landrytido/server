@@ -9,10 +9,7 @@ export default class GetLinksByLinkGroupIdUseCase
 {
   constructor(private readonly linkRepository: LinkRepository) {}
 
-  async handle(
-    context: ContextualGraphqlRequest,
-    linkGroupId: number,
-  ): Promise<Link[]> {
+  async handle(context: ContextualGraphqlRequest, linkGroupId: number) {
     try {
       return await this.linkRepository.findByLinkGroupId(linkGroupId);
     } catch (error) {

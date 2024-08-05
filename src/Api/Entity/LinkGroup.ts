@@ -1,9 +1,10 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
-import { Link } from "./Link";
+import Link from "./Link";
+import { ContextualGraphqlRequest } from "../../index";
 
 @ObjectType()
-export class LinkGroup {
+export default class LinkGroup {
   @Field(() => Int)
   id: number;
 
@@ -21,4 +22,6 @@ export class LinkGroup {
 
   @Field(() => [Link])
   links?: Link[];
+
+  context?: ContextualGraphqlRequest;
 }

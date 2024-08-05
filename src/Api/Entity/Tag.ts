@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { Note } from "./Note";
+import Note from "./Note";
+import { ContextualGraphqlRequest } from "../../index";
 
 @ObjectType()
 export class Tag {
@@ -11,4 +12,6 @@ export class Tag {
 
   @Field(() => [Note])
   notes: Note[];
+
+  context?: ContextualGraphqlRequest;
 }

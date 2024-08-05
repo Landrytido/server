@@ -9,7 +9,7 @@ export default class GetLinksByUserIdUseCase
 {
   constructor(private readonly linkRepository: LinkRepository) {}
 
-  async handle(context: ContextualGraphqlRequest): Promise<Link[]> {
+  async handle(context: ContextualGraphqlRequest) {
     try {
       return await this.linkRepository.findByUserId(context.userId);
     } catch (error) {

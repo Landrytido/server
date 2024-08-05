@@ -19,7 +19,7 @@ export default class UpdateLinkUseCase
     context: ContextualGraphqlRequest,
     id: number,
     dto: UpdateLinkDto,
-  ): Promise<Link> {
+  ) {
     try {
       const link = await this.linkRepository.findById(id);
 

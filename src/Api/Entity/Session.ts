@@ -1,8 +1,9 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
+import { ContextualGraphqlRequest } from "../../index";
 
 @ObjectType()
-export class Session {
+export default class Session {
   @Field(() => Int)
   id: number;
 
@@ -20,4 +21,6 @@ export class Session {
 
   @Field(() => User)
   user: User;
+
+  context?: ContextualGraphqlRequest;
 }

@@ -13,7 +13,7 @@ export default class GetLinkByIdUseCase
 {
   constructor(private readonly linkRepository: LinkRepository) {}
 
-  async handle(context: ContextualGraphqlRequest, id: number): Promise<Link> {
+  async handle(context: ContextualGraphqlRequest, id: number) {
     try {
       const link = await this.linkRepository.findById(id);
       if (!link) {

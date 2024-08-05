@@ -1,6 +1,6 @@
 import { PrismaService } from "../../Core/Datasource/Prisma";
 import { Injectable } from "@nestjs/common";
-import { LinkGroup } from "../Entity/LinkGroup";
+import LinkGroup from "../Entity/LinkGroup";
 import { Prisma } from "@prisma/client";
 
 @Injectable()
@@ -12,13 +12,13 @@ export default class LinkGroupRepository {
     });
   }
 
-  async findByUserId(userId: number): Promise<LinkGroup[]> {
+  async findByUserId(userId: number) {
     return this.prisma.linkGroup.findMany({
       where: { userId },
     });
   }
 
-  async findAll(): Promise<LinkGroup[]> {
+  async findAll() {
     return this.prisma.linkGroup.findMany();
   }
 
@@ -33,7 +33,7 @@ export default class LinkGroupRepository {
           Prisma.LinkGroupUpdateInput,
           Prisma.LinkGroupUncheckedUpdateInput
         >,
-  ): Promise<LinkGroup> {
+  ) {
     if (!data.id) {
       return this.prisma.linkGroup.create({
         data: {

@@ -17,14 +17,6 @@ type Comment {
   userId: Int!
 }
 
-input CreateLinkDto {
-  description: String
-  linkGroupId: Int!
-  name: String!
-  url: String!
-  userId: Int
-}
-
 input CreateLinkGroupDto {
   description: String
   name: String!
@@ -87,7 +79,7 @@ type MeetSharedWithMember {
 }
 
 type Mutation {
-  create(dto: CreateLinkDto!): Link!
+  create(dto: SaveLinkDto!): Link!
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
   deleteLink(id: Int!): Link!
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
@@ -161,6 +153,14 @@ type ResetToken {
   user: User!
   userId: Int!
   validityEndDate: DateTime!
+}
+
+input SaveLinkDto {
+  description: String
+  linkGroupId: Int!
+  name: String!
+  url: String!
+  userId: Int
 }
 
 input SaveUserDto {

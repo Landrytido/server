@@ -1,8 +1,9 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
+import { ContextualGraphqlRequest } from "../../index";
 
 @ObjectType()
-export class ResetToken {
+export default class ResetToken {
   @Field(() => Int)
   id: number;
 
@@ -17,4 +18,6 @@ export class ResetToken {
 
   @Field(() => User)
   user: User;
+
+  context?: ContextualGraphqlRequest;
 }

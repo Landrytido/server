@@ -1,24 +1,24 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../Core/Datasource/Prisma";
-import { Link, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export default class LinkRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findById(id: number): Promise<Link | null> {
+  async findById(id: number) {
     return this.prisma.link.findUnique({
       where: { id },
     });
   }
 
-  async findByUserId(userId: number): Promise<Link[]> {
+  async findByUserId(userId: number) {
     return this.prisma.link.findMany({
       where: { userId },
     });
   }
 
-  async findByLinkGroupId(linkGroupId: number): Promise<Link[]> {
+  async findByLinkGroupId(linkGroupId: number) {
     return this.prisma.link.findMany({
       where: { linkGroupId },
     });
@@ -29,7 +29,7 @@ export default class LinkRepository {
     data:
       | Prisma.XOR<Prisma.LinkCreateInput, Prisma.LinkUncheckedCreateInput>
       | Prisma.XOR<Prisma.LinkUpdateInput, Prisma.LinkUncheckedUpdateInput>,
-  ): Promise<Link> {
+  ) {
     if (!data.id) {
       return this.prisma.link.create({
         data: {
@@ -56,7 +56,7 @@ export default class LinkRepository {
     });
   }
 
-  async delete(id: number): Promise<Link> {
+  async delete(id: number) {
     return this.prisma.link.delete({ where: { id: +id } });
   }
 }
