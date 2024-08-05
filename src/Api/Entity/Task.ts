@@ -21,6 +21,6 @@ export class Task {
     @Field(() => Int)
     userId: number;
 
-    @Field(() => User)
-    user: User;
+    @Field(()=> User)
+    user?: User;
 }
