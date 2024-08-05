@@ -7,11 +7,11 @@ import TagRepository  from "src/Api/Repository/TagRepository";
 export default class GetTagUseCase implements UseCase<Promise<Tag>, [tagId: number]> {
     constructor(private readonly tagRepository: TagRepository) {}
 
-    handle(context: ContextualGraphqlRequest, tagId: number): Promise<Tag> {
+    handle(context: ContextualGraphqlRequest, tagId: number) {
         try {
             return this.tagRepository.findById(tagId);
         } catch (error) {
-            throw new BadRequestException("Impossible de trouver le tag");
+            throw new BadRequestException("cannot find a tag",error.message);
         }
     }
 }

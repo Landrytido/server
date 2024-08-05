@@ -7,11 +7,11 @@ import TagRepository from "src/Api/Repository/TagRepository";
 export default class RemoveTagUseCase implements UseCase<Promise<Tag>, [tagId: number]> {
     constructor(private readonly tagRepository: TagRepository) {}
 
-    handle(context: ContextualGraphqlRequest, tagId: number): Promise<Tag> {
+    handle(context: ContextualGraphqlRequest, tagId: number) {
         try {
             return this.tagRepository.RemoveById(tagId);
         } catch (error) {
-            throw new BadRequestException("Aucun Tag n'est crée Veuillez crée un Tag");
+            throw new BadRequestException("no tag has been created",error.message);
         }
     }
 }

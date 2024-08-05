@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ContextualGraphqlRequest, UseCase } from "src";
-import { SaveTagDto } from "src/Api/Dto/SaveTagDto";
+import SaveTagDto from "src/Api/Dto/SaveTagDto";
 import { Tag } from "src/Api/Entity/Tag";
 import TagRepository from "src/Api/Repository/TagRepository";
 
@@ -12,11 +12,11 @@ export default class CreateTagUseCase
   async handle(
     context: ContextualGraphqlRequest,
     dto: SaveTagDto
-  ): Promise<Tag> {
+  ){
     try {
-      return await this.tageRepository.create(dto);
+      return await this.tageRepository.save(dto);
     } catch (error) {
-      throw new BadRequestException("Impossible de créer le tag");
+      throw new BadRequestException("cannot create tag", error.message);
     }
   }
 }

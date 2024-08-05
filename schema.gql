@@ -73,9 +73,10 @@ type MeetSharedWithMember {
 }
 
 type Mutation {
-  RemoveById(id: Float!): Tag!
-  UpdateById(dto: SaveTagDto!, id: Int!): Tag!
-  create(dto: SaveTagDto!): Tag!
+  RemoveById(id: Float!): Task!
+  UpdateById(dto: SaveTaskDto!, id: Int!): Task!
+  createTag(dto: SaveTagDto!): Tag!
+  createTask(dto: SaveTaskDto!): Task!
   register(dto: SaveUserDto!): User!
   saveUser(dto: SaveUserDto!): User!
 }
@@ -118,10 +119,12 @@ enum PermissionLevel {
 }
 
 type Query {
-  findById(id: Float!): Tag!
+  findTagById(id: Float!): Tag!
+  findTaskById(id: Float!): Task!
   getLoggedUser: User!
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
+  tasksByUserId(userId: Float!): [Task!]!
   validateToken(dto: TokenValidationDto!): Boolean!
 }
 
@@ -143,6 +146,13 @@ type ResetToken {
 
 input SaveTagDto {
   name: String!
+}
+
+input SaveTaskDto {
+  completed: Boolean!
+  description: String!
+  dueDate: DateTime
+  title: String!
 }
 
 input SaveUserDto {
