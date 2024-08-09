@@ -5,7 +5,7 @@ import { ContextualGraphqlRequest } from "src";
 @ObjectType()
 export default class Invitation {
   @Field(() => Int)
-  idPrimary: number;
+  id: number;
 
   @Field(() => Int)
   receiverId: number;
@@ -13,11 +13,14 @@ export default class Invitation {
   @Field(() => Int)
   senderId: number;
 
-  @Field(() => User)
+  @Field(() => User, { nullable: true })
   receiver: User;
 
-  @Field(() => User)
+  @Field(() => User, { nullable: true })
   sender: User;
+
+  @Field()
+  isRelation: boolean;
 
   context?: ContextualGraphqlRequest;
 }

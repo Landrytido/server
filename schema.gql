@@ -23,10 +23,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Invitation {
-  idPrimary: Int!
-  receiver: User!
+  id: Int!
+  isRelation: Boolean!
+  receiver: User
   receiverId: Int!
-  sender: User!
+  sender: User
   senderId: Int!
 }
 
@@ -73,8 +74,11 @@ type MeetSharedWithMember {
 }
 
 type Mutation {
+  acceptInvitation(invitationId: Int!): Invitation!
+  createInvitation(dto: SaveInvitationDto!): Invitation!
   createNote(dto: SaveNoteDto!): Note!
   createNotebook(dto: SaveNotebookDto!): Notebook!
+  deleteInvitation(invitationId: Int!): Invitation!
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
   register(dto: SaveUserDto!): User!
@@ -127,6 +131,9 @@ type Query {
   findNotebooksByUserId: [Notebook!]!
   findNotes: [Note!]!
   findNotesByUserId: [Note!]!
+  findReceivedInvitations: [Invitation!]!
+  findRelations: [Invitation!]!
+  findSentInvitations: [Invitation!]!
   getLoggedUser: User!
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
@@ -147,6 +154,10 @@ type ResetToken {
   user: User!
   userId: Int!
   validityEndDate: DateTime!
+}
+
+input SaveInvitationDto {
+  email: String!
 }
 
 input SaveNoteDto {
