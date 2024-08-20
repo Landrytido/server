@@ -1,8 +1,7 @@
 import { PrismaService } from "src/Core/Datasource/Prisma";
 import SaveTagDto from "../Dto/SaveTagDto";
 import { Injectable } from "@nestjs/common";
-import { Tag } from "../Entity/Tag";
-import { Prisma } from "@prisma/client";
+import { Prisma, Tag } from "@prisma/client";
 
 @Injectable()
 export default class TagRepository {

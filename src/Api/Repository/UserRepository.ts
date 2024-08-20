@@ -18,12 +18,6 @@ export default class UserRepository {
     });
   }
 
-  async RemoveById(taskId: number) {
-    return await this.prisma.task.delete({
-      where: { id: taskId },
-    });
-  }
-
   async saveUser(
     data:
       | Prisma.XOR<Prisma.UserCreateInput, Prisma.UserUncheckedCreateInput>

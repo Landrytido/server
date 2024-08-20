@@ -1,53 +1,49 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-import User from './User';
-import { MeetSharedWithMember } from './MeetSharedWithMember';
+import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
+import User from "./User";
+import MeetSharedWithMember from "./MeetSharedWithMember";
+import { ContextualGraphqlRequest } from "src";
+import { Recurrence } from "src/main";
 
 @ObjectType()
-export class Meet {
-    @Field(() => Int)
-    id: number;
+export default class Meet {
+  @Field(() => Int)
+  id: number;
 
-    @Field()
-    title: string;
+  @Field()
+  title: string;
 
-    @Field()
-    description: string;
+  @Field()
+  description: string;
 
-    @Field()
-    startDate: Date;
+  @Field()
+  startDate: Date;
 
-    @Field()
-    endDate: Date;
+  @Field()
+  endDate: Date;
 
-    @Field()
-    isRecurring: boolean;
+  @Field()
+  isRecurring: boolean;
 
-    @Field(() => Recurrence)
-    recurrence: Recurrence;
+  @Field(() => Recurrence)
+  recurrence: Recurrence;
 
-    @Field()
-    location: string;
+  @Field()
+  location: string;
 
-    @Field()
-    createdAt: Date;
+  @Field(() => GraphQLISODateTime)
+  createdAt: Date;
 
-    @Field()
-    updatedAt: Date;
+  @Field(() => GraphQLISODateTime)
+  updatedAt: Date;
 
-    @Field(() => Int)
-    userId: number;
+  @Field(() => Int)
+  userId: number;
 
-    @Field(() => User)
-    user: User;
+  @Field(() => User)
+  user: User;
 
-    @Field(() => [MeetSharedWithMember])
-    sharedWith: MeetSharedWithMember[];
-}
+  @Field(() => [MeetSharedWithMember])
+  sharedWith: MeetSharedWithMember[];
 
-export enum Recurrence {
-    NONE = 'NONE',
-    DAILY = 'DAILY',
-    WEEKLY = 'WEEKLY',
-    MONTHLY = 'MONTHLY',
-    ANNUAL = 'ANNUAL',
+  context?: ContextualGraphqlRequest;
 }

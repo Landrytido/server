@@ -1,6 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { Task } from "../Entity/Task";
-import SaveTaskDto from "../Dto/SaveTaskDto";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "src/Core/Datasource/Prisma";
 

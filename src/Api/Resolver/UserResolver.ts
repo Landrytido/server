@@ -1,5 +1,5 @@
 import { UseGuards } from "@nestjs/common";
-import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ContextualRequest } from "../../Core/Decorator/ContextualRequest";
 import GraphqlAuthGuard from "../../Core/Security/Guard/GraphqlAuthGuard";
 import { ContextualGraphqlRequest } from "../../index";

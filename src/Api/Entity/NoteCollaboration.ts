@@ -1,30 +1,28 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-import User from './User';
-import { Note } from './Note';
+import { Field, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
+import User from "./User";
+import Note from "./Note";
+import { PermissionLevel } from "src/main";
+import { ContextualGraphqlRequest } from "src";
 
 @ObjectType()
-export class NoteCollaboration {
-    @Field(() => Int)
-    id: number;
+export default class NoteCollaboration {
+  @Field(() => Int)
+  id: number;
 
-    @Field(() => PermissionLevel)
-    permissionLevel: PermissionLevel;
+  @Field(() => PermissionLevel)
+  permissionLevel: PermissionLevel;
 
-    @Field(() => Int)
-    noteId: number;
+  @Field(() => Int)
+  noteId: number;
 
-    @Field(() => Int)
-    userId: number;
+  @Field(() => Int)
+  userId: number;
 
-    @Field(() => Note)
-    note: Note;
+  @Field(() => Note)
+  note: Note;
 
-    @Field(() => User)
-    user: User;
-}
+  @Field(() => User)
+  user: User;
 
-export enum PermissionLevel {
-    READ = 'READ',
-    WRITE = 'WRITE',
-    ADMIN = 'ADMIN',
+  context?: ContextualGraphqlRequest;
 }

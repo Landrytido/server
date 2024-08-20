@@ -1,5 +1,14 @@
+
 import TagResolver from "./TagResolver";
 import TaskResolver from "./TaskResolver";
-import UserResolver from "./UserResolver";
 
-export const Resolvers = [UserResolver, TagResolver, TaskResolver];
+import NotebookResolver from "./NotebookResolver";
+import NoteResolver from "./NoteResolver";
+
+import UserResolver from "./UserResolver";
+import InvitationResolver from "./InvitationResolver";
+
+
+export const Resolvers = [UserResolver, TagResolver, TaskResolver, NotebookResolver, NoteResolver, InvitationResolver];
+
+

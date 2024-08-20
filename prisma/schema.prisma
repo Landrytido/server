@@ -124,11 +124,12 @@ model Task {
 }
 
 model Invitation {
-  id         Int  @id @default(autoincrement())
+  id         Int     @id @default(autoincrement())
   receiverId Int
   senderId   Int
-  receiver   User @relation("InvitationsReceived", fields: [receiverId], references: [id])
-  sender     User @relation("InvitationsSent", fields: [senderId], references: [id])
+  receiver   User    @relation("InvitationsReceived", fields: [receiverId], references: [id])
+  sender     User    @relation("InvitationsSent", fields: [senderId], references: [id])
+  isRelation Boolean @default(false)
 }
 
 model Meet {

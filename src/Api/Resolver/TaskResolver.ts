@@ -1,5 +1,4 @@
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { Task } from "../Entity/Task";
 import UseCaseFactory from "../UseCase/UseCaseFactory";
 import { ContextualGraphqlRequest } from "src";
 import { ContextualRequest } from "src/Core/Decorator/ContextualRequest";
@@ -11,6 +10,7 @@ import GetTaskByUserIdUseCase from "../UseCase/Task/GetTaskbyUserId/GetTaskByUse
 import GetTaskUseCase from "../UseCase/Task/GetTask/GetTaskUseCase";
 import RemoveTaskUseCase from "../UseCase/Task/RemoveTask/RemoveTaskUseCase";
 import UpdateTaskUseCase from "../UseCase/Task/UpdateTask/UpdateTaskUseCase";
+import Task from "../Entity/Task";
 
 @Resolver(Task)
 @UseGuards(GraphqlAuthGuard)

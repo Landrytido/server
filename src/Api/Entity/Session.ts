@@ -2,7 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import User from './User';
 
 @ObjectType()
-export class Session {
+export default class Session {
     @Field(() => Int)
     id: number;
 
