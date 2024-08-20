@@ -18,7 +18,7 @@ export default class CreateUserUseCase
 
       return this.userRepository.saveUser(dto);
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new BadRequestException("CreateUserUseCase Failed", error.message);
     }
   }
 }
