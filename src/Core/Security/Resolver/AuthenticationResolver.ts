@@ -19,6 +19,7 @@ export default class AuthenticationResolver {
 
   @Query(() => String)
   async login(@Args('dto') dto: AuthenticationDto) {
+    console.log(dto)
     return (await this.useCaseFactory.create(Login)).handle(null, dto);
   }
 

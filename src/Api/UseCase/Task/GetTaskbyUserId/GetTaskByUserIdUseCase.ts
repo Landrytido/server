@@ -7,7 +7,7 @@ import TaskRepository from "src/Api/Repository/TaskRepository";
 export default class GetTaskByUserIdUseCase implements UseCase<Promise<Task[]>, []> {
   constructor(private readonly taskRepository: TaskRepository) {}
 
-  async handle(context: ContextualGraphqlRequest): Promise<Task[]> {
+  async handle(context: ContextualGraphqlRequest) {
     try {
       return await this.taskRepository.findByUserId(context.userId);
     } catch (error) {

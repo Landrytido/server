@@ -30,7 +30,7 @@ export default class TaskResolver {
   @Query(() => [Task])
   async tasksByUserId(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("userId") userId: number
+    @Args("userId",{type:()=>Int}) userId: number
   ): Promise<Task[]> {
     return (await this.serviceFactory.create(GetTaskByUserIdUseCase)).handle(
       context
@@ -39,7 +39,7 @@ export default class TaskResolver {
 
   @Query(() => Task)
   async findTaskById(
-    @Args("id") id: number,
+    @Args("id",{type:()=>Int}) id: number,
     @ContextualRequest() context: ContextualGraphqlRequest
   ) {
     return (await this.serviceFactory.create(GetTaskUseCase)).handle(
@@ -50,7 +50,7 @@ export default class TaskResolver {
 
   @Mutation(() => Task)
   async RemoveById(
-    @Args("id") id: number,
+    @Args("id",{type:()=>Int}) id: number,
     @ContextualRequest() context: ContextualGraphqlRequest
   ) {
     return (await this.serviceFactory.create(RemoveTaskUseCase)).handle(

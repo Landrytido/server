@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../Core/Datasource/Prisma';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../Core/Datasource/Prisma";
 import { Prisma } from "@prisma/client";
 
 @Injectable()
@@ -18,16 +18,32 @@ export default class UserRepository {
     });
   }
 
-  async saveUser(data: Prisma.XOR<Prisma.UserCreateInput, Prisma.UserUncheckedCreateInput> | Prisma.XOR<Prisma.UserUpdateInput, Prisma.UserUncheckedUpdateInput>) {
+  async RemoveById(taskId: number) {
+    return await this.prisma.task.delete({
+      where: { id: taskId },
+    });
+  }
+
+  async saveUser(
+    data:
+      | Prisma.XOR<Prisma.UserCreateInput, Prisma.UserUncheckedCreateInput>
+      | Prisma.XOR<Prisma.UserUpdateInput, Prisma.UserUncheckedUpdateInput>
+  ) {
     if (!data.id) {
       return this.prisma.user.create({
-        data: data as Prisma.XOR<Prisma.UserCreateInput, Prisma.UserUncheckedCreateInput>
+        data: data as Prisma.XOR<
+          Prisma.UserCreateInput,
+          Prisma.UserUncheckedCreateInput
+        >,
       });
     }
 
     return this.prisma.user.update({
       where: { id: data.id as number },
-      data: data as Prisma.XOR<Prisma.UserUpdateInput, Prisma.UserUncheckedUpdateInput>
+      data: data as Prisma.XOR<
+        Prisma.UserUpdateInput,
+        Prisma.UserUncheckedUpdateInput
+      >,
     });
   }
 }
