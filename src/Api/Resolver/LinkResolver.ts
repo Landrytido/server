@@ -24,6 +24,9 @@ import GetLinksByLinkGroupIdUseCase from "../UseCase/Link/GetLinksByLinkGroupId/
 import { PrismaService } from "../../Core/Datasource/Prisma";
 import LinkGroup from "../Entity/LinkGroup";
 import User from "../Entity/User";
+import LinkClick from "../Entity/LinkClick";
+import GetLinksByUserIdWithMinClicksUseCase
+  from "../UseCase/Link/GetLinksByUserIdWithMinClicks/GetLinksByUserIdWithMinClicksUseCase";
 
 @Resolver(Link)
 export default class LinkResolver {
@@ -103,6 +106,17 @@ export default class LinkResolver {
     );
   }
 
+  @UseGuards(GraphqlAuthGuard)
+  @Query(() => [Link])
+  async findLinksByUserIdWithMinClicks(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("minClicks", { type: () => Int }) minClicks: number,
+  ) {
+    return (
+      await this.serviceFactory.create(GetLinksByUserIdWithMinClicksUseCase)
+    ).handle(context, minClicks);
+  }
+
   @ResolveField(() => LinkGroup)
   async linkGroup(@Parent() link: Link) {
     return this.prisma.linkGroup.findUnique({
@@ -113,5 +127,12 @@ export default class LinkResolver {
   @ResolveField(() => User)
   async user(@Parent() link: Link) {
     return this.prisma.user.findUnique({ where: { id: link.userId } });
+  }
+
+  @ResolveField(() => [LinkClick])
+  async clicks(@Parent() link: Link) {
+    return this.prisma.linkClick.findMany({
+      where: { linkId: link.id },
+    });
   }
 }

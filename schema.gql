@@ -36,6 +36,7 @@ type Invitation {
 }
 
 type Link {
+  clicks: [LinkClick!]!
   description: String
   id: Int!
   linkGroup: LinkGroup
@@ -44,6 +45,15 @@ type Link {
   url: String!
   user: User
   userId: Int!
+}
+
+type LinkClick {
+  clicks: Int!
+  id: Int!
+  link: Link
+  linkId: Int
+  user: User
+  userId: Int
 }
 
 type LinkGroup {
@@ -81,9 +91,11 @@ type MeetSharedWithMember {
 type Mutation {
   create(dto: SaveLinkDto!): Link!
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
+  delete(id: Int!): LinkClick!
   deleteLink(id: Int!): Link!
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
   register(dto: SaveUserDto!): User!
+  saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveUser(dto: SaveUserDto!): User!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
@@ -127,11 +139,15 @@ enum PermissionLevel {
 }
 
 type Query {
+  findByLinkId(linkId: Int!): [LinkClick!]!
+  findByUser: [LinkClick!]!
   findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
   findLinkGroupsByUserId: [LinkGroup!]!
   findLinksByLinkGroupId(linkGroupId: Int!): [Link!]!
   findLinksByUserId: [Link!]!
+  findLinksByUserIdWithMinClicks(minClicks: Int!): [Link!]!
+  findOne(id: Int!): LinkClick!
   getAllLinkGroups: [LinkGroup!]!
   getLoggedUser: User!
   login(dto: AuthenticationDto!): String!
@@ -153,6 +169,11 @@ type ResetToken {
   user: User!
   userId: Int!
   validityEndDate: DateTime!
+}
+
+input SaveLinkClickDto {
+  id: Int
+  linkId: Int!
 }
 
 input SaveLinkDto {

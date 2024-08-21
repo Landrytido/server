@@ -59,4 +59,19 @@ export default class LinkRepository {
   async delete(id: number) {
     return this.prisma.link.delete({ where: { id: +id } });
   }
+
+  async findLinksByUserIdWithMinClicks(userId: number, minClicks: number) {
+    return this.prisma.link.findMany({
+      where: {
+        userId: userId,
+        clicks: {
+          some: {
+            clicks: {
+              gte: minClicks,
+            },
+          },
+        },
+      },
+    });
+  }
 }
