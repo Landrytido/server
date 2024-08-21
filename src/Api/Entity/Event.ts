@@ -1,13 +1,13 @@
+
 import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import { ContextualGraphqlRequest } from "src";
 import { Recurrence } from "src/main";
-
 @ObjectType()
-export default class Meet {
-  @Field(() => Int)
-  id: number;
+export class Event {
+    @Field(() => Int)
+    id: number;
 
   @Field()
   title: string;
@@ -47,3 +47,4 @@ export default class Meet {
 
   context?: ContextualGraphqlRequest;
 }
+

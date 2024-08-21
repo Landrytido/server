@@ -22,12 +22,42 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+<<<<<<< HEAD
 type Invitation {
 <<<<<<< HEAD
+=======
+type Event {
+  createdAt: DateTime!
+  description: String!
+  endDate: DateTime!
+  id: Int!
+  isRecurring: Boolean!
+  location: String!
+  sharedWith: [MeetSharedWithMember!]!
+  startDate: DateTime!
+  title: String!
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
+input EventDto {
+  description: String!
+  endDate: DateTime!
+  id: Int
+  location: String!
+  startDate: DateTime!
+  title: String!
+  userId: Int!
+}
+
+type Invitation {
+>>>>>>> 0833586f66901f51fd3d9e3cf9181e8b3d30e592
   idPrimary: Int!
   receiver: User!
   receiverId: Int!
   sender: User!
+<<<<<<< HEAD
 =======
   id: Int!
   isRelation: Boolean!
@@ -35,6 +65,8 @@ type Invitation {
   receiverId: Int!
   sender: User
 >>>>>>> 1f099c4feb59212c3c550b027ccec17d69c81ae4
+=======
+>>>>>>> 0833586f66901f51fd3d9e3cf9181e8b3d30e592
   senderId: Int!
 }
 
@@ -57,6 +89,7 @@ type LinkGroup {
   userId: Int!
 }
 
+<<<<<<< HEAD
 type Meet {
   createdAt: DateTime!
   description: String!
@@ -75,12 +108,17 @@ type Meet {
 
 type MeetSharedWithMember {
   meet: Meet!
+=======
+type MeetSharedWithMember {
+  meet: Event!
+>>>>>>> 0833586f66901f51fd3d9e3cf9181e8b3d30e592
   meetId: Int!
   user: User!
   userId: Int!
 }
 
 type Mutation {
+<<<<<<< HEAD
 <<<<<<< HEAD
   RemoveById(id: Int!): Task!
   UpdateById(dto: SaveTaskDto!, id: Int!): Task!
@@ -95,7 +133,11 @@ type Mutation {
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
 >>>>>>> 1f099c4feb59212c3c550b027ccec17d69c81ae4
+=======
+  deleteEvent(id: Float!): Event!
+>>>>>>> 0833586f66901f51fd3d9e3cf9181e8b3d30e592
   register(dto: SaveUserDto!): User!
+  saveEvent(dto: EventDto!): Event!
   saveUser(dto: SaveUserDto!): User!
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
   updateNotebook(dto: SaveNotebookDto!, notebookId: Int!): Notebook!
@@ -175,7 +217,45 @@ enum PermissionLevel {
   WRITE
 }
 
+type Note {
+  collaborations: [NoteCollaboration!]!
+  content: String
+  createdAt: DateTime!
+  id: Int!
+  notebook: Notebook
+  notebookId: Int
+  tags: [Tag!]!
+  title: String!
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
+type NoteCollaboration {
+  id: Int!
+  note: Note!
+  noteId: Int!
+  permissionLevel: PermissionLevel!
+  user: User!
+  userId: Int!
+}
+
+type Notebook {
+  id: Int!
+  notes: [Note!]!
+  title: String!
+  user: User!
+  userId: Int!
+}
+
+enum PermissionLevel {
+  ADMIN
+  READ
+  WRITE
+}
+
 type Query {
+<<<<<<< HEAD
   findTagById(id: Float!): Tag!
   findTaskById(id: Int!): Task!
   findNoteById(noteId: Int!): Note!
@@ -187,6 +267,10 @@ type Query {
   findReceivedInvitations: [Invitation!]!
   findRelations: [Invitation!]!
   findSentInvitations: [Invitation!]!
+=======
+  getAllEvent: [Event!]!
+  getEvent(id: Float!): Event!
+>>>>>>> 0833586f66901f51fd3d9e3cf9181e8b3d30e592
   getLoggedUser: User!
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
@@ -194,6 +278,7 @@ type Query {
   validateToken(dto: TokenValidationDto!): Boolean!
 }
 
+<<<<<<< HEAD
 enum Recurrence {
   ANNUAL
   DAILY
@@ -202,6 +287,8 @@ enum Recurrence {
   WEEKLY
 }
 
+=======
+>>>>>>> 0833586f66901f51fd3d9e3cf9181e8b3d30e592
 type ResetToken {
   id: Int!
   token: String!
@@ -210,6 +297,7 @@ type ResetToken {
   validityEndDate: DateTime!
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 input SaveTagDto {
   name: String!
@@ -235,6 +323,8 @@ input SaveNotebookDto {
   title: String!
 }
 
+=======
+>>>>>>> 0833586f66901f51fd3d9e3cf9181e8b3d30e592
 input SaveUserDto {
   email: String!
   firstName: String!
@@ -262,10 +352,14 @@ type Task {
   completed: Boolean!
   description: String!
 <<<<<<< HEAD
+<<<<<<< HEAD
   dueDate: DateTime
 =======
   dueDate: DateTime!
 >>>>>>> 1f099c4feb59212c3c550b027ccec17d69c81ae4
+=======
+  dueDate: DateTime
+>>>>>>> 0833586f66901f51fd3d9e3cf9181e8b3d30e592
   id: Int!
   title: String!
   user: User!
@@ -288,7 +382,11 @@ type User {
   lastName: String!
   linkGroups: [LinkGroup!]!
   links: [Link!]!
+<<<<<<< HEAD
   meets: [Meet!]!
+=======
+  meets: [Event!]!
+>>>>>>> 0833586f66901f51fd3d9e3cf9181e8b3d30e592
   meetsShared: [MeetSharedWithMember!]!
   notebooks: [Notebook!]!
   notes: [Note!]!

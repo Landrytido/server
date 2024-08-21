@@ -1,3 +1,4 @@
+
 import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import { ContextualGraphqlRequest } from "../../index";
 import Session from "./Session";
@@ -8,11 +9,9 @@ import Link from "./Link";
 import Task from "./Task";
 import NoteCollaboration from "./NoteCollaboration";
 import Invitation from "./Invitation";
-import Meet from "./Meet";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import ResetToken from "./ResetToken";
 import Comment from "./Comment";
-
 
 @ObjectType()
 export default class User {
@@ -66,8 +65,8 @@ export default class User {
   @Field(() => [Invitation])
   invitationsReceived?: Invitation[];
 
-  @Field(() => [Meet])
-  meets?: Meet[];
+  @Field(() => [Event])
+  meets?: Event[];
 
   @Field(() => [MeetSharedWithMember])
   meetsShared?: MeetSharedWithMember[];

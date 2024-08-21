@@ -24,8 +24,8 @@ export default class Authenticator {
     if (!user) {
       throw new Error(`User not found with email "${email}"`);
     }
-
-    if (password !== user.password) {
+    
+    if (user.password !== password) {
 
       throw new InvalidUserPasswordException();
     }

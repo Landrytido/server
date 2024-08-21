@@ -1,7 +1,8 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+
 import User from "./User";
-import Meet from "./Meet";
 import { ContextualGraphqlRequest } from "src";
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Event } from './Event';
 
 @ObjectType()
 export default class MeetSharedWithMember {
@@ -11,9 +12,9 @@ export default class MeetSharedWithMember {
   @Field(() => Int)
   userId: number;
 
-  @Field(() => Meet)
-  meet: Meet;
-
+  @Field(() => Event)
+  meet: Event;
+  
   @Field(() => User)
   user: User;
 

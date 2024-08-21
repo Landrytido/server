@@ -27,9 +27,6 @@ require("events").EventEmitter.defaultMaxListeners = 0;
 registerEnumType(Recurrence, { name: "Recurrence" });
 registerEnumType(PermissionLevel, { name: "PermissionLevel" });
 
-registerEnumType(Recurrence, { name: "Recurrence" });
-registerEnumType(PermissionLevel, { name: "PermissionLevel" });
-
 export let app;
 
 async function bootstrapApi() {
