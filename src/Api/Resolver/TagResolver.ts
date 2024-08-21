@@ -1,5 +1,4 @@
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { Tag } from "../Entity/Tag";
 import UseCaseFactory from "../UseCase/UseCaseFactory";
 import SaveTagDto from "../Dto/SaveTagDto";
 import { ContextualRequest } from "src/Core/Decorator/ContextualRequest";
@@ -10,6 +9,7 @@ import RemoveTagUseCase from "../UseCase/Tag/RemoveTag/RemoveTagUseCase";
 import UpdateTagUseCase from "../UseCase/Tag/UpdateTag/UpdateTagUseCase";
 import { UseGuards } from "@nestjs/common";
 import GraphqlAuthGuard from "src/Core/Security/Guard/GraphqlAuthGuard";
+import Tag from "../Entity/Tag";
 
 @Resolver(Tag)
 @UseGuards(GraphqlAuthGuard)

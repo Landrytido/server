@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
+import { Tag } from "@prisma/client";
 import { ContextualGraphqlRequest, UseCase } from "src";
 import SaveTagDto from "src/Api/Dto/SaveTagDto";
-import { Tag } from "src/Api/Entity/Tag";
 import TagRepository from "src/Api/Repository/TagRepository";
 
 @Injectable()
@@ -9,10 +9,7 @@ export default class CreateTagUseCase
   implements UseCase<Promise<Tag>, [dto: SaveTagDto]>
 {
   constructor(private readonly tageRepository: TagRepository) {}
-  async handle(
-    context: ContextualGraphqlRequest,
-    dto: SaveTagDto
-  ){
+  async handle(context: ContextualGraphqlRequest, dto: SaveTagDto) {
     try {
       return await this.tageRepository.save(dto);
     } catch (error) {
