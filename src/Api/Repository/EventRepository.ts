@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../Core/Datasource/Prisma';
-import { Prisma, Event } from '@prisma/client';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../Core/Datasource/Prisma";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export default class EventRepository {
@@ -12,17 +12,27 @@ export default class EventRepository {
     });
   }
 
-  async saveEvent(data: Prisma.XOR<Prisma.EventCreateInput, Prisma.EventUncheckedCreateInput> | Prisma.XOR<Prisma.EventUpdateInput, Prisma.EventUncheckedUpdateInput>){
-    if(!data.id) {
+  async saveEvent(
+    data:
+      | Prisma.XOR<Prisma.EventCreateInput, Prisma.EventUncheckedCreateInput>
+      | Prisma.XOR<Prisma.EventUpdateInput, Prisma.EventUncheckedUpdateInput>
+  ) {
+    if (!data.id) {
       return this.prisma.event.create({
-        data: data as Prisma.XOR<Prisma.EventCreateInput , Prisma.EventUncheckedCreateInput>
-      })
+        data: data as Prisma.XOR<
+          Prisma.EventCreateInput,
+          Prisma.EventUncheckedCreateInput
+        >,
+      });
     }
 
-    return this.prisma.event .update({
-      where:{id : data.id as number},
-      data: data as Prisma.XOR<Prisma.EventUpdateInput, Prisma.EventUncheckedUpdateInput>
-    })
+    return this.prisma.event.update({
+      where: { id: data.id as number },
+      data: data as Prisma.XOR<
+        Prisma.EventUpdateInput,
+        Prisma.EventUncheckedUpdateInput
+      >,
+    });
   }
 
   async delete(id: number) {

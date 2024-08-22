@@ -9,19 +9,18 @@ import GetEventUseCase from "../UseCase/Event/GetEventUseCase";
 import GetAllEventUseCase from "../UseCase/Event/GetAllEventUseCase";
 import GraphqlAuthGuard from "src/Core/Security/Guard/GraphqlAuthGuard";
 import { UseGuards } from "@nestjs/common";
-import { Event } from "@prisma/client";
+import { Event } from "../Entity/Event";
 
 @Resolver(Event)
 @UseGuards(GraphqlAuthGuard)
 export default class EventResolver {
   constructor(private readonly serviceFactory: UseCaseFactory) {}
 
-  @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Event)
   async saveEvent(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("dto") dto: SaveEventDto
-  ): Promise<Event> {
+  ) {
     return (await this.serviceFactory.create(SaveEventUseCase)).handle(
       context,
       dto
@@ -32,7 +31,7 @@ export default class EventResolver {
   async getEvent(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("id") id: number
-  ): Promise<Event> {
+  ) {
     return (await this.serviceFactory.create(GetEventUseCase)).handle(
       context,
       id
@@ -40,9 +39,7 @@ export default class EventResolver {
   }
 
   @Query(() => [Event])
-  async getAllEvent(
-    @ContextualRequest() context: ContextualGraphqlRequest
-  ): Promise<Event[]> {
+  async getAllEvent(@ContextualRequest() context: ContextualGraphqlRequest) {
     return (await this.serviceFactory.create(GetAllEventUseCase)).handle(
       context
     );
@@ -52,7 +49,7 @@ export default class EventResolver {
   async deleteEvent(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("id") id: number
-  ): Promise<Event> {
+  ) {
     return (await this.serviceFactory.create(DeleteEventUseCase)).handle(
       context,
       id
