@@ -5,14 +5,14 @@ export default class SaveUserDto {
     @Field(() => Int, { nullable: true })
     id?: number|null;
 
-    @Field()
-    email: string;
+    @Field({nullable : true})
+    email?: string;
 
-    @Field()
-    password: string;
+    @Field({nullable : true})
+    password?: string;
 
-    @Field()
-    firstName: string;
+    @Field({ nullable: true })
+    firstName?: string;
 
     @Field({ nullable: true })
     lastName?: string|null;

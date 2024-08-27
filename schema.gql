@@ -203,11 +203,11 @@ input SaveTaskDto {
 }
 
 input SaveUserDto {
-  email: String!
-  firstName: String!
+  email: String
+  firstName: String
   id: Int
   lastName: String
-  password: String!
+  password: String
 }
 
 type Session {

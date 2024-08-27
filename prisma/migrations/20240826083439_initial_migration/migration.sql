@@ -115,19 +115,20 @@ CREATE TABLE `Invitation` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `receiverId` INTEGER NOT NULL,
     `senderId` INTEGER NOT NULL,
+    `isRelation` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Meet` (
+CREATE TABLE `Event` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NOT NULL,
     `startDate` DATETIME(3) NOT NULL,
     `endDate` DATETIME(3) NOT NULL,
-    `isRecurring` BOOLEAN NOT NULL DEFAULT false,
-    `recurrence` ENUM('NONE', 'DAILY', 'WEEKLY', 'MONTHLY', 'ANNUAL') NOT NULL DEFAULT 'NONE',
+    `isRecurring` BOOLEAN NULL DEFAULT false,
+    `recurrence` ENUM('NONE', 'DAILY', 'WEEKLY', 'MONTHLY', 'ANNUAL') NULL DEFAULT 'NONE',
     `location` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -137,11 +138,11 @@ CREATE TABLE `Meet` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `MeetSharedWithMember` (
-    `meetId` INTEGER NOT NULL,
+CREATE TABLE `EventSharedWithMember` (
+    `eventId` INTEGER NOT NULL,
     `userId` INTEGER NOT NULL,
 
-    PRIMARY KEY (`meetId`, `userId`)
+    PRIMARY KEY (`eventId`, `userId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -211,13 +212,13 @@ ALTER TABLE `Invitation` ADD CONSTRAINT `Invitation_receiverId_fkey` FOREIGN KEY
 ALTER TABLE `Invitation` ADD CONSTRAINT `Invitation_senderId_fkey` FOREIGN KEY (`senderId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Meet` ADD CONSTRAINT `Meet_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Event` ADD CONSTRAINT `Event_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `MeetSharedWithMember` ADD CONSTRAINT `MeetSharedWithMember_meetId_fkey` FOREIGN KEY (`meetId`) REFERENCES `Meet`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `EventSharedWithMember` ADD CONSTRAINT `EventSharedWithMember_eventId_fkey` FOREIGN KEY (`eventId`) REFERENCES `Event`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `MeetSharedWithMember` ADD CONSTRAINT `MeetSharedWithMember_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `EventSharedWithMember` ADD CONSTRAINT `EventSharedWithMember_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Comment` ADD CONSTRAINT `Comment_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
