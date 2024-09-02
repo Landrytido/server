@@ -1,0 +1,113 @@
+import { Prisma } from "@prisma/client";
+import { PrismaService } from "../../Core/Datasource/Prisma";
+import { Injectable } from "@nestjs/common";
+
+@Injectable()
+export default class InvitationRepository {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async findReceiverIdByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
+
+  async findInvitationBySenderAndReceiver(
+    senderId: number,
+    receiverId: number
+  ) {
+    return this.prisma.invitation.findFirst({
+      where: {
+        receiverId: receiverId,
+        senderId: senderId,
+      },
+    });
+  }
+
+  async findSentInvitations(senderId: number) {
+    return this.prisma.invitation.findMany({
+      where: { senderId, AND: [{ isRelation: false }] },
+      include: {
+        receiver: true,
+        sender: true,
+      },
+    });
+  }
+
+  async findReceivedInvitations(receiverId: number) {
+    const invitations = await this.prisma.invitation.findMany({
+      where: { receiverId, AND: [{ isRelation: false }] },
+      include: {
+        receiver: true,
+        sender: true,
+      },
+    });
+    return invitations;
+  }
+
+  findRelations(userId: number) {
+    const relations = this.prisma.invitation.findMany({
+      where: {
+        OR: [{ receiverId: userId }, { senderId: userId }],
+        AND: [{ isRelation: true }],
+      },
+      include: {
+        sender: true,
+        receiver: true,
+      },
+    });
+
+    return relations;
+  }
+
+  async acceptInvitation(invitationId: number) {
+    return this.prisma.invitation.update({
+      where: {
+        id: invitationId,
+      },
+      data: {
+        isRelation: true,
+      },
+      include: {
+        sender: true,
+      },
+    });
+  }
+
+  async save(
+    data:
+      | Prisma.XOR<
+          Prisma.InvitationCreateInput,
+          Prisma.InvitationUncheckedCreateInput
+        >
+      | Prisma.XOR<
+          Prisma.InvitationUpdateInput,
+          Prisma.InvitationUncheckedUpdateInput
+        >
+  ) {
+    if (!data.id) {
+      return this.prisma.invitation.create({
+        data: data as Prisma.XOR<
+          Prisma.InvitationCreateInput,
+          Prisma.InvitationUncheckedCreateInput
+        >,
+      });
+    }
+
+    return this.prisma.invitation.update({
+      where: { id: data.id as number },
+      data: data as Prisma.XOR<
+        Prisma.InvitationUpdateInput,
+        Prisma.InvitationUncheckedUpdateInput
+      >,
+    });
+  }
+
+  async remove(invitationId: number) {
+    return this.prisma.invitation.delete({
+      where: { id: invitationId },
+    });
+  }
+}

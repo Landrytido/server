@@ -5,6 +5,7 @@ export default class SaveUserDto {
   @Field(() => Int, { nullable: true })
   id?: number | null;
 
+<<<<<<< HEAD
   @Field()
   email: string;
 
@@ -13,6 +14,16 @@ export default class SaveUserDto {
 
   @Field()
   firstName: string;
+=======
+    @Field({nullable : true})
+    email?: string;
+
+    @Field({nullable : true})
+    password?: string;
+
+    @Field({ nullable: true })
+    firstName?: string;
+>>>>>>> main
 
   @Field({ nullable: true })
   lastName?: string | null;

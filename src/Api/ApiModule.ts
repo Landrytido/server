@@ -9,7 +9,12 @@ import { Repositories } from "./Repository/Repositories";
 import { Resolvers } from "./Resolver/Resolvers";
 import UseCaseFactory from "./UseCase/UseCaseFactory";
 import UncontextualUseCaseFactory from "./UseCase/UncontextualUseCaseFactory";
-
+import EventResolver from './Resolver/EventResolver';
+import EventRepository from './Repository/EventRepository';
+import GetEventUseCase from './UseCase/Event/GetEventUseCase';
+import DeleteEventUseCase from './UseCase/Event/DeleteEventUseCase';
+import GetAllEventUseCase from './UseCase/Event/GetAllEventUseCase';
+import SaveEventUseCase from './UseCase/Event/SaveEventUseCase';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -32,6 +37,12 @@ import UncontextualUseCaseFactory from "./UseCase/UncontextualUseCaseFactory";
   providers: [
     UseCaseFactory,
     UncontextualUseCaseFactory,
+    EventResolver,
+    SaveEventUseCase,
+    EventRepository,
+    GetEventUseCase,
+    GetAllEventUseCase,
+    DeleteEventUseCase,
     ...Repositories,
     ...Resolvers,
   ],

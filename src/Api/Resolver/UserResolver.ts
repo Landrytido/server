@@ -15,14 +15,22 @@ import UncontextualUseCaseFactory from "../UseCase/UncontextualUseCaseFactory";
 export default class UserResolver {
   constructor(
     private readonly serviceFactory: UseCaseFactory,
+<<<<<<< HEAD
     private readonly uncontextualUseCaseFactory: UncontextualUseCaseFactory,
+=======
+    private readonly uncontextualUseCaseFactory: UncontextualUseCaseFactory
+>>>>>>> main
   ) {}
 
   @UseGuards(GraphqlAuthGuard)
   @Query(() => User)
   async getLoggedUser(@ContextualRequest() context: ContextualGraphqlRequest) {
     return (await this.serviceFactory.create(GetLoggedUserUseCase)).handle(
+<<<<<<< HEAD
       context,
+=======
+      context
+>>>>>>> main
     );
   }
 
@@ -37,11 +45,19 @@ export default class UserResolver {
   @Mutation(() => User)
   async saveUser(
     @ContextualRequest() context: ContextualGraphqlRequest,
+<<<<<<< HEAD
     @Args("dto") dto: SaveUserDto,
   ): Promise<User> {
     return (await this.serviceFactory.create(SaveUserUseCase)).handle(
       context,
       dto,
+=======
+    @Args("dto") dto: SaveUserDto
+  ): Promise<User> {
+    return (await this.serviceFactory.create(SaveUserUseCase)).handle(
+      context,
+      dto
+>>>>>>> main
     );
   }
 }

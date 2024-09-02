@@ -17,16 +17,20 @@ type Comment {
   userId: Int!
 }
 
+<<<<<<< HEAD
 input CreateLinkGroupDto {
   description: String
   name: String!
 }
 
+=======
+>>>>>>> main
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
+<<<<<<< HEAD
 type Invitation {
   id: Int!
   receiver: User!
@@ -66,6 +70,9 @@ type LinkGroup {
 }
 
 type Meet {
+=======
+type Event {
+>>>>>>> main
   createdAt: DateTime!
   description: String!
   endDate: DateTime!
@@ -81,14 +88,58 @@ type Meet {
   userId: Int!
 }
 
+<<<<<<< HEAD
 type MeetSharedWithMember {
   meet: Meet!
+=======
+input EventDto {
+  description: String!
+  endDate: DateTime!
+  id: Int
+  location: String!
+  startDate: DateTime!
+  title: String!
+  userId: Int!
+}
+
+type Invitation {
+  id: Int!
+  isRelation: Boolean!
+  receiver: User
+  receiverId: Int!
+  sender: User
+  senderId: Int!
+}
+
+type Link {
+  description: String!
+  id: Int!
+  linkGroup: LinkGroup!
+  linkGroupId: Int!
+  url: String!
+  user: User!
+  userId: Int!
+}
+
+type LinkGroup {
+  description: String!
+  id: Int!
+  links: [Link!]!
+  name: String!
+  user: User!
+  userId: Int!
+}
+
+type MeetSharedWithMember {
+  meet: Event!
+>>>>>>> main
   meetId: Int!
   user: User!
   userId: Int!
 }
 
 type Mutation {
+<<<<<<< HEAD
   create(dto: SaveLinkDto!): Link!
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
   delete(id: Int!): LinkClick!
@@ -99,6 +150,25 @@ type Mutation {
   saveUser(dto: SaveUserDto!): User!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
+=======
+  RemoveById(id: Int!): Task!
+  UpdateById(dto: SaveTaskDto!, id: Int!): Task!
+  acceptInvitation(invitationId: Int!): Invitation!
+  createInvitation(dto: SaveInvitationDto!): Invitation!
+  createNote(dto: SaveNoteDto!): Note!
+  createNotebook(dto: SaveNotebookDto!): Notebook!
+  createTag(dto: SaveTagDto!): Tag!
+  createTask(dto: SaveTaskDto!): Task!
+  deleteEvent(id: Float!): Event!
+  deleteInvitation(invitationId: Int!): Invitation!
+  deleteNote(noteId: Int!): Note!
+  deleteNotebook(notebookId: Int!): Notebook!
+  register(dto: SaveUserDto!): User!
+  saveEvent(dto: EventDto!): Event!
+  saveUser(dto: SaveUserDto!): User!
+  updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
+  updateNotebook(dto: SaveNotebookDto!, notebookId: Int!): Notebook!
+>>>>>>> main
 }
 
 type Note {
@@ -139,6 +209,7 @@ enum PermissionLevel {
 }
 
 type Query {
+<<<<<<< HEAD
   findByLinkId(linkId: Int!): [LinkClick!]!
   findByUser: [LinkClick!]!
   findLinkById(id: Int!): Link!
@@ -149,9 +220,25 @@ type Query {
   findLinksByUserIdWithMinClicks(minClicks: Int!): [Link!]!
   findOne(id: Int!): LinkClick!
   getAllLinkGroups: [LinkGroup!]!
+=======
+  findNoteById(noteId: Int!): Note!
+  findNotebookById(notebookId: Int!): Notebook!
+  findNotebooks: [Notebook!]!
+  findNotebooksByUserId: [Notebook!]!
+  findNotes: [Note!]!
+  findNotesByUserId: [Note!]!
+  findReceivedInvitations: [Invitation!]!
+  findRelations: [Invitation!]!
+  findSentInvitations: [Invitation!]!
+  findTagById(id: Float!): Tag!
+  findTaskById(id: Int!): Task!
+  getAllEvent: [Event!]!
+  getEvent(id: Float!): Event!
+>>>>>>> main
   getLoggedUser: User!
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
+  tasksByUserId(userId: Int!): [Task!]!
   validateToken(dto: TokenValidationDto!): Boolean!
 }
 
@@ -171,6 +258,7 @@ type ResetToken {
   validityEndDate: DateTime!
 }
 
+<<<<<<< HEAD
 input SaveLinkClickDto {
   id: Int
   linkId: Int!
@@ -185,11 +273,64 @@ input SaveLinkDto {
 }
 
 input SaveUserDto {
+=======
+input SaveInvitationDto {
+>>>>>>> main
   email: String!
-  firstName: String!
+}
+
+input SaveNoteDto {
+  content: String
+  notebookId: Int
+  title: String!
+}
+
+input SaveNotebookDto {
+  title: String!
+}
+
+input SaveTagDto {
+  name: String!
+}
+
+input SaveTaskDto {
+  completed: Boolean!
+  description: String!
+  dueDate: DateTime
+  title: String!
+}
+
+input SaveUserDto {
+  email: String
+  firstName: String
   id: Int
   lastName: String
-  password: String!
+  password: String
+}
+
+type Session {
+  createdAt: DateTime!
+  id: Int!
+  token: String!
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
+type Tag {
+  id: Int!
+  name: String!
+  notes: [Note!]!
+}
+
+type Task {
+  completed: Boolean!
+  description: String!
+  dueDate: DateTime!
+  id: Int!
+  title: String!
+  user: User!
+  userId: Int!
 }
 
 type Session {
@@ -239,7 +380,11 @@ type User {
   lastName: String!
   linkGroups: [LinkGroup!]!
   links: [Link!]!
+<<<<<<< HEAD
   meets: [Meet!]!
+=======
+  meets: [Event!]!
+>>>>>>> main
   meetsShared: [MeetSharedWithMember!]!
   notebooks: [Notebook!]!
   notes: [Note!]!

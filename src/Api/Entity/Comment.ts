@@ -1,7 +1,7 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import Note from "./Note";
-import { ContextualGraphqlRequest } from "../../index";
+import { ContextualGraphqlRequest } from "src";
 
 @ObjectType()
 export default class Comment {

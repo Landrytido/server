@@ -12,9 +12,19 @@ export default class CreateUserUseCase
 
   async handle(dto: SaveUserDto): Promise<User> {
     try {
+<<<<<<< HEAD
       return this.userRepository.saveUser(dto);
     } catch (error) {
       throw new BadRequestException(error.message);
+=======
+      const user = await this.userRepository.findByEmail(dto.email);
+
+      if (user) throw new BadRequestException("User already exists");
+
+      return this.userRepository.saveUser(dto);
+    } catch (error) {
+      throw new BadRequestException("CreateUserUseCase Failed", error.message);
+>>>>>>> main
     }
   }
 }

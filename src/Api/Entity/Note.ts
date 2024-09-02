@@ -1,9 +1,9 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import Notebook from "./Notebook";
 import { NoteCollaboration } from "./NoteCollaboration";
 import { Tag } from "./Tag";
-import { ContextualGraphqlRequest } from "../../index";
+import { ContextualGraphqlRequest } from "src";
 
 @ObjectType()
 export default class Note {
@@ -16,10 +16,10 @@ export default class Note {
   @Field({ nullable: true })
   content?: string;
 
-  @Field()
+  @Field(() => GraphQLISODateTime)
   createdAt: Date;
 
-  @Field()
+  @Field(() => GraphQLISODateTime)
   updatedAt: Date;
 
   @Field(() => Int)

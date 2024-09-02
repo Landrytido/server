@@ -13,5 +13,5 @@ export const ContextualRequest = createParamDecorator(
     delete headers.authorization;
 
     return { ...request.user, request: { headers } };
-  },
+  }
 );

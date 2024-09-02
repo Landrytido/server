@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import Note from "./Note";
-import { ContextualGraphqlRequest } from "../../index";
+import { ContextualGraphqlRequest } from "src";
 
 @ObjectType()
 export class Tag {

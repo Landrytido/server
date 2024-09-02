@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import UserRepository from "./UserRepository";
 import LinkGroupRepository from "./LinkGroupRepository";
 import LinkRepository from "./LinkRepository";
@@ -9,3 +10,18 @@ export const Repositories = [
   LinkRepository,
   LinkClickRepository,
 ];
+=======
+
+import TagRepository from "./TagRepository";
+import TaskRepository from "./TaskRepository";
+
+import NotebookRepository from "./NotebookRepository";
+import NoteRepository from "./NoteRepository";
+
+import UserRepository from "./UserRepository";
+import InvitationRepository from "./InvitationRepository";
+
+
+export const Repositories = [UserRepository, TagRepository, TaskRepository ,NotebookRepository,NoteRepository,InvitationRepository];
+
+>>>>>>> main
