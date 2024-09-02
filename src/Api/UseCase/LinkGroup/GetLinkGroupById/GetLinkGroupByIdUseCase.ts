@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import LinkGroupRepository from "../../../Repository/LinkGroupRepository";
-import LinkGroup from "../../../Entity/LinkGroup";
 import { ContextualGraphqlRequest, UseCase } from "../../../../index";
+import { LinkGroup } from "@prisma/client";
 
 @Injectable()
 export default class GetLinkGroupByIdUseCase
@@ -15,13 +15,13 @@ export default class GetLinkGroupByIdUseCase
 
   async handle(
     context: ContextualGraphqlRequest,
-    linkGroupId: number,
+    linkGroupId: number
   ): Promise<LinkGroup> {
     try {
       const linkGroup = await this.linkGroupRepository.findById(linkGroupId);
       if (!linkGroup) {
         throw new NotFoundException(
-          `LinkGroup with ID ${linkGroupId} not found`,
+          `LinkGroup with ID ${linkGroupId} not found`
         );
       }
       return linkGroup;

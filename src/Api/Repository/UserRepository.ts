@@ -21,11 +21,7 @@ export default class UserRepository {
   async saveUser(
     data:
       | Prisma.XOR<Prisma.UserCreateInput, Prisma.UserUncheckedCreateInput>
-<<<<<<< HEAD
-      | Prisma.XOR<Prisma.UserUpdateInput, Prisma.UserUncheckedUpdateInput>,
-=======
       | Prisma.XOR<Prisma.UserUpdateInput, Prisma.UserUncheckedUpdateInput>
->>>>>>> main
   ) {
     if (!data.id) {
       return this.prisma.user.create({

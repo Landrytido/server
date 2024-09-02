@@ -22,7 +22,7 @@ export default class NoteResolver {
   async createNote(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("dto") dto: SaveNoteDto
-  ): Promise<Note> {
+  ) {
     return (await this.serviceFactory.create(CreateNoteUseCase)).handle(
       context,
       dto
@@ -34,7 +34,7 @@ export default class NoteResolver {
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("noteId", { type: () => Int }) noteId: number,
     @Args("dto") dto: SaveNoteDto
-  ): Promise<Note> {
+  ) {
     return (await this.serviceFactory.create(UpdateNoteUseCase)).handle(
       context,
       noteId,
@@ -46,7 +46,7 @@ export default class NoteResolver {
   async deleteNote(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("noteId", { type: () => Int }) noteId: number
-  ): Promise<Note> {
+  ) {
     return (await this.serviceFactory.create(DeleteNoteUseCase)).handle(
       context,
       noteId
@@ -57,7 +57,7 @@ export default class NoteResolver {
   async findNoteById(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("noteId", { type: () => Int }) noteId: number
-  ): Promise<Note> {
+  ) {
     return (await this.serviceFactory.create(GetNoteUseCase)).handle(
       context,
       noteId
@@ -65,9 +65,7 @@ export default class NoteResolver {
   }
 
   @Query(() => [Note])
-  async findNotes(
-    @ContextualRequest() context: ContextualGraphqlRequest
-  ): Promise<Note[]> {
+  async findNotes(@ContextualRequest() context: ContextualGraphqlRequest) {
     return (await this.serviceFactory.create(GetAllNotesUseCase)).handle(
       context
     );
@@ -76,7 +74,7 @@ export default class NoteResolver {
   @Query(() => [Note])
   async findNotesByUserId(
     @ContextualRequest() context: ContextualGraphqlRequest
-  ): Promise<Note[]> {
+  ) {
     return (await this.serviceFactory.create(GetNotesByUserIdUseCase)).handle(
       context
     );

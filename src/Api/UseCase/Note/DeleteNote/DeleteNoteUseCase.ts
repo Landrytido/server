@@ -4,9 +4,9 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import Note from "src/Api/Entity/Note";
 import NoteRepository from "src/Api/Repository/NoteRepository";
 import InsufficientPermissionException from "src/Core/Exception/InsufficientPermissionException";
+import { Note } from "@prisma/client";
 
 @Injectable()
 export default class DeleteNoteUseCase

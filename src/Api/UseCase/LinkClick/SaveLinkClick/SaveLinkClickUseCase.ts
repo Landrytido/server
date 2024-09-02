@@ -1,8 +1,8 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
 import LinkClickRepository from "../../../Repository/LinkClickRepository";
-import { LinkClick } from "@prisma/client";
 import { ContextualGraphqlRequest, UseCase } from "../../../../index";
 import SaveLinkClickDto from "./SaveLinkClickDto";
+import LinkClick from "src/Api/Entity/LinkClick";
 
 @Injectable()
 export default class SaveLinkClickUseCase
@@ -16,7 +16,7 @@ export default class SaveLinkClickUseCase
     } catch (error) {
       throw new BadRequestException(
         "Failed to create link click",
-        error.message,
+        error.message
       );
     }
   }

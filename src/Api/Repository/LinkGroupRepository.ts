@@ -1,6 +1,5 @@
 import { PrismaService } from "../../Core/Datasource/Prisma";
 import { Injectable } from "@nestjs/common";
-import LinkGroup from "../Entity/LinkGroup";
 import { Prisma } from "@prisma/client";
 
 @Injectable()
@@ -32,7 +31,7 @@ export default class LinkGroupRepository {
       | Prisma.XOR<
           Prisma.LinkGroupUpdateInput,
           Prisma.LinkGroupUncheckedUpdateInput
-        >,
+        >
   ) {
     if (!data.id) {
       return this.prisma.linkGroup.create({
@@ -60,7 +59,7 @@ export default class LinkGroupRepository {
     });
   }
 
-  async delete(linkGroupId: number): Promise<LinkGroup> {
+  async delete(linkGroupId: number) {
     return this.prisma.linkGroup.delete({ where: { id: linkGroupId } });
   }
 }

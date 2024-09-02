@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import LinkGroupRepository from "../../../Repository/LinkGroupRepository";
-import LinkGroup from "../../../Entity/LinkGroup";
 import { ContextualGraphqlRequest, UseCase } from "../../../../index";
+import { LinkGroup } from "@prisma/client";
 
 @Injectable()
 export default class GetLinkGroupsByUserIdUseCase
@@ -15,7 +15,7 @@ export default class GetLinkGroupsByUserIdUseCase
     } catch (error) {
       throw new BadRequestException(
         "Failed to find link groups by user ID",
-        error.message,
+        error.message
       );
     }
   }

@@ -4,10 +4,10 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import Note from "src/Api/Entity/Note";
 import NoteRepository from "src/Api/Repository/NoteRepository";
 import SaveNoteDto from "src/Api/Dto/SaveNoteDto";
 import InsufficientPermissionException from "src/Core/Exception/InsufficientPermissionException";
+import { Note } from "@prisma/client";
 
 @Injectable()
 export default class UpdateNoteUseCase
@@ -19,7 +19,7 @@ export default class UpdateNoteUseCase
     context: ContextualGraphqlRequest,
     noteId: number,
     dto: SaveNoteDto
-  ): Promise<Note> {
+  ) {
     try {
       const note = await this.noteRepository.findById(noteId);
 
