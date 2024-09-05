@@ -67,6 +67,7 @@ type Link {
   id: Int!
   linkGroup: LinkGroup!
   linkGroupId: Int!
+  name: String!
   url: String!
   user: User!
   userId: Int!
@@ -117,8 +118,8 @@ type Mutation {
   RemoveById(id: Int!): Task!
   UpdateById(dto: SaveTaskDto!, id: Int!): Task!
   acceptInvitation(invitationId: Int!): Invitation!
-  create(dto: SaveLinkDto!): Link!
   createInvitation(dto: SaveInvitationDto!): Invitation!
+  createLink(dto: SaveLinkDto!): Link!
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
   createNote(dto: SaveNoteDto!): Note!
   createNotebook(dto: SaveNotebookDto!): Notebook!

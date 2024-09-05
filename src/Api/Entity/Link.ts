@@ -10,6 +10,9 @@ export default class Link {
   id: number;
 
   @Field()
+  name: string;
+
+  @Field()
   url: string;
 
   @Field()

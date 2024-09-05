@@ -25,25 +25,24 @@ import { PrismaService } from "../../Core/Datasource/Prisma";
 import LinkGroup from "../Entity/LinkGroup";
 import User from "../Entity/User";
 import LinkClick from "../Entity/LinkClick";
-import GetLinksByUserIdWithMinClicksUseCase
-  from "../UseCase/Link/GetLinksByUserIdWithMinClicks/GetLinksByUserIdWithMinClicksUseCase";
+import GetLinksByUserIdWithMinClicksUseCase from "../UseCase/Link/GetLinksByUserIdWithMinClicks/GetLinksByUserIdWithMinClicksUseCase";
 
 @Resolver(Link)
 export default class LinkResolver {
   constructor(
     private readonly serviceFactory: UseCaseFactory,
-    private readonly prisma: PrismaService,
+    private readonly prisma: PrismaService
   ) {}
 
   @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Link)
-  async create(
+  async createLink(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("dto") dto: SaveLinkDto,
+    @Args("dto") dto: SaveLinkDto
   ) {
     return (await this.serviceFactory.create(CreateLinkUseCase)).handle(
       context,
-      dto,
+      dto
     );
   }
 
@@ -51,21 +50,21 @@ export default class LinkResolver {
   @Query(() => Link)
   async findLinkById(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("id", { type: () => Int }) id: number,
+    @Args("id", { type: () => Int }) id: number
   ) {
     return (await this.serviceFactory.create(GetLinkByIdUseCase)).handle(
       context,
-      id,
+      id
     );
   }
 
   @UseGuards(GraphqlAuthGuard)
   @Query(() => [Link])
   async findLinksByUserId(
-    @ContextualRequest() context: ContextualGraphqlRequest,
+    @ContextualRequest() context: ContextualGraphqlRequest
   ) {
     return (await this.serviceFactory.create(GetLinksByUserIdUseCase)).handle(
-      context,
+      context
     );
   }
 
@@ -73,7 +72,7 @@ export default class LinkResolver {
   @Query(() => [Link])
   async findLinksByLinkGroupId(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("linkGroupId", { type: () => Int }) linkGroupId: number,
+    @Args("linkGroupId", { type: () => Int }) linkGroupId: number
   ) {
     return (
       await this.serviceFactory.create(GetLinksByLinkGroupIdUseCase)
@@ -85,12 +84,12 @@ export default class LinkResolver {
   async updateLink(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("id", { type: () => Int }) id: number,
-    @Args("dto") dto: UpdateLinkDto,
+    @Args("dto") dto: UpdateLinkDto
   ) {
     return (await this.serviceFactory.create(UpdateLinkUseCase)).handle(
       context,
       id,
-      dto,
+      dto
     );
   }
 
@@ -98,11 +97,11 @@ export default class LinkResolver {
   @Mutation(() => Link)
   async deleteLink(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("id", { type: () => Int }) id: number,
+    @Args("id", { type: () => Int }) id: number
   ) {
     return (await this.serviceFactory.create(DeleteLinkUseCase)).handle(
       context,
-      id,
+      id
     );
   }
 
@@ -110,7 +109,7 @@ export default class LinkResolver {
   @Query(() => [Link])
   async findLinksByUserIdWithMinClicks(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("minClicks", { type: () => Int }) minClicks: number,
+    @Args("minClicks", { type: () => Int }) minClicks: number
   ) {
     return (
       await this.serviceFactory.create(GetLinksByUserIdWithMinClicksUseCase)
