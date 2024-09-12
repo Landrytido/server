@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ContextualRequest } from "src/Core/Decorator/ContextualRequest";
 import SaveEventDto from "../UseCase/Event/SaveEventDto";
 import UseCaseFactory from "../UseCase/UseCaseFactory";
@@ -30,7 +30,7 @@ export default class EventResolver {
   @Query(() => Event)
   async getEvent(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("id") id: number
+    @Args("id",{type:()=>Int})id: number
   ) {
     return (await this.serviceFactory.create(GetEventUseCase)).handle(
       context,

@@ -95,23 +95,23 @@ enum PermissionLevel {
 }
 
 model Link {
-  id          Int       @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
   url         String
   description String?
   linkGroupId Int
   userId      Int
-  linkGroup   LinkGroup @relation(fields: [linkGroupId], references: [id])
-  user        User      @relation(fields: [userId], references: [id])
+  linkGroup   LinkGroup   @relation(fields: [linkGroupId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
   clicks      LinkClick[]
 }
 
 model LinkGroup {
-  id          Int    @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   name        String
   description String?
   userId      Int
-  user        User   @relation(fields: [userId], references: [id])
+  user        User    @relation(fields: [userId], references: [id])
   links       Link[]
 }
 
@@ -144,7 +144,7 @@ model Event {
   recurrence  Recurrence?             @default(NONE)
   location    String
   createdAt   DateTime                @default(now())
-  updatedAt   DateTime                @updatedAt
+  updatedAt   DateTime                @default(now()) @updatedAt
   userId      Int
   user        User                    @relation(fields: [userId], references: [id])
   sharedWith  EventSharedWithMember[]
@@ -186,10 +186,10 @@ model ResetToken {
 }
 
 model LinkClick {
-  id     Int      @id @default(autoincrement())
-  clicks Int      @default(0)
+  id     Int   @id @default(autoincrement())
+  clicks Int   @default(0)
   linkId Int?
   userId Int?
-  link   Link?     @relation(fields: [linkId], references: [id])
-  user   User?     @relation(fields: [userId], references: [id])
+  link   Link? @relation(fields: [linkId], references: [id])
+  user   User? @relation(fields: [userId], references: [id])
 }
