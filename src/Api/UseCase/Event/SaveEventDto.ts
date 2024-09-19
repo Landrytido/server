@@ -1,6 +1,6 @@
 import { Field, GraphQLISODateTime, InputType, Int } from "@nestjs/graphql";
 @InputType()
-export default class EventDto {
+export default class saveEventDto {
   @Field(() => Int, { nullable: true })
   id?: number | null;
 

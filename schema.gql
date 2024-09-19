@@ -43,18 +43,9 @@ type Event {
   userId: Int!
 }
 
-input EventDto {
-  description: String!
-  endDate: DateTime!
-  id: Int
-  location: String!
-  startDate: DateTime!
-  title: String!
-  userId: Int!
-}
-
 type Invitation {
   id: Int!
+  isRelation: Boolean!
   receiver: User!
   receiverId: Int!
   sender: User!
@@ -134,7 +125,7 @@ type Mutation {
   deleteNotebook(notebookId: Int!): Notebook!
   register(dto: SaveUserDto!): User!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
-  saveEvent(dto: EventDto!): Event!
+  saveEvent(dto: saveEventDto!): Event!
   saveUser(dto: SaveUserDto!): User!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
@@ -328,4 +319,14 @@ type User {
   sessions: [Session!]!
   tasks: [Task!]!
   updatedAt: DateTime!
+}
+
+input saveEventDto {
+  description: String!
+  endDate: DateTime!
+  id: Int
+  location: String!
+  startDate: DateTime!
+  title: String!
+  userId: Int!
 }
