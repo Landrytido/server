@@ -11,6 +11,7 @@ import GetTaskUseCase from "../UseCase/Task/GetTask/GetTaskUseCase";
 import RemoveTaskUseCase from "../UseCase/Task/RemoveTask/RemoveTaskUseCase";
 import UpdateTaskUseCase from "../UseCase/Task/UpdateTask/UpdateTaskUseCase";
 import Task from "../Entity/Task";
+import GetAllTaskUseCase from "../UseCase/Task/GetAllTask/GetAllTaskUseCase";
 
 @Resolver(Task)
 @UseGuards(GraphqlAuthGuard)
@@ -45,6 +46,13 @@ export default class TaskResolver {
     return (await this.serviceFactory.create(GetTaskUseCase)).handle(
       context,
       id
+    );
+  }
+
+  @Query(() => [Task])
+  async getAllTask(@ContextualRequest() context: ContextualGraphqlRequest) {
+    return (await this.serviceFactory.create(GetAllTaskUseCase)).handle(
+      context
     );
   }
 
