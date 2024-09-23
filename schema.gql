@@ -107,7 +107,7 @@ type MeetSharedWithMember {
 
 type Mutation {
   RemoveById(id: Int!): Task!
-  UpdateById(dto: SaveTaskDto!, id: Int!): Task!
+  UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptInvitation(invitationId: Int!): Invitation!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
@@ -115,7 +115,6 @@ type Mutation {
   createNote(dto: SaveNoteDto!): Note!
   createNotebook(dto: SaveNotebookDto!): Notebook!
   createTag(dto: SaveTagDto!): Tag!
-  createTask(dto: SaveTaskDto!): Task!
   delete(id: Int!): LinkClick!
   deleteEvent(id: Float!): Event!
   deleteInvitation(invitationId: Int!): Invitation!
@@ -126,6 +125,7 @@ type Mutation {
   register(dto: SaveUserDto!): User!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: saveEventDto!): Event!
+  saveTask(dto: SaveTaskDto!): Task!
   saveUser(dto: SaveUserDto!): User!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
@@ -194,7 +194,7 @@ type Query {
   getAllEvent: [Event!]!
   getAllLinkGroups: [LinkGroup!]!
   getAllTask: [Task!]!
-  getEvent(id: Float!): Event!
+  getEvent(id: Int!): Event!
   getLoggedUser: User!
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
@@ -253,7 +253,9 @@ input SaveTaskDto {
   completed: Boolean!
   description: String!
   dueDate: DateTime
+  id: Int
   title: String!
+  userId: Int!
 }
 
 input SaveUserDto {
