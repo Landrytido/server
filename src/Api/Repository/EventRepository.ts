@@ -44,4 +44,10 @@ export default class EventRepository {
   async findAll() {
     return this.prisma.event.findMany();
   }
+
+  async findByUserId(userId : number){
+    return this.prisma.event.findMany({
+      where : {userId : userId}
+    })
+  }
 }

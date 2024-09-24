@@ -171,6 +171,7 @@ enum PermissionLevel {
 }
 
 type Query {
+  eventByUserId(userId: Int!): [Event!]!
   findByLinkId(linkId: Int!): [LinkClick!]!
   findByUser: [LinkClick!]!
   findLinkById(id: Int!): Link!

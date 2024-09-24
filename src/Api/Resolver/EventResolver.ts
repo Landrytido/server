@@ -10,6 +10,7 @@ import GetAllEventUseCase from "../UseCase/Event/GetAllEventUseCase";
 import GraphqlAuthGuard from "src/Core/Security/Guard/GraphqlAuthGuard";
 import { UseGuards } from "@nestjs/common";
 import { Event } from "../Entity/Event";
+import GetEventByUserIdUseCase from "../UseCase/Event/GetEventByUserIdUseCase";
 
 @Resolver(Event)
 @UseGuards(GraphqlAuthGuard)
@@ -41,6 +42,16 @@ export default class EventResolver {
   @Query(() => [Event])
   async getAllEvent(@ContextualRequest() context: ContextualGraphqlRequest) {
     return (await this.serviceFactory.create(GetAllEventUseCase)).handle(
+      context
+    );
+  }
+
+  @Query(() => [Event])
+  async eventByUserId(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("userId",{type:()=>Int}) userId: number
+  ){
+    return (await this.serviceFactory.create(GetEventByUserIdUseCase)).handle(
       context
     );
   }
