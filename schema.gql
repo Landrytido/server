@@ -116,7 +116,7 @@ type Mutation {
   createNotebook(dto: SaveNotebookDto!): Notebook!
   createTag(dto: SaveTagDto!): Tag!
   delete(id: Int!): LinkClick!
-  deleteEvent(id: Float!): Event!
+  deleteEvent(id: Int!): Event!
   deleteInvitation(invitationId: Int!): Invitation!
   deleteLink(id: Int!): Link!
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!

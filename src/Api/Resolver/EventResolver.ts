@@ -59,7 +59,7 @@ export default class EventResolver {
   @Mutation(() => Event)
   async deleteEvent(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("id") id: number
+    @Args("id",{type:()=>Int}) id: number
   ) {
     return (await this.serviceFactory.create(DeleteEventUseCase)).handle(
       context,
