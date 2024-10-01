@@ -39,6 +39,15 @@ model User {
   eventsShared        EventSharedWithMember[]
   resetTokens         ResetToken[]
   linkClicks          LinkClick[]
+  searchHistory       SearchHistory[]
+}
+
+model SearchHistory {
+  id            Int       @id @default(autoincrement())
+  user          User      @relation(fields: [userId], references: [id])
+  userId        Int
+  searchTerm    String
+  searchDate    DateTime  @default(now())
 }
 
 model Session {
