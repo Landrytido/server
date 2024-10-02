@@ -2,7 +2,8 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 import User from 'src/Api/Entity/User';
 
 @ObjectType()
-export class SearchHistoryEntity {
+export default class SearchHistory {
+  
   @Field(() => Int)
   id: number;
 
