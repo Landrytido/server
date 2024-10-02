@@ -8,9 +8,11 @@ import NotebookResolver from "./NotebookResolver";
 import NoteResolver from "./NoteResolver";
 import UserResolver from "./UserResolver";
 import InvitationResolver from "./InvitationResolver";
+import SearchHistoryResolver from "./SearchHistoryResolver";
 
 export const Resolvers = [
   UserResolver,
+  SearchHistoryResolver,
   TagResolver,
   TaskResolver,
   NotebookResolver,
