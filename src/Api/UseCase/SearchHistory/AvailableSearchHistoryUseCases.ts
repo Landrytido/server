@@ -1,4 +1,4 @@
-import GetSearchHistoryUseCase from "./GetSearchHistory/GetSearchHistoryUseCase";
+import GetSearchHistoryUseCase from "./GetSearchHistory/GetAllSearchHistoryByUserIdUseCase";
 import SaveSearchHistoryUseCase from "./CreateSearch/CreateSearchUseCase";
 import DeleteSearchHistoryUseCase from "./DeleteSearch/DeleteSearchUseCase";
 

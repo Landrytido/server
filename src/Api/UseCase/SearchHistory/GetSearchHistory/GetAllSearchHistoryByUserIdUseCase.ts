@@ -8,15 +8,15 @@ import SearchHistory from "src/Api/Entity/SearchHistory";
 import SearchHistoryRepository from "src/Api/Repository/SearchHistoryRepository";
 
 @Injectable()
-export default class GetSearchHistoryUseCase
+export default class GetAllSearchHistoryByUserIdUseCase
   implements UseCase<Promise<SearchHistory>, [searchHistoryId: number]>
 {
   constructor(private readonly searchHistoryRepository: SearchHistoryRepository) {}
 
   async handle(
-  context: ContextualGraphqlRequest, searchHistoryId: number): Promise<SearchHistory> {
+  context: ContextualGraphqlRequest, userId: number): Promise<any> {
     try {
-      const searchHistory = await this.searchHistoryRepository.findById(searchHistoryId);
+      const searchHistory: SearchHistory[] = await this.searchHistoryRepository.findByUserId(userId);
       
       if (!searchHistory) throw new NotFoundException("Search history not found");
 
