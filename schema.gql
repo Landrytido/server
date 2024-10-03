@@ -206,7 +206,7 @@ type Query {
   getAllLinkGroups: [LinkGroup!]!
   getEvent(id: Float!): Event!
   getLoggedUser: User!
-  getSearchHistory(searchHistoryId: Float!): [SearchHistory!]!
+  getSearchHistoryByUserId: [SearchHistory!]!
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
   tasksByUserId(userId: Int!): [Task!]!
