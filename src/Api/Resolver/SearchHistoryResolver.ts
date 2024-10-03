@@ -10,6 +10,7 @@ import SearchHistoryDto from "../Dto/SearchHistoryDto";
 import CreateSearchHistoryUseCase from "../UseCase/SearchHistory/CreateSearch/CreateSearchUseCase";
 import User from "../Entity/User";
 import GetLoggedUserUseCase from "../UseCase/User/GetLoggedUser/GetLoggedUserUseCase";
+import DeleteSearchHistoryUseCase from "../UseCase/SearchHistory/DeleteSearch/DeleteSearchUseCase";
 
 @Resolver(SearchHistory)
 
@@ -37,6 +38,23 @@ export default class SearchHistoryResolver {
       context,
       dto
     );
+  }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => Boolean)
+  async deleteSearchHistory(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("searchHistoryId") searchHistoryId: number
+  ): Promise<boolean> {
+    try {
+      await (await this.serviceFactory.create(DeleteSearchHistoryUseCase)).handle(context,
+        searchHistoryId
+      );
+      return true;
+    } catch (error) {
+      
+      return false;
+    }
   }
 
   @ResolveField(() => User)
