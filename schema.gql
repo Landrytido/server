@@ -199,7 +199,7 @@ type Query {
   getAllTask: [Task!]!
   getEvent(id: Int!): Event!
   getLoggedUser: User!
-  getSearchHistory(searchHistoryId: Float!): [SearchHistory!]!
+  getSearchHistoryByUserId: [SearchHistory!]!
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
   tasksByUserId(userId: Int!): [Task!]!

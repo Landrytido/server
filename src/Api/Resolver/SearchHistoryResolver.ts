@@ -5,7 +5,7 @@ import GraphqlAuthGuard from "../../Core/Security/Guard/GraphqlAuthGuard";
 import { ContextualGraphqlRequest } from "../../index";
 import SearchHistory from "../Entity/SearchHistory";
 import UseCaseFactory from "../UseCase/UseCaseFactory";
-import GetSearchHistoryUseCase from "../UseCase/SearchHistory/GetSearchHistory/GetSearchHistoryUseCase";
+import GetSearchHistoryUseCase from "../UseCase/SearchHistory/GetSearchHistory/GetAllSearchHistoryByUserIdUseCase";
 import SearchHistoryDto from "../Dto/SearchHistoryDto";
 import CreateSearchHistoryUseCase from "../UseCase/SearchHistory/CreateSearch/CreateSearchUseCase";
 import User from "../Entity/User";
@@ -19,10 +19,12 @@ export default class SearchHistoryResolver {
 
   @UseGuards(GraphqlAuthGuard)
   @Query(() => [SearchHistory])
-  async getSearchHistory(@ContextualRequest() context: ContextualGraphqlRequest, @Args("searchHistoryId") searchHistoryId: number) {
+  async getSearchHistoryByUserId(@ContextualRequest() context: ContextualGraphqlRequest) {
+     const userIdLogged = (await (await this.serviceFactory.create(GetLoggedUserUseCase)).handle(context)).id;
+
     return (await this.serviceFactory.create(GetSearchHistoryUseCase)).handle(
       context,
-      searchHistoryId
+      userIdLogged
     );
   }
 
