@@ -17,6 +17,12 @@ type Comment {
   userId: Int!
 }
 
+input CommentDto {
+  content: String!
+  noteId: Int!
+  userId: Int!
+}
+
 input CreateLinkGroupDto {
   description: String
   name: String!
@@ -118,6 +124,7 @@ type Mutation {
   RemoveById(id: Int!): Task!
   UpdateById(dto: SaveTaskDto!, id: Int!): Task!
   acceptInvitation(invitationId: Int!): Invitation!
+  createComment(data: CommentDto!): Comment!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
