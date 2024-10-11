@@ -8,12 +8,12 @@ export default class SearchHistoryDto {
   @Field(() => Int, { nullable: true })
   id?: number | null;
 
-  @Field(() => SaveUserDto)
-  user: SaveUserDto;
+  @Field(() => Int)
+  userId: number;
 
   @Field(() => String)
   searchTerm: string;
 
   @Field(() => Date)
-  searchDate: Date;
+  searchDate?: Date;
 }

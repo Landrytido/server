@@ -31,15 +31,28 @@ export default class SearchHistoryResolver {
   @UseGuards(GraphqlAuthGuard)
   @Mutation(() => SearchHistory)
   async saveSearchHistory(
-
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("dto") dto: SearchHistoryDto
-
   ): Promise<SearchHistory> {
-    return (await this.serviceFactory.create(CreateSearchHistoryUseCase)).handle(
+  
+    const userIdLogged = (await (await this.serviceFactory.create(GetLoggedUserUseCase)).handle(context)).id;
+    
+    const allSearchHistoryOfUser: SearchHistory[] = await this.getSearchHistoryByUserId(context);
+  
+    
+    if (allSearchHistoryOfUser.length >= 20) {
+      const oldestSearchHistory = allSearchHistoryOfUser[allSearchHistoryOfUser.length - 1]; 
+      await (await this.serviceFactory.create(DeleteSearchHistoryUseCase)).handle(context, oldestSearchHistory.id);
+    }
+  
+    const newSearch = await (await this.serviceFactory.create(CreateSearchHistoryUseCase)).handle(
       context,
       dto
     );
+    
+    allSearchHistoryOfUser.unshift(newSearch);
+    
+    return newSearch;
   }
 
   @UseGuards(GraphqlAuthGuard)
