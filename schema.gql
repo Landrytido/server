@@ -282,7 +282,7 @@ input SearchHistoryDto {
   id: Int
   searchDate: DateTime!
   searchTerm: String!
-  user: SaveUserDto!
+  userId: Int!
 }
 
 type Session {
