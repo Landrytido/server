@@ -122,7 +122,7 @@ type Mutation {
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
-  deleteSearchHistory(searchHistoryId: Float!): Boolean!
+  deleteSearchHistory(searchHistoryId: Int!): Boolean!
   register(dto: SaveUserDto!): User!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
