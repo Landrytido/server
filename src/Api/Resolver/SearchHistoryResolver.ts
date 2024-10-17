@@ -1,5 +1,5 @@
 import { UseGuards } from "@nestjs/common";
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { ContextualRequest } from "../../Core/Decorator/ContextualRequest";
 import GraphqlAuthGuard from "../../Core/Security/Guard/GraphqlAuthGuard";
 import { ContextualGraphqlRequest } from "../../index";
@@ -56,21 +56,19 @@ export default class SearchHistoryResolver {
   }
 
   @UseGuards(GraphqlAuthGuard)
-  @Mutation(() => Boolean)
-  async deleteSearchHistory(
-    @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("searchHistoryId") searchHistoryId: number
-  ): Promise<boolean> {
-    try {
-      await (await this.serviceFactory.create(DeleteSearchHistoryUseCase)).handle(context,
-        searchHistoryId
-      );
-      return true;
-    } catch (error) {
-      
-      return false;
-    }
+@Mutation(() => Boolean)
+async deleteSearchHistory(
+  @ContextualRequest() context: ContextualGraphqlRequest,
+  @Args("searchHistoryId", { type: () => Int }) searchHistoryId: number
+): Promise<boolean> {
+  try {
+    await (await this.serviceFactory.create(DeleteSearchHistoryUseCase)).handle(context, searchHistoryId);
+    return true;
+  } catch (error) {
+    console.error("Erreur lors de la suppression de l'historique de recherche :", error);
+    return false;
   }
+}
 
   @ResolveField(() => User)
   async user(@Parent() user: User, @ContextualRequest() context: ContextualGraphqlRequest): Promise<User> {
