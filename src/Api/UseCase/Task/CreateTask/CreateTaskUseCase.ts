@@ -8,14 +8,15 @@ import TaskRepository from "src/Api/Repository/TaskRepository";
 export class CreateTaskUseCase implements UseCase<Promise<Task>, [dto: SaveTaskDto]> {
   constructor(private readonly taskRepository: TaskRepository) {}
   
-  async handle(context: ContextualGraphqlRequest, dto: SaveTaskDto){
+  async handle(context: ContextualGraphqlRequest, dto: SaveTaskDto) {
     try {
       return await this.taskRepository.save({
         ...dto,
-        userId:context.userId
+        userId: context.userId,
       });
     } catch (error) {
-      throw new BadRequestException("cannot creat task",error.message);
+      throw new BadRequestException("Impossible de créer la tâche", error.message);
     }
   }
+  
 }

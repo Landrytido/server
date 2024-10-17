@@ -20,5 +20,8 @@ export default class Invitation {
   @Field(() => User)
   sender: User;
 
+  @Field()
+  isRelation: boolean;
+
   context?: ContextualGraphqlRequest;
 }

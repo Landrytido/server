@@ -3,14 +3,14 @@ import UseCaseFactory from "../UseCase/UseCaseFactory";
 import { ContextualGraphqlRequest } from "src";
 import { ContextualRequest } from "src/Core/Decorator/ContextualRequest";
 import SaveTaskDto from "../Dto/SaveTaskDto";
-import { CreateTaskUseCase } from "../UseCase/Task/CreateTask/CreateTaskUseCase";
 import { UseGuards } from "@nestjs/common";
 import GraphqlAuthGuard from "src/Core/Security/Guard/GraphqlAuthGuard";
 import GetTaskByUserIdUseCase from "../UseCase/Task/GetTaskbyUserId/GetTaskByUserIdUseCase";
 import GetTaskUseCase from "../UseCase/Task/GetTask/GetTaskUseCase";
 import RemoveTaskUseCase from "../UseCase/Task/RemoveTask/RemoveTaskUseCase";
-import UpdateTaskUseCase from "../UseCase/Task/UpdateTask/UpdateTaskUseCase";
 import Task from "../Entity/Task";
+import GetAllTaskUseCase from "../UseCase/Task/GetAllTask/GetAllTaskUseCase";
+import SaveTaskUseCase from "../UseCase/Task/SaveTask/SaveTaskUseCase";
 
 @Resolver(Task)
 @UseGuards(GraphqlAuthGuard)
@@ -18,11 +18,11 @@ export default class TaskResolver {
   constructor(private readonly serviceFactory: UseCaseFactory) {}
 
   @Mutation(() => Task)
-  async createTask(
-    @Args("dto") dto: SaveTaskDto,
-    @ContextualRequest() context: ContextualGraphqlRequest
+  async saveTask(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("dto") dto: SaveTaskDto
   ) {
-    return (await this.serviceFactory.create(CreateTaskUseCase)).handle(
+    return (await this.serviceFactory.create(SaveTaskUseCase)).handle(
       context,
       dto
     );
@@ -48,6 +48,13 @@ export default class TaskResolver {
     );
   }
 
+  @Query(() => [Task])
+  async getAllTask(@ContextualRequest() context: ContextualGraphqlRequest) {
+    return (await this.serviceFactory.create(GetAllTaskUseCase)).handle(
+      context
+    );
+  }
+
   @Mutation(() => Task)
   async RemoveById(
     @Args("id",{type:()=>Int}) id: number,
@@ -59,16 +66,5 @@ export default class TaskResolver {
     );
   }
 
-  @Mutation(() => Task)
-  async UpdateById(
-    @Args("id", { type: () => Int }) id: number,
-    @Args("dto") dto: SaveTaskDto,
-    @ContextualRequest() context: ContextualGraphqlRequest
-  ) {
-    return (await this.serviceFactory.create(UpdateTaskUseCase)).handle(
-      context,
-      id,
-      dto
-    );
-  }
+  
 }

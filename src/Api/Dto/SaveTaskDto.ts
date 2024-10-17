@@ -1,7 +1,9 @@
-import { Field, InputType } from "@nestjs/graphql";
+import { Field, InputType, Int } from "@nestjs/graphql";
 
 @InputType()
 export default class SaveTaskDto {
+  @Field(() => Int, { nullable: true })
+  id?: number | null;
   @Field()
   title: string;
   @Field()
@@ -10,5 +12,7 @@ export default class SaveTaskDto {
   dueDate?: Date;
   @Field()
   completed?: boolean;
+  @Field(() => Int)
+  userId: number;
 }
 

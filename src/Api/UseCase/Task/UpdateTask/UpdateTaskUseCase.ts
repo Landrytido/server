@@ -9,14 +9,13 @@ export default class UpdateTaskUseCase
   implements UseCase<Promise<Task>, [taskId: number, dto: SaveTaskDto]>
 {
   constructor(private readonly taskRepository: TaskRepository) {}
-  handle(context: ContextualGraphqlRequest, taskId: number, dto: SaveTaskDto) {
+  async handle(context: ContextualGraphqlRequest, taskId: number, dto: SaveTaskDto) {
     try {
-      return this.taskRepository.save({
-        ...dto,
-        userId: context.userId,
-      });
+      const data = { ...dto, userId: context.userId, id: taskId }; // Combiner dto et taskId
+      return await this.taskRepository.save(data);  // Envoyer un seul objet à `save`
     } catch (error) {
-      throw new BadRequestException("impossible de mettre a jour la tache");
+      throw new BadRequestException("Impossible de mettre à jour la tâche", error.message);
     }
   }
+  
 }

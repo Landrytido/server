@@ -15,10 +15,10 @@ export class Event {
   @Field()
   description: string;
 
-  @Field()
+  @Field(() => GraphQLISODateTime)
   startDate: Date;
 
-  @Field()
+  @Field(() => GraphQLISODateTime)
   endDate: Date;
 
   @Field()

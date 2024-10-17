@@ -23,6 +23,10 @@ export default class TaskRepository {
     });
   }
 
+  async findAllTask(){
+    return await this.prisma.task.findMany()
+  }
+
   async save(
     data:
       | Prisma.XOR<Prisma.TaskCreateInput, Prisma.TaskUncheckedCreateInput>
