@@ -34,7 +34,10 @@ export default class SearchHistoryResolver {
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("dto") dto: SearchHistoryDto
   ): Promise<SearchHistory> {
-  
+
+    if(dto.searchTerm){
+
+        
     const userIdLogged = (await (await this.serviceFactory.create(GetLoggedUserUseCase)).handle(context)).id;
     
     const allSearchHistoryOfUser: SearchHistory[] = await this.getSearchHistoryByUserId(context);
@@ -53,6 +56,8 @@ export default class SearchHistoryResolver {
     allSearchHistoryOfUser.unshift(newSearch);
     
     return newSearch;
+
+    }
   }
 
   @UseGuards(GraphqlAuthGuard)
