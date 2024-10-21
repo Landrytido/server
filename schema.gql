@@ -123,6 +123,7 @@ type Mutation {
   createNotebook(dto: SaveNotebookDto!): Notebook!
   createTag(dto: SaveTagDto!): Tag!
   delete(id: Int!): LinkClick!
+  deleteComment(commentId: Float!): Boolean!
   deleteEvent(id: Int!): Event!
   deleteInvitation(invitationId: Int!): Invitation!
   deleteLink(id: Int!): Link!
@@ -134,6 +135,7 @@ type Mutation {
   saveEvent(dto: saveEventDto!): Event!
   saveTask(dto: SaveTaskDto!): Task!
   saveUser(dto: SaveUserDto!): User!
+  updateComment(commentId: Float!, data: CommentDto!): Comment!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
@@ -181,6 +183,7 @@ type Query {
   eventByUserId(userId: Int!): [Event!]!
   findByLinkId(linkId: Int!): [LinkClick!]!
   findByUser: [LinkClick!]!
+  findCommentsByNoteId(noteId: Float!): [Comment!]!
   findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
   findLinkGroupsByUserId: [LinkGroup!]!
