@@ -12,7 +12,7 @@ export default class CreateUserUseCase
 
   async handle(dto: SaveUserDto): Promise<User> {
     try {
-      return this.userRepository.saveUser(dto);
+      return this.userRepository.create(dto);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
