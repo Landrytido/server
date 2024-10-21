@@ -19,7 +19,7 @@ export default class SaveUserUseCase
         throw new ForbiddenException("Not authorized");
       }
 
-      return this.userRepository.saveUser(dto);
+      return this.userRepository.save(dto);
     } catch (error) {
       throw new ForbiddenException(error.message);
     }
