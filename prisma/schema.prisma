@@ -41,6 +41,7 @@ model User {
   linkClicks          LinkClick[]
   searchHistory       SearchHistory[]
   scores              Score[]
+  noteTasks           NoteTask[]
 }
 
 model SearchHistory {
@@ -73,6 +74,7 @@ model Note {
   collaborations NoteCollaboration[]
   tags           Tag[]               @relation("NoteTags")
   Comment        Comment[]
+  notetasks      NoteTask[]          @relation("NoteTasks")
 }
 
 model Notebook {
@@ -218,5 +220,15 @@ model Score {
   createdAt DateTime @default(now())
   firstName String
   lastName  String
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model NoteTask {
+  id        Int      @id @default(autoincrement())
+  title     String
+  completed Boolean  @default(false)
+  noteId    Int
+  userId    Int
+  note      Note     @relation(fields: [noteId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 }

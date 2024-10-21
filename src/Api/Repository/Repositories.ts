@@ -9,6 +9,7 @@ import NoteRepository from "./NoteRepository";
 import InvitationRepository from "./InvitationRepository";
 import SearchHistoryRepository from "./SearchHistoryRepository";
 import { ScoreRepository } from "./ScoreRepository";
+import NoteTasksRepository  from "./NoteTasksRepository";
 
 export const Repositories = [
   UserRepository,
@@ -21,6 +22,7 @@ export const Repositories = [
   InvitationRepository,
   LinkGroupRepository,
   LinkRepository,
+  NoteTasksRepository,
   LinkClickRepository,
   ScoreRepository
 ];

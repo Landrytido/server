@@ -140,9 +140,11 @@ type Mutation {
   deleteNotebook(notebookId: Int!): Notebook!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
   register(dto: SaveUserDto!): User!
+  removeNoteTaskById(id: Int!): NoteTask!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: saveEventDto!): Event!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
+  saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
   saveTask(dto: SaveTaskDto!): Task!
   saveUser(dto: SaveUserDto!): User!
   updateComment(commentId: Float!, data: CommentDto!): Comment!
@@ -153,13 +155,13 @@ type Mutation {
 }
 
 type Note {
-  collaborations: [NoteCollaboration!]!
+  collaborations: [NoteCollaboration!]
   content: String
   createdAt: DateTime!
   id: Int!
   notebook: Notebook
   notebookId: Int
-  tags: [Tag!]!
+  tags: [Tag!]
   title: String!
   updatedAt: DateTime!
   user: User!
@@ -171,6 +173,16 @@ type NoteCollaboration {
   note: Note!
   noteId: Int!
   permissionLevel: PermissionLevel!
+  user: User!
+  userId: Int!
+}
+
+type NoteTask {
+  completed: Boolean!
+  id: Int!
+  note: Note!
+  noteId: Int!
+  title: String!
   user: User!
   userId: Int!
 }
@@ -201,6 +213,7 @@ type Query {
   findLinksByUserId: [Link!]!
   findLinksByUserIdWithMinClicks(minClicks: Int!): [Link!]!
   findNoteById(noteId: Int!): Note!
+  findNoteTaskById(id: Int!): NoteTask!
   findNotebookById(notebookId: Int!): Notebook!
   findNotebooks: [Notebook!]!
   findNotebooksByUserId: [Notebook!]!
@@ -214,11 +227,13 @@ type Query {
   findTaskById(id: Int!): Task!
   getAllEvent: [Event!]!
   getAllLinkGroups: [LinkGroup!]!
+  getAllNoteTask: [NoteTask!]!
   getAllTask: [Task!]!
   getEvent(id: Int!): Event!
   getLoggedUser: User!
   getSearchHistoryByUserId: [SearchHistory!]!
   login(dto: AuthenticationDto!): String!
+  noteTasksByUserId(dto: SaveNoteTaskDto!): [NoteTask!]!
   refreshToken: String!
   tasksByUserId(userId: Int!): [Task!]!
   topScores(level: Level = EASY, limit: Int = 10): [Score!]!
@@ -264,6 +279,14 @@ input SaveNoteDto {
   content: String
   notebookId: Int
   title: String!
+}
+
+input SaveNoteTaskDto {
+  completed: Boolean!
+  id: Int
+  noteId: Int!
+  title: String
+  userId: Int!
 }
 
 input SaveNotebookDto {
