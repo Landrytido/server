@@ -11,5 +11,5 @@ export default class CommentDto
   
   @Field(() => Int)
   userId: number;
-
+ 
 }

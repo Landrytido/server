@@ -133,6 +133,7 @@ type Mutation {
   createTag(dto: SaveTagDto!): Tag!
   createTask(dto: SaveTaskDto!): Task!
   delete(id: Int!): LinkClick!
+  deleteComment(commentId: Float!): Boolean!
   deleteEvent(id: Float!): Event!
   deleteInvitation(invitationId: Int!): Invitation!
   deleteLink(id: Int!): Link!
@@ -143,6 +144,7 @@ type Mutation {
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: EventDto!): Event!
   saveUser(dto: SaveUserDto!): User!
+  updateComment(commentId: Float!, data: CommentDto!): Comment!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
@@ -189,6 +191,7 @@ enum PermissionLevel {
 type Query {
   findByLinkId(linkId: Int!): [LinkClick!]!
   findByUser: [LinkClick!]!
+  findCommentsByNoteId(noteId: Float!): [Comment!]!
   findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
   findLinkGroupsByUserId: [LinkGroup!]!
