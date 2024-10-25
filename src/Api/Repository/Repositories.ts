@@ -7,6 +7,7 @@ import TaskRepository from "./TaskRepository";
 import NotebookRepository from "./NotebookRepository";
 import NoteRepository from "./NoteRepository";
 import InvitationRepository from "./InvitationRepository";
+import { ScoreRepository } from "./ScoreRepository";
 
 export const Repositories = [
   UserRepository,
@@ -18,4 +19,5 @@ export const Repositories = [
   LinkGroupRepository,
   LinkRepository,
   LinkClickRepository,
+  ScoreRepository
 ];

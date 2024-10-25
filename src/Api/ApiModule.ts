@@ -15,6 +15,7 @@ import GetEventUseCase from './UseCase/Event/GetEventUseCase';
 import DeleteEventUseCase from './UseCase/Event/DeleteEventUseCase';
 import GetAllEventUseCase from './UseCase/Event/GetAllEventUseCase';
 import SaveEventUseCase from './UseCase/Event/SaveEventUseCase';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
