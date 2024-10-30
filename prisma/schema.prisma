@@ -72,7 +72,6 @@ model Note {
   collaborations NoteCollaboration[]
   tags           Tag[]               @relation("NoteTags")
   Comment        Comment[]
-  tasks          Task[]
 }
 
 model Notebook {
@@ -133,8 +132,6 @@ model Task {
   completed   Boolean   @default(false)
   userId      Int
   user        User      @relation(fields: [userId], references: [id])
-  noteId    Int
-  Note      Note     @relation(fields: [noteId], references: [id])
 }
 
 model Invitation {
