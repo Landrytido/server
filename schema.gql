@@ -155,13 +155,13 @@ type Mutation {
 }
 
 type Note {
-  collaborations: [NoteCollaboration!]
+  collaborations: [NoteCollaboration!]!
   content: String
   createdAt: DateTime!
   id: Int!
   notebook: Notebook
   notebookId: Int
-  tags: [Tag!]
+  tags: [Tag!]!
   title: String!
   updatedAt: DateTime!
   user: User!
