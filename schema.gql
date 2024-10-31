@@ -130,8 +130,10 @@ type Mutation {
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
+  deleteSearchHistory(searchHistoryId: Int!): Boolean!
   register(dto: SaveUserDto!): User!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
+  saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveEvent(dto: saveEventDto!): Event!
   saveTask(dto: SaveTaskDto!): Task!
   saveUser(dto: SaveUserDto!): User!
@@ -207,6 +209,7 @@ type Query {
   getAllTask: [Task!]!
   getEvent(id: Int!): Event!
   getLoggedUser: User!
+  getSearchHistoryByUserId: [SearchHistory!]!
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
   tasksByUserId(userId: Int!): [Task!]!
@@ -277,6 +280,21 @@ input SaveUserDto {
   password: String!
 }
 
+type SearchHistory {
+  id: Int!
+  searchDate: DateTime!
+  searchTerm: String!
+  user: User!
+  userId: Int!
+}
+
+input SearchHistoryDto {
+  id: Int
+  searchDate: DateTime!
+  searchTerm: String!
+  userId: Int!
+}
+
 type Session {
   createdAt: DateTime!
   id: Int!
@@ -329,6 +347,7 @@ type User {
   notebooks: [Notebook!]!
   notes: [Note!]!
   resetTokens: [ResetToken!]!
+  searchHistory: [SearchHistory!]!
   sessions: [Session!]!
   tasks: [Task!]!
   updatedAt: DateTime!
