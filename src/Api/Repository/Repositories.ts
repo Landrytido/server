@@ -7,10 +7,12 @@ import TaskRepository from "./TaskRepository";
 import NotebookRepository from "./NotebookRepository";
 import NoteRepository from "./NoteRepository";
 import InvitationRepository from "./InvitationRepository";
+import SearchHistoryRepository from "./SearchHistoryRepository";
 import { ScoreRepository } from "./ScoreRepository";
 
 export const Repositories = [
   UserRepository,
+  SearchHistoryRepository,
   TagRepository,
   TaskRepository,
   NotebookRepository,
