@@ -5,7 +5,7 @@ import { SaveScoreDto } from '../Dto/SaveScoreDto';
 
 @Resolver(() => Score)
 export class ScoreResolver {
-  constructor(private scoreRepository: ScoreRepository) {}
+  constructor(private readonly scoreRepository: ScoreRepository) {}
 
   // Mutation pour ajouter un score
   @Mutation(() => Score)
