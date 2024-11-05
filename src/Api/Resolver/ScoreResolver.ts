@@ -25,7 +25,7 @@ export class ScoreResolver {
 
   // Query pour récupérer les 15 meilleurs scores
   @Query(() => [Score])
-  async topScores(@Args('limit', { type: () => Int, defaultValue: 15 }) limit: number): Promise<Score[]> {
+  async topScores(@Args('limit', { type: () => Int, defaultValue: 10 }) limit: number): Promise<Score[]> {
     return this.scoreRepository.getTopScores(limit);
   }
 }
