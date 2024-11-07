@@ -52,6 +52,13 @@ type Invitation {
   senderId: Int!
 }
 
+"""Level of difficulty for the score (easy, medium, hard)"""
+enum Level {
+  EASY
+  HARD
+  MEDIUM
+}
+
 type Link {
   clicks: [LinkClick!]!
   description: String!
@@ -109,7 +116,7 @@ type Mutation {
   RemoveById(id: Int!): Task!
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptInvitation(invitationId: Int!): Invitation!
-  addScore(time: Int!, userId: Int!): Score!
+  addScore(level: Level!, time: Int!, userId: Int!): Score!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
@@ -276,6 +283,7 @@ input SaveUserDto {
 type Score {
   createdAt: DateTime!
   id: Int!
+  level: Level!
   time: Int!
   userId: Int!
 }

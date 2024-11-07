@@ -3,7 +3,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 import { S3Module } from "nestjs-s3";
-import CoreModule from "../Core/CoreModule";
+import CoreModule  from "../Core/CoreModule";
 import GraphqlModule from "../Core/GraphqlModule";
 import { Repositories } from "./Repository/Repositories";
 import { Resolvers } from "./Resolver/Resolvers";

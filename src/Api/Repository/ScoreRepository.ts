@@ -1,20 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Core/Datasource/Prisma';
-import { SaveScoreDto } from '../Dto/SaveScoreDto';
+import { Prisma,  } from '@prisma/client';
+
 
 @Injectable()
 export class ScoreRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   // Crée un score et gère la suppression automatique des scores au-delà du 15e
-  async createScore(data: SaveScoreDto) {
-    // Envoie uniquement les champs userId et time à Prisma
-    const { userId, time } = data;
+  async createScore(
+    data: Prisma.XOR<Prisma.ScoreCreateInput, Prisma.ScoreUncheckedCreateInput>
+  ) {
+    const { userId, time, level } = data;
 
     const createdScore = await this.prisma.score.create({
       data: {
         userId,
         time,
+        level,
       },
     });
 
@@ -24,8 +27,8 @@ export class ScoreRepository {
     return createdScore;
   }
 
-  // Récupère les 15 meilleurs scores, triés par temps ascendant
-  async getTopScores(limit: number = 15) {
+  // Récupère les 10 meilleurs scores, triés par temps ascendant
+  async getTopScores(limit: number = 10) {
     return this.prisma.score.findMany({
       orderBy: {
         time: 'asc',
@@ -45,7 +48,7 @@ export class ScoreRepository {
       orderBy: {
         time: 'asc',
       },
-      skip: 15, // On ne conserve que les 15 premiers
+      skip: 10, // On ne conserve que les 10 premiers
     });
 
     const idsToDelete = scores.map((score) => score.id);

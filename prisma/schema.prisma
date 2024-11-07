@@ -202,9 +202,17 @@ model LinkClick {
   link   Link? @relation(fields: [linkId], references: [id])
   user   User? @relation(fields: [userId], references: [id])
 }
+
+enum Level {
+  EASY 
+  MEDIUM
+  HARD
+}
+
 model Score {
   id        Int      @id @default(autoincrement())
   userId    Int
   time      Int      // Temps en secondes
+  level     Level
   createdAt DateTime @default(now())
 }

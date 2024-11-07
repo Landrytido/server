@@ -1,11 +1,16 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
+import { Level} from '@prisma/client';
 
-@InputType()
+// SaveScoreDto.ts
 export class SaveScoreDto {
-
-  @Field(() => Int, { nullable: true })
-  userId?: number | null;
-
+  @Field(() => Int)
+  userId: number;
+  
   @Field(() => Int)
   time: number;
+  
+  @Field(() => Level)
+  level: Level;
+  
 }
+
