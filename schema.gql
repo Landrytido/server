@@ -135,6 +135,7 @@ type Mutation {
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveEvent(dto: saveEventDto!): Event!
+  saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveTask(dto: SaveTaskDto!): Task!
   saveUser(dto: SaveUserDto!): User!
   updateComment(commentId: Float!, data: CommentDto!): Comment!
