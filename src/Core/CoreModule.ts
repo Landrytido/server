@@ -10,6 +10,7 @@ import TextHelper from "./Helper/TextHelper";
 import UniqidGenerator from "./Helper/UniqidGenerator";
 import LoggingModule from "./Logging/LoggingModule";
 import SecurityModule from "./Security/SecurityModule";
+import { PrismaService } from './Datasource/Prisma'; 
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import SecurityModule from "./Security/SecurityModule";
     TextHelper,
     SecurityModule,
     UniqidGenerator,
+    PrismaService,
   ],
   controllers: [],
   providers: [
@@ -40,6 +42,7 @@ import SecurityModule from "./Security/SecurityModule";
     PromiseFactory,
     TextHelper,
     UniqidGenerator,
+    PrismaService,
   ],
 })
 export default class CoreModule {}

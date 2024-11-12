@@ -17,6 +17,12 @@ type Comment {
   userId: Int!
 }
 
+input CommentDto {
+  content: String!
+  noteId: Int!
+  userId: Int!
+}
+
 input CreateLinkGroupDto {
   description: String
   name: String!
@@ -109,6 +115,7 @@ type Mutation {
   RemoveById(id: Int!): Task!
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptInvitation(invitationId: Int!): Invitation!
+  createComment(data: CommentDto!): Comment!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
@@ -116,6 +123,7 @@ type Mutation {
   createNotebook(dto: SaveNotebookDto!): Notebook!
   createTag(dto: SaveTagDto!): Tag!
   delete(id: Int!): LinkClick!
+  deleteComment(commentId: Float!): Boolean!
   deleteEvent(id: Int!): Event!
   deleteInvitation(invitationId: Int!): Invitation!
   deleteLink(id: Int!): Link!
@@ -129,6 +137,7 @@ type Mutation {
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveTask(dto: SaveTaskDto!): Task!
   saveUser(dto: SaveUserDto!): User!
+  updateComment(commentId: Float!, data: CommentDto!): Comment!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
@@ -176,6 +185,7 @@ type Query {
   eventByUserId(userId: Int!): [Event!]!
   findByLinkId(linkId: Int!): [LinkClick!]!
   findByUser: [LinkClick!]!
+  findCommentsByNoteId(noteId: Float!): [Comment!]!
   findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
   findLinkGroupsByUserId: [LinkGroup!]!
