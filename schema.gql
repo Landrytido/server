@@ -133,6 +133,7 @@ type Mutation {
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
   register(dto: SaveUserDto!): User!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
+  saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveEvent(dto: saveEventDto!): Event!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveTask(dto: SaveTaskDto!): Task!
