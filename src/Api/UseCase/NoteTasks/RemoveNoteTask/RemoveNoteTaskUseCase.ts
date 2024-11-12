@@ -11,7 +11,7 @@ export default class RemoveNoteTaskUseCase
 
   handle(context: ContextualGraphqlRequest, noteTaskId: number) {
     try {
-      return this.noteTaskRepository.RemoveById(noteTaskId);
+      return this.noteTaskRepository.removeById(noteTaskId);
     } catch (error) {
       throw new BadRequestException(
         "No note-task has been created, please create a new one",

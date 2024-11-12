@@ -64,7 +64,7 @@ model Session {
 model Note {
   id             Int                 @id @default(autoincrement())
   title          String
-  content        String?
+  content        String?             @db.LongText   
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
   userId         Int
