@@ -8,8 +8,9 @@ import NotebookResolver from "./NotebookResolver";
 import NoteResolver from "./NoteResolver";
 import UserResolver from "./UserResolver";
 import InvitationResolver from "./InvitationResolver";
-import { ScoreResolver } from "./ScoreResolver";
 import SearchHistoryResolver from "./SearchHistoryResolver";
+import CommentResolver from "./CommentResolver";
+import { ScoreResolver } from "./ScoreResolver";
 
 export const Resolvers = [
   UserResolver,
@@ -22,5 +23,6 @@ export const Resolvers = [
   LinkGroupResolver,
   LinkResolver,
   LinkClickResolver,
+  CommentResolver,
   ScoreResolver
 ];

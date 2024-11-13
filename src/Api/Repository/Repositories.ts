@@ -13,6 +13,7 @@ import { ScoreRepository } from "./ScoreRepository";
 export const Repositories = [
   UserRepository,
   SearchHistoryRepository,
+  SearchHistoryRepository,
   TagRepository,
   TaskRepository,
   NotebookRepository,
