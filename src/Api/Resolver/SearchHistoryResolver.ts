@@ -20,11 +20,9 @@ export default class SearchHistoryResolver {
   @UseGuards(GraphqlAuthGuard)
   @Query(() => [SearchHistory])
   async getSearchHistoryByUserId(@ContextualRequest() context: ContextualGraphqlRequest) {
-     const userIdLogged = (await (await this.serviceFactory.create(GetLoggedUserUseCase)).handle(context)).id;
 
     return (await this.serviceFactory.create(GetSearchHistoryUseCase)).handle(
-      context,
-      userIdLogged
+      context
     );
   }
 
