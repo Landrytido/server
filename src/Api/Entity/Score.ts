@@ -1,5 +1,5 @@
-import { ObjectType, Field, Int, } from '@nestjs/graphql';
-import { Level } from '@prisma/client'
+import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Level } from '@prisma/client';
 
 @ObjectType()
 export class Score {
@@ -12,9 +12,16 @@ export class Score {
   @Field(() => Int)
   time: number;
 
-  @Field(() => Level) 
+  @Field(() => Level)
   level: Level;
 
   @Field()
   createdAt: Date;
+
+  @Field() // Ajout du prénom
+  firstName: string;
+
+  @Field() // Ajout du nom
+  lastName: string;
 }
+

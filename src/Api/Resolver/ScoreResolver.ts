@@ -13,20 +13,32 @@ export class ScoreResolver {
     @Args('userId', { type: () => Int }) userId: number,
     @Args('time', { type: () => Int }) time: number,
     @Args('level', { type: () => Level }) level: Level,
+    @Args('firstName', { type: () => String }) firstName: string,
+    @Args('lastName', { type: () => String }) lastName: string
   ): Promise<Score> {
-    const createScoreDto: SaveScoreDto = { userId, time, level };
-    return this.scoreRepository.createScore(createScoreDto);
+    // Construire l'objet `createScoreDto` pour l'enregistrer
+    const createScoreDto = {
+      userId,
+      time,
+      level,
+      firstName,
+      lastName
+    };
+  
+    // Enregistrer le score et retourner le résultat
+    const score = await this.scoreRepository.createScore(createScoreDto);
+    return score;
   }
 
-  // Query pour récupérer les 3 meilleurs scores
   @Query(() => [Score])
   async topThreeScores(): Promise<Score[]> {
     return this.scoreRepository.getTopThreeScores();
   }
 
-  // Query pour récupérer les meilleurs scores avec une limite
   @Query(() => [Score])
-  async topScores(@Args('limit', { type: () => Int, defaultValue: 10 }) limit: number): Promise<Score[]> {
+  async topScores(
+    @Args('limit', { type: () => Int, defaultValue: 10 }) limit: number,
+  ): Promise<Score[]> {
     return this.scoreRepository.getTopScores(limit);
   }
 }

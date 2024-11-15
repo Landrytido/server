@@ -212,7 +212,9 @@ enum Level {
 model Score {
   id        Int      @id @default(autoincrement())
   userId    Int
-  time      Int      // Temps en secondes
+  time      Int
   level     Level
   createdAt DateTime @default(now())
+  firstName String
+  lastName  String
 }

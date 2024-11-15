@@ -122,7 +122,7 @@ type Mutation {
   RemoveById(id: Int!): Task!
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptInvitation(invitationId: Int!): Invitation!
-  addScore(level: Level!, time: Int!, userId: Int!): Score!
+  addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
   createComment(data: CommentDto!): Comment!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
@@ -292,7 +292,9 @@ input SaveUserDto {
 
 type Score {
   createdAt: DateTime!
+  firstName: String!
   id: Int!
+  lastName: String!
   level: Level!
   time: Int!
   userId: Int!

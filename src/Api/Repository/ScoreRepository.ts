@@ -18,6 +18,8 @@ export class ScoreRepository {
         userId,
         time,
         level,
+        firstName: data.firstName, // Assurez-vous que ce champ est fourni
+      lastName: data.lastName,
       },
     });
 
