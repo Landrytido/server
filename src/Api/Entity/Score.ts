@@ -18,10 +18,10 @@ export class Score {
   @Field()
   createdAt: Date;
 
-  @Field() // Ajout du prénom
+  @Field() 
   firstName: string;
 
-  @Field() // Ajout du nom
+  @Field() 
   lastName: string;
 }
 

@@ -15,7 +15,6 @@ export class ScoreResolver {
     @Args('firstName', { type: () => String }) firstName: string,
     @Args('lastName', { type: () => String }) lastName: string
   ): Promise<Score> {
-    // Construire l'objet `createScoreDto` pour l'enregistrer
     const createScoreDto = {
       userId,
       time,
@@ -23,8 +22,6 @@ export class ScoreResolver {
       firstName,
       lastName,
     };
-
-    // Enregistrer le score et retourner le résultat
     const score = await this.scoreRepository.createScore(createScoreDto);
     return score;
   }

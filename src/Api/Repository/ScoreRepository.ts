@@ -7,7 +7,6 @@ import { Prisma, Level } from '@prisma/client'; // Importation de Level
 export class ScoreRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  // Crée un score et gère la suppression automatique des scores au-delà du 15e
   async createScore(
     data: Prisma.XOR<Prisma.ScoreCreateInput, Prisma.ScoreUncheckedCreateInput>
   ) {
@@ -23,13 +22,11 @@ export class ScoreRepository {
       },
     });
 
-    // Appelle la méthode pour supprimer les scores au-delà du 15e
     await this.cleanUpScores();
 
     return createdScore;
   }
 
-  // Récupère les 10 meilleurs scores pour un niveau donné, triés par temps ascendant
   async getTopScores(limit: number = 10, level: Level = Level.EASY) {
     return this.prisma.score.findMany({
       where: level ? { level } : undefined,
@@ -39,13 +36,11 @@ export class ScoreRepository {
       take: limit,
     });
   }
-
-  // Récupère les 3 meilleurs scores pour un niveau donné
   async getTopThreeScores(level?: Level) {
     return this.getTopScores(3, level);
   }
 
-  // Récupère les scores d'un utilisateur spécifique pour un niveau donné
+
   async getUserScores(userId: number, level?: Level) {
     return this.prisma.score.findMany({
       where: {
@@ -58,13 +53,12 @@ export class ScoreRepository {
     });
   }
 
-  // Supprime les scores au-delà du 15e
   private async cleanUpScores() {
     const scores = await this.prisma.score.findMany({
       orderBy: {
         time: 'asc',
       },
-      skip: 10, // On ne conserve que les 10 premiers
+      skip: 10, 
     });
 
     const idsToDelete = scores.map((score) => score.id);
