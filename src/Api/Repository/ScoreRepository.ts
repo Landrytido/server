@@ -1,7 +1,7 @@
+// src/Repository/ScoreRepository.ts
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Core/Datasource/Prisma';
-import { Prisma,  } from '@prisma/client';
-
+import { Prisma, Level } from '@prisma/client'; // Importation de Level
 
 @Injectable()
 export class ScoreRepository {
@@ -18,8 +18,8 @@ export class ScoreRepository {
         userId,
         time,
         level,
-        firstName: data.firstName, // Assurez-vous que ce champ est fourni
-      lastName: data.lastName,
+        firstName: data.firstName,
+        lastName: data.lastName,
       },
     });
 
@@ -29,9 +29,10 @@ export class ScoreRepository {
     return createdScore;
   }
 
-  // Récupère les 10 meilleurs scores, triés par temps ascendant
-  async getTopScores(limit: number = 10) {
+  // Récupère les 10 meilleurs scores pour un niveau donné, triés par temps ascendant
+  async getTopScores(limit: number = 10, level: Level = Level.EASY) {
     return this.prisma.score.findMany({
+      where: level ? { level } : undefined,
       orderBy: {
         time: 'asc',
       },
@@ -39,9 +40,22 @@ export class ScoreRepository {
     });
   }
 
-  // Récupère les 3 meilleurs scores
-  async getTopThreeScores() {
-    return this.getTopScores(3);
+  // Récupère les 3 meilleurs scores pour un niveau donné
+  async getTopThreeScores(level?: Level) {
+    return this.getTopScores(3, level);
+  }
+
+  // Récupère les scores d'un utilisateur spécifique pour un niveau donné
+  async getUserScores(userId: number, level?: Level) {
+    return this.prisma.score.findMany({
+      where: {
+        userId: userId,
+        ...(level ? { level } : {}),
+      },
+      orderBy: {
+        time: 'asc',
+      },
+    });
   }
 
   // Supprime les scores au-delà du 15e

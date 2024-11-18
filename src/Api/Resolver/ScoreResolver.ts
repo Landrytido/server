@@ -1,7 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { ScoreRepository } from '../Repository/ScoreRepository';
 import { Score } from '../Entity/Score';
-import { SaveScoreDto } from '../Dto/SaveScoreDto';
 import { Level } from '@prisma/client';
 
 @Resolver(() => Score)
@@ -22,9 +21,9 @@ export class ScoreResolver {
       time,
       level,
       firstName,
-      lastName
+      lastName,
     };
-  
+
     // Enregistrer le score et retourner le résultat
     const score = await this.scoreRepository.createScore(createScoreDto);
     return score;
@@ -37,8 +36,17 @@ export class ScoreResolver {
 
   @Query(() => [Score])
   async topScores(
-    @Args('limit', { type: () => Int, defaultValue: 10 }) limit: number,
+    @Args('limit', { type: () => Int, nullable: true, defaultValue: 10 }) limit: number,
+    @Args('level', { type: () => Level, nullable: true, defaultValue: Level.EASY }) level: Level,
   ): Promise<Score[]> {
-    return this.scoreRepository.getTopScores(limit);
+    return this.scoreRepository.getTopScores(limit, level);
+  }
+  
+
+  @Query(() => [Score])
+  async userScores(
+    @Args('userId', { type: () => Int }) userId: number
+  ): Promise<Score[]> {
+    return this.scoreRepository.getUserScores(userId);
   }
 }

@@ -221,8 +221,9 @@ type Query {
   login(dto: AuthenticationDto!): String!
   refreshToken: String!
   tasksByUserId(userId: Int!): [Task!]!
-  topScores(limit: Int! = 10): [Score!]!
+  topScores(level: Level = EASY, limit: Int = 10): [Score!]!
   topThreeScores: [Score!]!
+  userScores(userId: Int!): [Score!]!
   validateToken(dto: TokenValidationDto!): Boolean!
 }
 
