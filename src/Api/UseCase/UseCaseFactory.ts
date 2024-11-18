@@ -10,6 +10,8 @@ import { AvailableTaskUseCases } from "./Task/AvailableTaskUseCases";
 import { AvailableNoteUseCases } from "./Note/AvailbaleNoteUseCases";
 import { AvailableNotebookUseCases } from "./Notebook/AvailableNotebookUseCases";
 import { AvailableInvitationUseCases } from "./Invitation/AvailableInvitationUseCases";
+import { AvailableSearchHistoryUseCases } from "./SearchHistory/AvailableSearchHistoryUseCases";
+import { AvailableCommentUseCases } from "./Comment/AvailableCommentUseCases";
 
 export type UseCases =
   | AvailableUserUseCases
@@ -21,7 +23,9 @@ export type UseCases =
   | AvailableInvitationUseCases
   | AvailableLinkGroupUseCases
   | AvailableLinkUseCases
-  | AvailableLinkClickUseCases;
-
+  | AvailableLinkClickUseCases
+  | AvailableSearchHistoryUseCases
+  | AvailableCommentUseCases;
+  
 @Injectable()
 export default class UseCaseFactory extends ServiceFactory<UseCases> {}
