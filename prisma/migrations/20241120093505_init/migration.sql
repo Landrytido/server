@@ -191,11 +191,11 @@ CREATE TABLE `LinkClick` (
 CREATE TABLE `Score` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
-    `firstName` VARCHAR(255) NOT NULL,
-    `lastName` VARCHAR(255) NULL,
     `time` INTEGER NOT NULL,
     `level` ENUM('EASY', 'MEDIUM', 'HARD') NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `firstName` VARCHAR(191) NOT NULL,
+    `lastName` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -271,6 +271,9 @@ ALTER TABLE `LinkClick` ADD CONSTRAINT `LinkClick_linkId_fkey` FOREIGN KEY (`lin
 
 -- AddForeignKey
 ALTER TABLE `LinkClick` ADD CONSTRAINT `LinkClick_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Score` ADD CONSTRAINT `Score_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `_NoteTags` ADD CONSTRAINT `_NoteTags_A_fkey` FOREIGN KEY (`A`) REFERENCES `Note`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
