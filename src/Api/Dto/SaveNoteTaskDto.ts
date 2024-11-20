@@ -1,4 +1,3 @@
-// src/Api/Dto/SaveNoteTaskDto.ts
 import { InputType, Field, Int } from '@nestjs/graphql';
 import { IsInt, IsNotEmpty, IsString, IsBoolean, IsOptional } from 'class-validator';
 
@@ -28,4 +27,10 @@ export class SaveNoteTaskDto {
   @IsInt()
   @IsNotEmpty()
   userId: number;
+
+  @Field(() => Int, { nullable: true })
+  @IsInt()
+  @IsOptional()
+  parentId?: number | null;
+  
 }

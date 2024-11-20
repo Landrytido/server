@@ -1,5 +1,3 @@
-// src/Api/UseCase/NoteTasks/GetNoteTaskByUserId/GetNoteTasksByUserIdDto.ts
-
 import { InputType, Field, Int } from '@nestjs/graphql';
 
 @InputType()

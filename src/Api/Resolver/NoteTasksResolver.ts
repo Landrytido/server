@@ -1,26 +1,25 @@
-// src/Api/Resolver/NoteTasksResolver.ts
 import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
 import UseCaseFactory from "../UseCase/UseCaseFactory";
 import { ContextualGraphqlRequest } from "src";
 import { ContextualRequest } from "src/Core/Decorator/ContextualRequest";
 import { SaveNoteTaskDto } from "../Dto/SaveNoteTaskDto";
 import { UpdateNoteTaskDto } from "../UseCase/NoteTasks/UpdateNoteTask/UpdateNoteTaskDto";
-import { GetNoteTasksByUserIdDto } from "../UseCase/NoteTasks/GetNoteTaskbyUserId/GetNoteTasksByUserIdDto";
+import { GetNoteTasksByUserIdDto } from "../UseCase/NoteTasks/GetNoteTaskByUserId/GetNoteTasksByUserIdDto";
 import { UseGuards } from "@nestjs/common";
 import GraphqlAuthGuard from "src/Core/Security/Guard/GraphqlAuthGuard";
-import GetNoteTaskByUserIdUseCase from "../UseCase/NoteTasks/GetNoteTaskByUserId/GetNoteTaskByUserIdUseCase"; 
-import GetNoteTaskUseCase from "../UseCase/NoteTasks/GetNoteTask/GetNoteTaskUseCase"; 
-import RemoveNoteTaskUseCase from "../UseCase/NoteTasks/RemoveNoteTask/RemoveNoteTaskUseCase"; 
-import NoteTask from "../Entity/NoteTask"; 
-import SaveNoteTaskUseCase from "../UseCase/NoteTasks/SaveNoteTask/SaveNoteTaskUseCase"; 
+import GetNoteTaskByUserIdUseCase from "../UseCase/NoteTasks/GetNoteTaskByUserId/GetNoteTaskByUserIdUseCase";
+import GetNoteTaskUseCase from "../UseCase/NoteTasks/GetNoteTask/GetNoteTaskUseCase";
+import RemoveNoteTaskUseCase from "../UseCase/NoteTasks/RemoveNoteTask/RemoveNoteTaskUseCase";
+import NoteTask from "../Entity/NoteTask";
+import SaveNoteTaskUseCase from "../UseCase/NoteTasks/SaveNoteTask/SaveNoteTaskUseCase";
 import UpdateNoteTaskUseCase from "../UseCase/NoteTasks/UpdateNoteTask/UpdateNoteTaskUseCase";
 
-@Resolver(NoteTask) 
+@Resolver(NoteTask)
 @UseGuards(GraphqlAuthGuard)
-export default class NoteTaskResolver { 
+export default class NoteTaskResolver {
   constructor(private readonly serviceFactory: UseCaseFactory) {}
 
-  @Mutation(() => NoteTask) 
+  @Mutation(() => NoteTask)
   async saveNoteTask(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("dto") dto: SaveNoteTaskDto
@@ -42,18 +41,18 @@ export default class NoteTaskResolver {
     );
   }
 
-  @Query(() => [NoteTask]) 
+  @Query(() => [NoteTask])
   async noteTasksByUserId(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("dto") dto: GetNoteTasksByUserIdDto 
-  ) { 
+    @Args("dto") dto: GetNoteTasksByUserIdDto
+  ) {
     return (await this.serviceFactory.create(GetNoteTaskByUserIdUseCase)).handle(
       context,
       dto
     );
   }
 
-  @Query(() => NoteTask) 
+  @Query(() => NoteTask)
   async findNoteTaskById(
     @Args("id", { type: () => Int }) id: number,
     @ContextualRequest() context: ContextualGraphqlRequest

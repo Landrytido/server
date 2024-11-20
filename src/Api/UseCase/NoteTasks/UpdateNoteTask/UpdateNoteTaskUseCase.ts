@@ -1,4 +1,3 @@
-// src/Api/UseCase/NoteTasks/UpdateNoteTask/UpdateNoteTaskUseCase.ts
 import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
 import { NoteTask } from "@prisma/client";
 import { ContextualGraphqlRequest, UseCase } from "src";
@@ -29,15 +28,36 @@ export default class UpdateNoteTaskUseCase
         throw new ForbiddenException("Not authorized to update this NoteTask.");
       }
 
-      // Préparer les données à mettre à jour uniquement les champs pertinents
       const updateData: Partial<UpdateNoteTaskDto> = {};
       if (dto.title !== undefined) updateData.title = dto.title;
       if (dto.completed !== undefined) updateData.completed = dto.completed;
+      if (dto.parentId !== undefined) updateData.parentId = dto.parentId;
 
-      return await this.noteTaskRepository.save({
+      const updatedNoteTask = await this.noteTaskRepository.save({
         id: dto.id,
         ...updateData,
       });
+
+      if (dto.completed !== undefined) {
+        if (existingNoteTask.parentId === null) {
+          await this.noteTaskRepository.updateSubtasksCompletion(
+            updatedNoteTask.id,
+            dto.completed
+          );
+        } else {
+          const allSubtasks = await this.noteTaskRepository.findSubtasks(
+            existingNoteTask.parentId
+          );
+          const allCompleted = allSubtasks.every(subtask => subtask.completed);
+
+          await this.noteTaskRepository.save({
+            id: existingNoteTask.parentId,
+            completed: allCompleted,
+          });
+        }
+      }
+
+      return updatedNoteTask;
     } catch (error) {
       if (error instanceof BadRequestException || error instanceof ForbiddenException) {
         throw error;

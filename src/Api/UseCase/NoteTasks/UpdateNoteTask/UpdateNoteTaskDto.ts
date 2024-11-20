@@ -1,4 +1,3 @@
-// src/Api/Dto/UpdateNoteTaskDto.ts
 import { InputType, Field, Int } from '@nestjs/graphql';
 import { IsInt, IsOptional, IsString, IsBoolean } from 'class-validator';
 
@@ -17,4 +16,9 @@ export class UpdateNoteTaskDto {
   @IsBoolean()
   @IsOptional()
   completed?: boolean;
+
+  @Field(() => Int, { nullable: true })
+  @IsInt()
+  @IsOptional()
+  parentId?: number | null;
 }

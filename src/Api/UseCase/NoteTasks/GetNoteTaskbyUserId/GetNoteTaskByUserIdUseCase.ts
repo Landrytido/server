@@ -1,5 +1,3 @@
-// src/Api/UseCase/NoteTasks/GetNoteTaskByUserId/GetNoteTaskByUserIdUseCase.ts
-
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { NoteTask } from "@prisma/client";
 import { ContextualGraphqlRequest, UseCase } from "src";

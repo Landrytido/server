@@ -189,6 +189,9 @@ type NoteTask {
   id: Int!
   note: Note!
   noteId: Int!
+  parent: NoteTask
+  parentId: Int
+  subtasks: [NoteTask!]
   title: String!
   user: User!
   userId: Int!
@@ -291,6 +294,7 @@ input SaveNoteTaskDto {
   completed: Boolean
   id: Int
   noteId: Int!
+  parentId: Int
   title: String!
   userId: Int!
 }
@@ -383,6 +387,7 @@ input UpdateLinkDto {
 input UpdateNoteTaskDto {
   completed: Boolean
   id: Int!
+  parentId: Int
   title: String
 }
 

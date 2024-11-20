@@ -19,9 +19,18 @@ export default class NoteTask {
   @Field(() => Int)
   userId: number;
 
+  @Field(() => Int, { nullable: true })
+  parentId?: number;
+
   @Field(() => User)  
   user: User;
 
   @Field(() => Note) 
   note: Note;
+
+  @Field(() => NoteTask, { nullable: true })
+  parent?: NoteTask;
+
+  @Field(() => [NoteTask], { nullable: true })
+  subtasks?: NoteTask[] | null;
 }

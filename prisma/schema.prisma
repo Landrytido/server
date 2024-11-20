@@ -229,6 +229,9 @@ model NoteTask {
   completed Boolean  @default(false)
   noteId    Int
   userId    Int
+  parentId  Int?
   note      Note     @relation(fields: [noteId], references: [id], name: "NoteTasks", onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id])
+  parent    NoteTask?  @relation("NoteTaskRelation", fields: [parentId], references: [id], onDelete: Cascade)
+  subtasks  NoteTask[] @relation("NoteTaskRelation")
 }
