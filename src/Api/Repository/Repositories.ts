@@ -24,3 +24,4 @@ export const Repositories = [
   LinkClickRepository,
   ScoreRepository
 ];
+
