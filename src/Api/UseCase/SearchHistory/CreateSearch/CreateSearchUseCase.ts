@@ -18,7 +18,7 @@ export default class CreateSearchHistoryUseCase
       return await this.searchHistoryRepository.save({
         searchTerm: dto.searchTerm,
         searchDate: dto.searchDate,
-        userId: dto.id,
+        userId: dto.userId,
       });;
     } catch (error) {
       throw new BadRequestException(

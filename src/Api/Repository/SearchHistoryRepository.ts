@@ -17,6 +17,9 @@ export default class SearchHistoryRepository {
     return await this.prisma.searchHistory.findMany({
       where: { userId },
       include: { user: true },
+      orderBy: {
+        searchDate: 'desc',
+      },
     });
   }
 

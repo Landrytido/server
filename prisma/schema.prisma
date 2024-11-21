@@ -73,7 +73,7 @@ model Note {
   notebook       Notebook?           @relation(fields: [notebookId], references: [id])
   collaborations NoteCollaboration[]
   tags           Tag[]               @relation("NoteTags")
-  Comment        Comment[]
+  comments       Comment[]           @relation("NoteComments")
   notetasks      NoteTask[]          @relation("NoteTasks")
 }
 
@@ -185,9 +185,10 @@ model Comment {
   userId    Int
   noteId    Int
   user      User     @relation(fields: [userId], references: [id])
-  note      Note     @relation(fields: [noteId], references: [id])
+  note      Note     @relation("NoteComments", fields: [noteId], references: [id], onDelete: Cascade)        
   createdAt DateTime @default(now())
 }
+
 
 model ResetToken {
   id              Int      @id @default(autoincrement())
