@@ -15,7 +15,7 @@ export default class Link {
   @Field()
   url: string;
 
-  @Field()
+  @Field( ()=> String, { nullable: true })
   description: string;
 
   @Field(() => Int)

@@ -60,7 +60,7 @@ type Invitation {
 
 type Link {
   clicks: [LinkClick!]!
-  description: String!
+  description: String
   id: Int!
   linkGroup: LinkGroup!
   linkGroupId: Int!
