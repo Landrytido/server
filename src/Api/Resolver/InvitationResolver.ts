@@ -18,26 +18,58 @@ import GetRelationUseCase from "../UseCase/Invitation/GetRelations/GetRelationUs
 export default class InvitationResolver {
   constructor(private readonly serviceFactory: UseCaseFactory) {}
 
-  @Mutation(() => Invitation)
+  //A remettre //
+  // @Mutation(() => Invitation)
+  // async createInvitation(
+  //   @ContextualRequest() context: ContextualGraphqlRequest,
+  //   @Args("dto") dto: SaveInvitationDto
+  // ) {
+  //   return await (
+  //     await this.serviceFactory.create(CreateInvitationUseCase)
+  //   ).handle(context, dto);
+  // }
+//A remettre //
+
+//A supprimer
+@Mutation(() => Invitation)
   async createInvitation(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("dto") dto: SaveInvitationDto
   ) {
-    return await (
+    const result = await (
       await this.serviceFactory.create(CreateInvitationUseCase)
     ).handle(context, dto);
+    console.log("createInvitationResolver", result);
+    return result
   }
+  //A supprimer,
 
+  //A remettre //
+  // @Mutation(() => Invitation)
+  // async deleteInvitation(
+  //   @ContextualRequest() context: ContextualGraphqlRequest,
+  //   @Args("invitationId", { type: () => Int }) invitationId: number
+  // ) {
+  //   return (await this.serviceFactory.create(DeleteInvitationUseCase)).handle(
+  //     context,
+  //     invitationId
+  //   );
+  // }
+  //A remettre //
+
+  //A supprimer, je veux juste tester ce que retourne la mutation deleteInvitation
+  //séparateur
   @Mutation(() => Invitation)
   async deleteInvitation(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("invitationId", { type: () => Int }) invitationId: number
   ) {
-    return (await this.serviceFactory.create(DeleteInvitationUseCase)).handle(
-      context,
-      invitationId
-    );
+
+    const result = await (await this.serviceFactory.create(DeleteInvitationUseCase)).handle(context, invitationId);
+    console.log("mutation deleteInvitation",result)
+    return result
   }
+//séparateur
 
   @Mutation(() => Invitation)
   async acceptInvitation(
@@ -68,10 +100,23 @@ export default class InvitationResolver {
     ).handle(context);
   }
 
-  @Query(() => [Invitation])
+  //A rajouter
+  // @Query(() => [Invitation])
+  // async findRelations(@ContextualRequest() context: ContextualGraphqlRequest) {
+  //   return (await this.serviceFactory.create(GetRelationUseCase)).handle(
+  //     context
+  //   );
+  // }
+   //A rajouter
+   //A supprimer
+   @Query(() => [Invitation])
   async findRelations(@ContextualRequest() context: ContextualGraphqlRequest) {
-    return (await this.serviceFactory.create(GetRelationUseCase)).handle(
+    
+    const result=(await this.serviceFactory.create(GetRelationUseCase)).handle(
       context
     );
+    console.log("findRelationsResolver", result)
+    return result
   }
+   //A supprimer
 }

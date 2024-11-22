@@ -143,6 +143,8 @@ model Invitation {
   isRelation Boolean @default(false)
 }
 
+
+
 model Event {
   id          Int                     @id @default(autoincrement())
   title       String

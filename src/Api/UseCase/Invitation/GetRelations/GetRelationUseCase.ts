@@ -13,22 +13,36 @@ export default class GetRelationsUseCase
       const relations = await this.invitationRepository.findRelations(
         context.userId
       );
+      //A supprimer
+      console.log("relations", relations)
+      //A supprimer
 
       return relations.map((relation) => {
+         //A supprimer
+ console.log("relation map", relation);
+ 
+ //A supprimer
         if (relation.senderId == context.userId) {
           return {
             ...relation,
             sender: null,
             receiver: relation.receiver,
-          };
+          } ;
+          
         }
-
+ //A supprimer
+ console.log("relations 1er return", relations);
+ 
+ //A supprimer
         return {
           ...relation,
           receiver: null,
           sender: relation.sender,
         };
+        
       });
+      
+      
     } catch (error) {
       throw new BadRequestException(
         "GetInvitationUseCaseFailed",

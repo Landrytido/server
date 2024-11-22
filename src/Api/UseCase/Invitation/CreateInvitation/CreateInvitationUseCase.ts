@@ -19,6 +19,9 @@ export default class CreateInvitationUseCase
       const receiver = await this.invitationRepository.findReceiverIdByEmail(
         dto.email
       );
+      //A supprimer//
+      console.log("const receiver", receiver)
+      //A supprimer//
 
       if (!receiver) throw new NotFoundException("User not found");
 
@@ -32,16 +35,28 @@ export default class CreateInvitationUseCase
           context.userId,
           receiver.id
         );
-
+//A supprimer//
+console.log("const invitation", invitation)
+//A supprimer//
       if (invitation)
         throw new BadRequestException(
           "You've already sent an invitation to this user"
         );
-
-      return await this.invitationRepository.save({
-        receiverId: receiver.id,
-        senderId: context.userId,
-      });
+      
+//A supprimer
+const result= await this.invitationRepository.save({
+  receiverId: receiver.id,
+  senderId: context.userId,
+});
+console.log("CreateInvitationUseCase", result)
+        return result
+        //A supprimer
+//a remettre//
+      // return await this.invitationRepository.save({
+      //   receiverId: receiver.id,
+      //   senderId: context.userId,
+      // });
+      //A remettre
     } catch (error) {
       throw new BadRequestException(
         "CreateInvitationUseCaseFailed",
