@@ -49,6 +49,12 @@ type Event {
   userId: Int!
 }
 
+input GetNoteTasksByUserIdDto {
+  completed: Boolean
+  noteId: Int!
+  userId: Int!
+}
+
 type Invitation {
   id: Int!
   isRelation: Boolean!
@@ -56,6 +62,13 @@ type Invitation {
   receiverId: Int!
   sender: User!
   senderId: Int!
+}
+
+"""Level of difficulty for the score (easy, medium, hard)"""
+enum Level {
+  EASY
+  HARD
+  MEDIUM
 }
 
 type Link {
@@ -115,6 +128,7 @@ type Mutation {
   RemoveById(id: Int!): Task!
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptInvitation(invitationId: Int!): Invitation!
+  addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
   createComment(data: CommentDto!): Comment!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
@@ -132,8 +146,10 @@ type Mutation {
   deleteNotebook(notebookId: Int!): Notebook!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
   register(dto: SaveUserDto!): User!
+  removeNoteTaskById(id: Int!): NoteTask!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: saveEventDto!): Event!
+  saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveTask(dto: SaveTaskDto!): Task!
   saveUser(dto: SaveUserDto!): User!
@@ -141,6 +157,7 @@ type Mutation {
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
+  updateNoteTask(dto: UpdateNoteTaskDto!): NoteTask!
   updateNotebook(dto: SaveNotebookDto!, notebookId: Int!): Notebook!
 }
 
@@ -163,6 +180,19 @@ type NoteCollaboration {
   note: Note!
   noteId: Int!
   permissionLevel: PermissionLevel!
+  user: User!
+  userId: Int!
+}
+
+type NoteTask {
+  completed: Boolean!
+  id: Int!
+  note: Note!
+  noteId: Int!
+  parent: NoteTask
+  parentId: Int
+  subtasks: [NoteTask!]
+  title: String!
   user: User!
   userId: Int!
 }
@@ -193,6 +223,7 @@ type Query {
   findLinksByUserId: [Link!]!
   findLinksByUserIdWithMinClicks(minClicks: Int!): [Link!]!
   findNoteById(noteId: Int!): Note!
+  findNoteTaskById(id: Int!): NoteTask!
   findNotebookById(notebookId: Int!): Notebook!
   findNotebooks: [Notebook!]!
   findNotebooksByUserId: [Notebook!]!
@@ -211,8 +242,12 @@ type Query {
   getLoggedUser: User!
   getSearchHistoryByUserId: [SearchHistory!]!
   login(dto: AuthenticationDto!): String!
+  noteTasksByUserId(dto: GetNoteTasksByUserIdDto!): [NoteTask!]!
   refreshToken: String!
   tasksByUserId(userId: Int!): [Task!]!
+  topScores(level: Level = EASY, limit: Int = 10): [Score!]!
+  topThreeScores: [Score!]!
+  userScores(userId: Int!): [Score!]!
   validateToken(dto: TokenValidationDto!): Boolean!
 }
 
@@ -255,6 +290,15 @@ input SaveNoteDto {
   title: String!
 }
 
+input SaveNoteTaskDto {
+  completed: Boolean
+  id: Int
+  noteId: Int!
+  parentId: Int
+  title: String!
+  userId: Int!
+}
+
 input SaveNotebookDto {
   title: String!
 }
@@ -278,6 +322,16 @@ input SaveUserDto {
   id: Int
   lastName: String
   password: String!
+}
+
+type Score {
+  createdAt: DateTime!
+  firstName: String!
+  id: Int!
+  lastName: String!
+  level: Level!
+  time: Int!
+  userId: Int!
 }
 
 type SearchHistory {
@@ -328,6 +382,13 @@ input UpdateLinkDto {
   description: String
   name: String!
   url: String
+}
+
+input UpdateNoteTaskDto {
+  completed: Boolean
+  id: Int!
+  parentId: Int
+  title: String
 }
 
 type User {
