@@ -12,7 +12,7 @@ export default class SaveLinkClickUseCase
 
   async handle(context: ContextualGraphqlRequest, dto: SaveLinkClickDto) {
     try {
-      return await this.linkClickRepository.saveClicks(dto.linkId, dto.userId);
+      return await this.linkClickRepository.saveClicks(dto.linkId, context.userId);
     } catch (error) {
       throw new BadRequestException(
         "Failed to create link click",
