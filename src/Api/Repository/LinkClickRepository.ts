@@ -27,9 +27,9 @@ export default class LinkClickRepository {
     return this.prisma.linkClick.delete({ where: { id: +id } });
   }
 
-  async saveClicks(linkId: number) {
+  async saveClicks(linkId: number, userId: number) {
     const existingLinkClick = await this.prisma.linkClick.findFirst({
-      where: { linkId },
+      where: { linkId, userId },
     });
 
     if (existingLinkClick) {
@@ -44,6 +44,7 @@ export default class LinkClickRepository {
     return this.prisma.linkClick.create({
       data: {
         link: { connect: { id: linkId } },
+        user: { connect: { id: userId } },
         clicks: 1,
       },
     });

@@ -11,7 +11,7 @@ export default class IncrementLinkClickUseCase
 
   async handle(context: ContextualGraphqlRequest, linkId: number) {
     try {
-      return await this.linkClickRepository.saveClicks(linkId);
+      return await this.linkClickRepository.saveClicks(linkId, context.userId);
     } catch (error) {
       throw new BadRequestException(
         "Failed to increment link click",

@@ -69,7 +69,7 @@ export default class LinkClickResolver {
   ) {
     return (await this.serviceFactory.create(SaveLinkClickUseCase)).handle(
       context,
-      dto,
+      dto
     );
   }
 

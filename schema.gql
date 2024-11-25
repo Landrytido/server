@@ -274,6 +274,7 @@ input SaveInvitationDto {
 input SaveLinkClickDto {
   id: Int
   linkId: Int!
+  userId: Int
 }
 
 input SaveLinkDto {
