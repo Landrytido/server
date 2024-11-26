@@ -3,6 +3,7 @@ import User from "./User";
 import LinkGroup from "./LinkGroup";
 
 import { ContextualGraphqlRequest } from "src";
+import LinkClick from "./LinkClick";
 
 @ObjectType()
 export default class Link {
@@ -29,6 +30,9 @@ export default class Link {
 
   @Field(() => User)
   user: User;
+
+  @Field(() => [LinkClick], { nullable: true })
+  clicks?: LinkClick[];
 
   context?: ContextualGraphqlRequest;
 }

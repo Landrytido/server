@@ -12,9 +12,36 @@ export default class LinkGroupRepository {
   }
 
   async findByUserId(userId: number) {
-    return this.prisma.linkGroup.findMany({
+    const linkGroups = await this.prisma.linkGroup.findMany({
       where: { userId },
+      include: {
+        links: {
+          include: {
+            clicks: true, // Inclure les clics pour chaque lien
+          },
+        },
+      },
     });
+
+    // Calculer le total des clics pour chaque groupe
+    const linkGroupsWithTotalClicks = linkGroups.map(group => {
+      const totalClicks = group.links.reduce((sum, link) => {
+        const linkClicks = link.clicks.reduce((clickSum, click) => clickSum + click.clicks, 0);
+        return sum + linkClicks;
+      }, 0);
+
+      console.log(`Group Name: ${group.name}, Total Clicks: ${totalClicks}`);
+
+      return {
+        ...group,
+        totalClicks, // Ajoute la propriété totalClicks pour chaque groupe
+      };
+    });
+
+    // Trier les groupes par le total des clics
+    const sortedLinkGroups = linkGroupsWithTotalClicks.sort((a, b) => b.totalClicks - a.totalClicks);
+
+    return sortedLinkGroups;
   }
 
   async findAll() {

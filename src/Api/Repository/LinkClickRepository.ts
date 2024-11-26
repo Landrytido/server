@@ -20,6 +20,9 @@ export default class LinkClickRepository {
   async findByUserId(userId: number) {
     return this.prisma.linkClick.findMany({
       where: { userId },
+      orderBy: {
+        clicks: 'desc',
+      },
     });
   }
 

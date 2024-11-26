@@ -72,7 +72,7 @@ enum Level {
 }
 
 type Link {
-  clicks: [LinkClick!]!
+  clicks: [LinkClick!]
   description: String
   id: Int!
   linkGroup: LinkGroup!
