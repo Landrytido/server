@@ -13,6 +13,7 @@ import { AvailableInvitationUseCases } from "./Invitation/AvailableInvitationUse
 import { AvailableSearchHistoryUseCases } from "./SearchHistory/AvailableSearchHistoryUseCases";
 import { AvailableCommentUseCases } from "./Comment/AvailableCommentUseCases";
 import { AvailableNoteTaskUseCases } from "./NoteTasks/AvailableNoteTaskskUseCases";
+import { AvailableMeetingUseCases } from "./Meeting/AvailableMeetingUseCase";
 
 export type UseCases =
   | AvailableUserUseCases
@@ -27,8 +28,9 @@ export type UseCases =
   | AvailableLinkClickUseCases
   | AvailableSearchHistoryUseCases
   | AvailableCommentUseCases
-  | AvailableLinkClickUseCases
+  | AvailableMeetingUseCases
   | AvailableNoteTaskUseCases;
+  
 
 @Injectable()
 export default class UseCaseFactory extends ServiceFactory<UseCases> {}

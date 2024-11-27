@@ -101,25 +101,23 @@ type LinkGroup {
   userId: Int!
 }
 
-type Meet {
+type MeetSharedWithMember {
+  meetId: Int!
+  user: User!
+  userId: Int!
+}
+
+type Meeting {
   createdAt: DateTime!
   description: String!
   endDate: DateTime!
   id: Int!
   isRecurring: Boolean!
   location: String!
-  recurrence: Recurrence!
-  sharedWith: [MeetSharedWithMember!]!
+  recurrence: Recurrence
   startDate: DateTime!
   title: String!
   updatedAt: DateTime!
-  user: User!
-  userId: Int!
-}
-
-type MeetSharedWithMember {
-  meet: Meet!
-  meetId: Int!
   user: User!
   userId: Int!
 }
@@ -142,6 +140,7 @@ type Mutation {
   deleteInvitation(invitationId: Int!): Invitation!
   deleteLink(id: Int!): Link!
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
+  deleteMeeting(id: Int!): Meeting!
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
@@ -149,6 +148,7 @@ type Mutation {
   removeNoteTaskById(id: Int!): NoteTask!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: saveEventDto!): Event!
+  saveMeeting(dto: SaveMeetingDto!): Meeting!
   saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveTask(dto: SaveTaskDto!): Task!
@@ -237,11 +237,14 @@ type Query {
   findTaskById(id: Int!): Task!
   getAllEvent: [Event!]!
   getAllLinkGroups: [LinkGroup!]!
+  getAllMeeting: [Meeting!]!
   getAllTask: [Task!]!
   getEvent(id: Int!): Event!
   getLoggedUser: User!
+  getMeeting(id: Int!): Meeting!
   getSearchHistoryByUserId: [SearchHistory!]!
   login(dto: AuthenticationDto!): String!
+  meetingByUserId(userId: Int!): [Meeting!]!
   noteTasksByUserId(dto: GetNoteTasksByUserIdDto!): [NoteTask!]!
   refreshToken: String!
   tasksByUserId(userId: Int!): [Task!]!
@@ -282,6 +285,18 @@ input SaveLinkDto {
   name: String!
   url: String!
   userId: Int
+}
+
+input SaveMeetingDto {
+  description: String!
+  endDate: DateTime!
+  id: Int
+  isRecurring: Boolean!
+  location: String!
+  recurrence: String
+  startDate: DateTime!
+  title: String!
+  userId: Int!
 }
 
 input SaveNoteDto {
@@ -403,7 +418,6 @@ type User {
   lastName: String!
   linkGroups: [LinkGroup!]!
   links: [Link!]!
-  meets: [Meet!]!
   meetsShared: [MeetSharedWithMember!]!
   notebooks: [Notebook!]!
   notes: [Note!]!
