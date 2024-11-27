@@ -30,8 +30,6 @@ export default class LinkGroupRepository {
         return sum + linkClicks;
       }, 0);
 
-      console.log(`Group Name: ${group.name}, Total Clicks: ${totalClicks}`);
-
       return {
         ...group,
         totalClicks, // Ajoute la propriété totalClicks pour chaque groupe

@@ -219,6 +219,7 @@ type Query {
   findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
   findLinkGroupsByUserId: [LinkGroup!]!
+  findLinkGroupsSortByUserId: [LinkGroup!]!
   findLinksByLinkGroupId(linkGroupId: Int!): [Link!]!
   findLinksByUserId: [Link!]!
   findLinksByUserIdWithMinClicks(minClicks: Int!): [Link!]!

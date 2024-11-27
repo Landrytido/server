@@ -33,6 +33,7 @@ export default class LinkGroupResolver {
 
   @UseGuards(GraphqlAuthGuard)
   @Mutation(() => LinkGroup)
+
   async createLinkGroup(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("dto") dto: CreateLinkGroupDto,
@@ -89,6 +90,16 @@ export default class LinkGroupResolver {
       context,
       linkGroupId,
     );
+  }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Query(() => [LinkGroup])
+  async findLinkGroupsSortByUserId(
+      @ContextualRequest() context: ContextualGraphqlRequest,
+  ) {
+    return (
+        await this.serviceFactory.create(GetLinkGroupsByUserIdUseCase)
+    ).handle(context);
   }
 
   @UseGuards(GraphqlAuthGuard)

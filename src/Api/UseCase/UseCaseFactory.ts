@@ -27,8 +27,8 @@ export type UseCases =
   | AvailableLinkClickUseCases
   | AvailableSearchHistoryUseCases
   | AvailableCommentUseCases
-  | AvailableLinkClickUseCases
   | AvailableNoteTaskUseCases;
+
 
 @Injectable()
 export default class UseCaseFactory extends ServiceFactory<UseCases> {}
