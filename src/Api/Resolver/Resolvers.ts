@@ -10,6 +10,9 @@ import UserResolver from "./UserResolver";
 import InvitationResolver from "./InvitationResolver";
 import SearchHistoryResolver from "./SearchHistoryResolver";
 import CommentResolver from "./CommentResolver";
+import { ScoreResolver } from "./ScoreResolver";
+import NoteTaskResolver from "./NoteTasksResolver";
+import MeetingResolver from "./MeetingResolver";
 
 export const Resolvers = [
   UserResolver,
@@ -23,4 +26,7 @@ export const Resolvers = [
   LinkResolver,
   LinkClickResolver,
   CommentResolver,
+  ScoreResolver,
+  NoteTaskResolver,
+  MeetingResolver,
 ];

@@ -40,6 +40,9 @@ model User {
   resetTokens         ResetToken[]
   linkClicks          LinkClick[]
   searchHistory       SearchHistory[]
+  scores              Score[]
+  noteTasks           NoteTask[]
+  meeting             Meeting[]
 }
 
 model SearchHistory {
@@ -62,7 +65,7 @@ model Session {
 model Note {
   id             Int                 @id @default(autoincrement())
   title          String
-  content        String?
+  content        String?             @db.LongText   
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
   userId         Int
@@ -71,7 +74,8 @@ model Note {
   notebook       Notebook?           @relation(fields: [notebookId], references: [id])
   collaborations NoteCollaboration[]
   tags           Tag[]               @relation("NoteTags")
-  Comment        Comment[]
+  comments       Comment[]           @relation("NoteComments")
+  notetasks      NoteTask[]          @relation("NoteTasks")
 }
 
 model Notebook {
@@ -184,9 +188,10 @@ model Comment {
   userId    Int
   noteId    Int
   user      User     @relation(fields: [userId], references: [id])
-  note      Note     @relation(fields: [noteId], references: [id])
+  note      Note     @relation("NoteComments", fields: [noteId], references: [id], onDelete: Cascade)        
   createdAt DateTime @default(now())
 }
+
 
 model ResetToken {
   id              Int      @id @default(autoincrement())
@@ -203,4 +208,48 @@ model LinkClick {
   userId Int?
   link   Link? @relation(fields: [linkId], references: [id])
   user   User? @relation(fields: [userId], references: [id])
+}
+
+enum Level {
+  EASY 
+  MEDIUM
+  HARD
+}
+
+model Score {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  time      Int
+  level     Level
+  createdAt DateTime @default(now())
+  firstName String
+  lastName  String
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model NoteTask {
+  id        Int      @id @default(autoincrement())
+  title     String
+  completed Boolean  @default(false)
+  noteId    Int
+  userId    Int
+  parentId  Int?
+  note      Note     @relation(fields: [noteId], references: [id], name: "NoteTasks", onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+  parent    NoteTask?  @relation("NoteTaskRelation", fields: [parentId], references: [id], onDelete: Cascade)
+  subtasks  NoteTask[] @relation("NoteTaskRelation")
+}
+model Meeting {
+  id          Int                     @id @default(autoincrement())
+  title       String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  isRecurring Boolean?                @default(false)
+  recurrence  Recurrence?             @default(NONE)
+  location    String
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @default(now()) @updatedAt
+  userId      Int
+  user        User                    @relation(fields: [userId], references: [id])
 }
