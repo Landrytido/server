@@ -231,7 +231,7 @@ type Query {
   findNotesByUserId: [Note!]!
   findOne(id: Int!): LinkClick!
   findReceivedInvitations: [Invitation!]!
-  findRelations: [Invitation!]!
+  findRelations: [Relation!]!
   findSentInvitations: [Invitation!]!
   findTagById(id: Float!): Tag!
   findTaskById(id: Int!): Task!
@@ -260,6 +260,13 @@ enum Recurrence {
   MONTHLY
   NONE
   WEEKLY
+}
+
+type Relation {
+  friendEmail: String!
+  invitationId: Int!
+  receiver: User!
+  sender: User!
 }
 
 type ResetToken {

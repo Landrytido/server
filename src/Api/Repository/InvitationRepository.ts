@@ -15,15 +15,15 @@ export default class InvitationRepository {
   //   });
   // }
   //A remettre
-//A supprimer
+  //A supprimer
   async findReceiverIdByEmail(email: string) {
-    const result= this.prisma.user.findUnique({
+    const result = this.prisma.user.findUnique({
       where: {
         email,
       },
     });
-    console.log("findReceiverIdByEmail", result)
-    return result
+    console.log("findReceiverIdByEmail", result);
+    return result;
   }
   //A supprimer
 
@@ -45,14 +45,14 @@ export default class InvitationRepository {
     senderId: number,
     receiverId: number
   ) {
-    const result= this.prisma.invitation.findFirst({
+    const result = this.prisma.invitation.findFirst({
       where: {
         receiverId: receiverId,
         senderId: senderId,
       },
     });
-    console.log("findInvitationBySenderAndReceiver", result)
-    return result
+    console.log("findInvitationBySenderAndReceiver", result);
+    return result;
   }
   //A supprimer
 
@@ -77,8 +77,8 @@ export default class InvitationRepository {
     return invitations;
   }
 
-  findRelations(userId: number) {
-    const relations = this.prisma.invitation.findMany({
+  async findRelations(userId: number) {
+    const relations = await this.prisma.invitation.findMany({
       where: {
         OR: [{ receiverId: userId }, { senderId: userId }],
         AND: [{ isRelation: true }],
@@ -88,10 +88,10 @@ export default class InvitationRepository {
         receiver: true,
       },
     });
- //A supprimer
- console.log("findRelations", relations);
- 
- //A supprimer
+    //A supprimer
+    console.log("findRelations", relations);
+
+    //A supprimer
     return relations;
   }
 
@@ -145,13 +145,13 @@ export default class InvitationRepository {
   // }
 
   //A supprimer, je veux juste tester les retours
-//séparateur
+  //séparateur
   async remove(invitationId: number) {
     const result = this.prisma.invitation.delete({
       where: { id: invitationId },
     });
-    console.log("prisma result", result)
-    return result
+    console.log("prisma result", result);
+    return result;
   }
   //séparateur
 }
