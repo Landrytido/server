@@ -6,16 +6,6 @@ import { Injectable } from "@nestjs/common";
 export default class InvitationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  //A remettre
-  // async findReceiverIdByEmail(email: string) {
-  //   return this.prisma.user.findUnique({
-  //     where: {
-  //       email,
-  //     },
-  //   });
-  // }
-  //A remettre
-  //A supprimer
   async findReceiverIdByEmail(email: string) {
     const result = this.prisma.user.findUnique({
       where: {
@@ -25,22 +15,7 @@ export default class InvitationRepository {
     console.log("findReceiverIdByEmail", result);
     return result;
   }
-  //A supprimer
 
-  //A remettre
-  // async findInvitationBySenderAndReceiver(
-  //   senderId: number,
-  //   receiverId: number
-  // ) {
-  //   return this.prisma.invitation.findFirst({
-  //     where: {
-  //       receiverId: receiverId,
-  //       senderId: senderId,
-  //     },
-  //   });
-  // }
-  //A remettre
-  //A supprimer
   async findInvitationBySenderAndReceiver(
     senderId: number,
     receiverId: number
@@ -54,7 +29,6 @@ export default class InvitationRepository {
     console.log("findInvitationBySenderAndReceiver", result);
     return result;
   }
-  //A supprimer
 
   async findSentInvitations(senderId: number) {
     return this.prisma.invitation.findMany({
@@ -139,14 +113,6 @@ export default class InvitationRepository {
     });
   }
 
-  // async remove(invitationId: number) {
-  //   return this.prisma.invitation.delete({
-  //     where: { id: invitationId },
-  //   });
-  // }
-
-  //A supprimer, je veux juste tester les retours
-  //séparateur
   async remove(invitationId: number) {
     const result = this.prisma.invitation.delete({
       where: { id: invitationId },
@@ -154,5 +120,4 @@ export default class InvitationRepository {
     console.log("prisma result", result);
     return result;
   }
-  //séparateur
 }

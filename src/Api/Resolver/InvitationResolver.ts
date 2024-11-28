@@ -19,19 +19,6 @@ import { Relation } from "../Entity/Relation";
 export default class InvitationResolver {
   constructor(private readonly serviceFactory: UseCaseFactory) {}
 
-  //A remettre //
-  // @Mutation(() => Invitation)
-  // async createInvitation(
-  //   @ContextualRequest() context: ContextualGraphqlRequest,
-  //   @Args("dto") dto: SaveInvitationDto
-  // ) {
-  //   return await (
-  //     await this.serviceFactory.create(CreateInvitationUseCase)
-  //   ).handle(context, dto);
-  // }
-  //A remettre //
-
-  //A supprimer
   @Mutation(() => Invitation)
   async createInvitation(
     @ContextualRequest() context: ContextualGraphqlRequest,
@@ -43,23 +30,7 @@ export default class InvitationResolver {
     console.log("createInvitationResolver", result);
     return result;
   }
-  //A supprimer,
 
-  //A remettre //
-  // @Mutation(() => Invitation)
-  // async deleteInvitation(
-  //   @ContextualRequest() context: ContextualGraphqlRequest,
-  //   @Args("invitationId", { type: () => Int }) invitationId: number
-  // ) {
-  //   return (await this.serviceFactory.create(DeleteInvitationUseCase)).handle(
-  //     context,
-  //     invitationId
-  //   );
-  // }
-  //A remettre //
-
-  //A supprimer, je veux juste tester ce que retourne la mutation deleteInvitation
-  //séparateur
   @Mutation(() => Invitation)
   async deleteInvitation(
     @ContextualRequest() context: ContextualGraphqlRequest,
@@ -71,7 +42,6 @@ export default class InvitationResolver {
     console.log("mutation deleteInvitation", result);
     return result;
   }
-  //séparateur
 
   @Mutation(() => Invitation)
   async acceptInvitation(
@@ -104,16 +74,6 @@ export default class InvitationResolver {
     return result;
   }
 
-  //A rajouter
-  // @Query(() => [Invitation])
-  // async findRelations(@ContextualRequest() context: ContextualGraphqlRequest) {
-  //   return (await this.serviceFactory.create(GetRelationUseCase)).handle(
-  //     context
-  //   );
-  // }
-  //A rajouter
-  //A supprimer si faux
-  //  @Query(() => [Invitation])
   @Query(() => [Relation])
   async findRelations(@ContextualRequest() context: ContextualGraphqlRequest) {
     const result = (
@@ -122,5 +82,4 @@ export default class InvitationResolver {
     console.log("findRelationsResolver", result);
     return result;
   }
-  //A supprimer
 }
