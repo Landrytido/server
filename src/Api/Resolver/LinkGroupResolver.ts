@@ -23,6 +23,8 @@ import CreateLinkGroupDto from "../UseCase/LinkGroup/CreateLinkGroup/CreateLinkG
 import User from "../Entity/User";
 import Link from "../Entity/Link";
 import { PrismaService } from "../../Core/Datasource/Prisma";
+import GetSortedLinkGroupsWithTotalClicksUseCase
+  from "../UseCase/LinkGroup/GetSortedLinkGroupsWithTotalClicks/GetSortedLinkGroupsWithTotalClicksUseCase";
 
 @Resolver(LinkGroup)
 export default class LinkGroupResolver {
@@ -98,7 +100,7 @@ export default class LinkGroupResolver {
       @ContextualRequest() context: ContextualGraphqlRequest,
   ) {
     return (
-        await this.serviceFactory.create(GetLinkGroupsByUserIdUseCase)
+        await this.serviceFactory.create(GetSortedLinkGroupsWithTotalClicksUseCase)
     ).handle(context);
   }
 

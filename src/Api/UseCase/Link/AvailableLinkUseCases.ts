@@ -5,6 +5,8 @@ import UpdateLinkUseCase from "./UpdateLink/UpdateLinkUseCase";
 import DeleteLinkUseCase from "./DeleteLink/DeleteLinkUseCase";
 import GetLinksByLinkGroupIdUseCase from "./GetLinksByLinkGroupId/GetLinksByLinkGroupIdUseCase";
 import GetLinksByUserIdWithMinClicksUseCase from "./GetLinksByUserIdWithMinClicks/GetLinksByUserIdWithMinClicksUseCase";
+import GetSortedLinkGroupsWithTotalClicksUseCase
+    from "../LinkGroup/GetSortedLinkGroupsWithTotalClicks/GetSortedLinkGroupsWithTotalClicksUseCase";
 
 export type AvailableLinkUseCases =
   | CreateLinkUseCase
@@ -13,4 +15,5 @@ export type AvailableLinkUseCases =
   | UpdateLinkUseCase
   | DeleteLinkUseCase
   | GetLinksByLinkGroupIdUseCase
-  | GetLinksByUserIdWithMinClicksUseCase;
+  | GetLinksByUserIdWithMinClicksUseCase
+    | GetSortedLinkGroupsWithTotalClicksUseCase
