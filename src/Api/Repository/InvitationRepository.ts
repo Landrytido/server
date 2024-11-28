@@ -74,6 +74,7 @@ export default class InvitationRepository {
         sender: true,
       },
     });
+    console.log("findReceivedInvitations repo", invitations);
     return invitations;
   }
 

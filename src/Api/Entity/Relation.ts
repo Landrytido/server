@@ -9,6 +9,12 @@ export class Relation {
   @Field(() => String)
   friendEmail: string;
 
+  @Field(() => String)
+  friendFirstName: string;
+
+  @Field(() => String)
+  friendLastName: string;
+
   @Field(() => User)
   receiver: User;
 

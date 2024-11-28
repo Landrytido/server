@@ -264,6 +264,8 @@ enum Recurrence {
 
 type Relation {
   friendEmail: String!
+  friendFirstName: String!
+  friendLastName: String!
   invitationId: Int!
   receiver: User!
   sender: User!

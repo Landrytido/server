@@ -97,9 +97,11 @@ export default class InvitationResolver {
   async findReceivedInvitations(
     @ContextualRequest() context: ContextualGraphqlRequest
   ) {
-    return (
+    const result = (
       await this.serviceFactory.create(GetReceivedInvitationsUseCase)
     ).handle(context);
+    console.log("findRecievedInvitations", result);
+    return result;
   }
 
   //A rajouter

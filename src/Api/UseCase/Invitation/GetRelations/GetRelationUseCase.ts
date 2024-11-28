@@ -63,19 +63,25 @@ export default class GetRelationsUseCase
       const validRelations = relations.filter(
         (relation) => relation.isRelation
       );
-      const emailRelations = validRelations.map((relation) => {
+      const relationInfos = validRelations.map((relation) => {
         const isSender = relation.senderId === context.userId;
         return {
           invitationId: relation.id,
           friendEmail: isSender
             ? relation.receiver.email
             : relation.sender.email,
+          friendFirstName: isSender
+            ? relation.receiver.firstName
+            : relation.sender.firstName,
+          friendLastName: isSender
+            ? relation.receiver.lastName
+            : relation.sender.lastName,
           sender: relation.sender,
           receiver: relation.receiver,
         };
       });
-      console.log("emailFriend", emailRelations);
-      return emailRelations;
+      console.log("emailFriend", relationInfos);
+      return relationInfos;
     } catch (error) {
       throw new BadRequestException(
         "GetInvitationUseCaseFailed",
