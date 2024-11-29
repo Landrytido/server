@@ -75,6 +75,7 @@ type Link {
   clicks: [LinkClick!]
   description: String
   id: Int!
+  imageId: Int
   linkGroup: LinkGroup!
   linkGroupId: Int!
   name: String!
@@ -281,6 +282,7 @@ input SaveLinkClickDto {
 
 input SaveLinkDto {
   description: String
+  imageId: Int
   linkGroupId: Int!
   name: String!
   url: String!

@@ -34,5 +34,8 @@ export default class Link {
   @Field(() => [LinkClick], { nullable: true })
   clicks?: LinkClick[];
 
+   @Field(() => Int, { nullable: true })
+   imageId?: number | null;
+
   context?: ContextualGraphqlRequest;
 }
