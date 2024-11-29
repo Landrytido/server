@@ -21,6 +21,7 @@ import GetLinkClickByLinkUseCase from "../UseCase/LinkClick/GetLinkClickByLink/G
 import GetLinkClickByUserUseCase from "../UseCase/LinkClick/GetLinkClickByUser/GetLinkClickByUserUseCase";
 import Link from "../Entity/Link";
 import LinkRepository from "../Repository/LinkRepository";
+import DeleteAllLinkClicksUseCase from "../UseCase/LinkClick/DeleteAllLinkClick/DeleteAllLinkClickUseCase";
 
 @Resolver(() => LinkClick)
 export default class LinkClickResolver {
@@ -75,14 +76,22 @@ export default class LinkClickResolver {
 
   @UseGuards(GraphqlAuthGuard)
   @Mutation(() => LinkClick)
-  async delete(
+  async deleteLinkClick(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("id", { type: () => Int }) id: number,
+    @Args("idLinkClick", { type: () => Int }) idLinkClick: number,
   ) {
     return (await this.serviceFactory.create(DeleteLinkClickUseCase)).handle(
       context,
-      id,
+      idLinkClick,
     );
+  }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => Boolean)
+  async deleteAllLinkClicks(
+      @ContextualRequest() context: ContextualGraphqlRequest,
+  ) {
+    return (await this.serviceFactory.create(DeleteAllLinkClicksUseCase)).handle(context);
   }
 
   @ResolveField(() => Link)

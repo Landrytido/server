@@ -30,6 +30,10 @@ export default class LinkClickRepository {
     return this.prisma.linkClick.delete({ where: { id: +id } });
   }
 
+  async deleteAllLinkClick() {
+    return this.prisma.linkClick.deleteMany({});
+  }
+
   async saveClicks(linkId: number, userId: number) {
     const existingLinkClick = await this.prisma.linkClick.findFirst({
       where: { linkId, userId },
@@ -52,4 +56,5 @@ export default class LinkClickRepository {
       },
     });
   }
+
 }
