@@ -6,11 +6,11 @@ import { ContextualGraphqlRequest } from "../../index";
 import SearchHistory from "../Entity/SearchHistory";
 import UseCaseFactory from "../UseCase/UseCaseFactory";
 import GetSearchHistoryUseCase from "../UseCase/SearchHistory/GetSearchHistory/GetAllSearchHistoryByUserIdUseCase";
-import SearchHistoryDto from "../Dto/SearchHistoryDto";
 import CreateSearchHistoryUseCase from "../UseCase/SearchHistory/CreateSearch/CreateSearchUseCase";
 import User from "../Entity/User";
 import GetLoggedUserUseCase from "../UseCase/User/GetLoggedUser/GetLoggedUserUseCase";
 import DeleteSearchHistoryUseCase from "../UseCase/SearchHistory/DeleteSearch/DeleteSearchUseCase";
+import SearchHistoryDto from "../UseCase/SearchHistory/SearchHistoryDto";
 
 @Resolver(SearchHistory)
 
