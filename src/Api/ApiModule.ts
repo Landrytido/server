@@ -18,6 +18,7 @@ import DeleteEventUseCase from './UseCase/Event/DeleteEventUseCase';
 import CommentRepository from './Repository/CommentRepository';
 import FileRepository from "./Repository/FileRepository";
 import SaveFileUseCase from "./UseCase/File/SaveFile/SaveFileUseCase";
+import {PuppeteerService} from "./UseCase/Link/Service/PupeeterService";
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import SaveFileUseCase from "./UseCase/File/SaveFile/SaveFileUseCase";
     CommentRepository,
       FileRepository,
       SaveFileUseCase,
+      PuppeteerService,
     ...Repositories,
     ...Resolvers,
   ],

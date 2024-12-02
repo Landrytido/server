@@ -18,8 +18,14 @@ export default class SaveFileUseCase
             if (!context.userId) {
                 throw new ForbiddenException("Not authorized");
             }
-            return await this.fileRepository.saveFile(dto);
+
+            console.log("Saving file with DTO:", dto); // Ajout d'un log
+            const savedFile = await this.fileRepository.saveFile(dto);
+            console.log("Saved file:", savedFile); // Log du résultat
+
+            return savedFile;
         } catch (error) {
+            console.error("Error in SaveFileUseCase:", error.message);
             throw new ForbiddenException(error.message);
         }
     }
