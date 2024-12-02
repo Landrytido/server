@@ -1,6 +1,6 @@
-import {Injectable} from "@nestjs/common";
-import {PrismaService} from "../../Core/Datasource/Prisma";
-import {Prisma} from "@prisma/client";
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../Core/Datasource/Prisma";
+import { Prisma } from "@prisma/client";
 import Bcrypt from "../../Core/Security/Service/encryption/Bcrypt";
 
 @Injectable()
@@ -23,7 +23,10 @@ export default class UserRepository {
   }
 
   async create(dto: Prisma.XOR<Prisma.UserCreateInput, Prisma.UserUncheckedCreateInput>) {
-    const hashedPassword = await this.bcrypt.hash(dto.password);
+    let hashedPassword = null;
+    if (dto.password) {
+      hashedPassword = await this.bcrypt.hash(dto.password);
+    }
     return this.prisma.user.create({
       data: {
         email: dto.email,
