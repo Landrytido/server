@@ -25,10 +25,10 @@ export default class LinkRepository {
   }
 
   async save(
-    userId: number,
-    data:
-      | Prisma.XOR<Prisma.LinkCreateInput, Prisma.LinkUncheckedCreateInput>
-      | Prisma.XOR<Prisma.LinkUpdateInput, Prisma.LinkUncheckedUpdateInput>,
+      userId: number,
+      data:
+          | Prisma.XOR<Prisma.LinkCreateInput, Prisma.LinkUncheckedCreateInput>
+          | Prisma.XOR<Prisma.LinkUpdateInput, Prisma.LinkUncheckedUpdateInput>,
   ) {
     if (!data.id) {
       return this.prisma.link.create({
@@ -36,6 +36,9 @@ export default class LinkRepository {
           name: data.name as string,
           description: data.description as string | null,
           url: data.url as string,
+          image: data.imageId
+              ? { connect: { id: data.imageId as number } }
+              : undefined,
           linkGroup: {
             connect: { id: data.linkGroupId as number },
           },
@@ -46,12 +49,16 @@ export default class LinkRepository {
       });
     }
 
+    // Mise à jour d'un lien existant
     return this.prisma.link.update({
       where: { id: data.id as number },
       data: {
         name: data.name as string,
-        description: data.description as string,
+        description: data.description as string | null,
         url: data.url as string,
+        image: data.imageId
+            ? { connect: { id: data.imageId as number } }
+            : { disconnect: true },
       },
     });
   }
