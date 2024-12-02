@@ -1,4 +1,4 @@
-import { InputType, Field } from "@nestjs/graphql";
+import {InputType, Field, Int} from "@nestjs/graphql";
 
 @InputType()
 export default class UpdateLinkDto {
@@ -10,4 +10,7 @@ export default class UpdateLinkDto {
 
   @Field({ nullable: true })
   description?: string;
+
+  @Field(() => Int, { nullable: true })
+  imageId?: number;
 }

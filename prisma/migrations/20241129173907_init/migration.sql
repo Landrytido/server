@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE `Link` ADD COLUMN `imageId` INTEGER NULL;
-
--- AddForeignKey
-ALTER TABLE `Link` ADD CONSTRAINT `Link_imageId_fkey` FOREIGN KEY (`imageId`) REFERENCES `File`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

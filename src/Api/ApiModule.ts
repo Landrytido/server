@@ -16,6 +16,8 @@ import GetEventUseCase from './UseCase/Event/GetEventUseCase';
 import GetAllEventUseCase from './UseCase/Event/GetAllEventUseCase';
 import DeleteEventUseCase from './UseCase/Event/DeleteEventUseCase';
 import CommentRepository from './Repository/CommentRepository';
+import FileRepository from "./Repository/FileRepository";
+import SaveFileUseCase from "./UseCase/File/SaveFile/SaveFileUseCase";
 
 @Module({
   imports: [
@@ -46,6 +48,8 @@ import CommentRepository from './Repository/CommentRepository';
     GetAllEventUseCase,
     DeleteEventUseCase,
     CommentRepository,
+      FileRepository,
+      SaveFileUseCase,
     ...Repositories,
     ...Resolvers,
   ],

@@ -49,6 +49,24 @@ type Event {
   userId: Int!
 }
 
+type File {
+  createdAt: DateTime!
+  filename: String!
+  id: Int!
+  initialFilename: String!
+  linkImage: [Link!]!
+  path: String!
+  updatedAt: DateTime!
+  uri: String!
+}
+
+input FileDto {
+  filename: String!
+  initialFilename: String!
+  path: String!
+  uri: String!
+}
+
 input GetNoteTasksByUserIdDto {
   completed: Boolean
   noteId: Int!
@@ -151,6 +169,7 @@ type Mutation {
   removeNoteTaskById(id: Int!): NoteTask!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: saveEventDto!): Event!
+  saveFile(dto: FileDto!): File!
   saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveTask(dto: SaveTaskDto!): Task!
@@ -385,6 +404,7 @@ input TokenValidationDto {
 
 input UpdateLinkDto {
   description: String
+  imageId: Int
   name: String!
   url: String
 }

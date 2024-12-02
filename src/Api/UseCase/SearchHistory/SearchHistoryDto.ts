@@ -1,6 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import User from 'src/Api/Entity/User';
-import SaveUserDto from '../UseCase/User/SaveUser/SaveUserDto';
+import SaveUserDto from '../User/SaveUser/SaveUserDto';
 
 @InputType()
 export default class SearchHistoryDto {

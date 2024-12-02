@@ -12,6 +12,7 @@ import SearchHistoryResolver from "./SearchHistoryResolver";
 import CommentResolver from "./CommentResolver";
 import { ScoreResolver } from "./ScoreResolver";
 import NoteTaskResolver from "./NoteTasksResolver";
+import FileResolver from "./FileResolver";
 
 export const Resolvers = [
   UserResolver,
@@ -27,4 +28,5 @@ export const Resolvers = [
   CommentResolver,
   ScoreResolver,
   NoteTaskResolver,
+  FileResolver
 ];
