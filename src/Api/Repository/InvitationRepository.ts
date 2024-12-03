@@ -7,7 +7,8 @@ export default class InvitationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findReceiverIdByEmail(email: string) {
-    const result = this.prisma.user.findUnique({
+    console.log("Searching for user with email:", email);
+    const result = await this.prisma.user.findUnique({
       where: {
         email,
       },

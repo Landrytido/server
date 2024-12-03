@@ -2,61 +2,92 @@ import SaveInvitationDto from "./SaveInvitationDto";
 import { ContextualGraphqlRequest, UseCase } from "../../../../index";
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
 import InvitationRepository from "../../../Repository/InvitationRepository";
 import { Invitation } from "@prisma/client";
+import { EmailService } from "src/Api/Services/emailService";
+import Authenticator from "src/Core/Security/Service/authentication/Authenticator";
 
 @Injectable()
 export default class CreateInvitationUseCase
   implements UseCase<Promise<Invitation>, [dto: SaveInvitationDto]>
 {
-  constructor(private readonly invitationRepository: InvitationRepository) {}
+  constructor(
+    private readonly invitationRepository: InvitationRepository,
+    private readonly emailService: EmailService,
+    @Inject("Authenticator") private authenticator: Authenticator
+  ) {}
 
   async handle(context: ContextualGraphqlRequest, dto: SaveInvitationDto) {
     try {
+      console.log("user email:", dto.email); //console log à supp
+
       const receiver = await this.invitationRepository.findReceiverIdByEmail(
         dto.email
       );
-      //A supprimer//
-      console.log("const receiver", receiver)
-      //A supprimer//
+      //=> console.log à supp
+      console.log("receiver:", receiver);
 
-      if (!receiver) throw new NotFoundException("User not found");
+      //external invitation logic
+      if (receiver == null) {
+        // Si l'utilisateur n'existe pas, gérer l'invitation externe
+        const token = await this.authenticator.createToken({
+          email: dto.email,
+          userId: context.userId,
+        });
 
-      if (receiver.id == context.userId)
-        throw new BadRequestException(
-          "Users are prohibited from sending invitations to themselves"
-        );
+        // Sauvegarder l'invitation externe dans la base de données
+        const savedInvitation = await this.invitationRepository.save({
+          externalEmailInvitation: dto.email,
+          senderId: context.userId,
+          tokenForExternalInvitation: token,
+          isExternal: true,
+        });
 
-      const invitation =
-        await this.invitationRepository.findInvitationBySenderAndReceiver(
+        // Générer le lien d'invitation avec le token
+        const invitationLink = `${process.env.FRONTEND_URL}/accept-invitation?token=${token}`;
+
+        // Envoi de l'e-mail d'invitation avec le lien
+        await this.emailService.sendInvitationEmail(
+          dto.email,
           context.userId,
-          receiver.id
+          invitationLink
         );
-//A supprimer//
-console.log("const invitation", invitation)
-//A supprimer//
-      if (invitation)
-        throw new BadRequestException(
-          "You've already sent an invitation to this user"
-        );
-      
-//A supprimer
-const result= await this.invitationRepository.save({
-  receiverId: receiver.id,
-  senderId: context.userId,
-});
-console.log("CreateInvitationUseCase", result)
-        return result
-        //A supprimer
-//a remettre//
-      // return await this.invitationRepository.save({
-      //   receiverId: receiver.id,
-      //   senderId: context.userId,
-      // });
-      //A remettre
+
+        return savedInvitation;
+      }
+
+      if (receiver) {
+        if (receiver.id == context.userId)
+          throw new BadRequestException(
+            "Users are prohibited from sending invitations to themselves"
+          );
+
+        const existingInvitation =
+          await this.invitationRepository.findInvitationBySenderAndReceiver(
+            context.userId,
+            receiver.id
+          );
+        // => console.log à supp
+        console.log("const invitation", existingInvitation);
+
+        if (existingInvitation)
+          throw new BadRequestException(
+            "You've already sent an invitation to this user"
+          );
+
+        const invitationSaved = await this.invitationRepository.save({
+          receiverId: receiver.id,
+          senderId: context.userId,
+          isExternal: false,
+        });
+        // => console.log à supp
+        console.log("CreateInvitationUseCase", invitationSaved);
+        return invitationSaved;
+      }
     } catch (error) {
       throw new BadRequestException(
         "CreateInvitationUseCaseFailed",

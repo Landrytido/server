@@ -56,12 +56,15 @@ input GetNoteTasksByUserIdDto {
 }
 
 type Invitation {
+  externalEmailInvitation: String
   id: Int!
+  isExternal: Boolean!
   isRelation: Boolean!
-  receiver: User!
-  receiverId: Int!
+  receiver: User
+  receiverId: Int
   sender: User!
   senderId: Int!
+  tokenForExternalInvitation: String
 }
 
 """Level of difficulty for the score (easy, medium, hard)"""
@@ -421,6 +424,7 @@ type User {
   createdAt: DateTime!
   email: String!
   firstName: String!
+  friends: [Relation!]!
   id: Int!
   invitationsReceived: [Invitation!]!
   invitationsSent: [Invitation!]!

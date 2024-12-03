@@ -1,26 +1,26 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
-import UserRepository from '../../Api/Repository/UserRepository';
-import DatasourceModule from '../Datasource/DatasourceModule';
-import EventModule from '../Event/EventModule';
-import LoggingModule from '../Logging/LoggingModule';
-import AuthenticationEventEmitter from './Event/AuthenticationEventEmitter';
-import AuthenticationEventSubscriber from './Event/AuthenticationEventSubscriber';
-import LocalAuthGuard from './Guard/LocalAuthGuard';
-import AuthenticationResolver from './Resolver/AuthenticationResolver';
-import Authenticator from './Service/authentication/Authenticator';
-import Bcrypt from './Service/encryption/Bcrypt';
-import RequestTokenDecoder from './Service/RequestTokenDecoder';
-import JwtStrategy from './Strategy/JwtStrategy';
-import LocalStrategy from './Strategy/LocalStrategy';
-import AuthenticationUseCaseFactory from './UseCase/AuthenticationUseCaseFactory';
-import Login from './UseCase/Login';
+import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { JwtModule, JwtService } from "@nestjs/jwt";
+import { PassportModule } from "@nestjs/passport";
+import UserRepository from "../../Api/Repository/UserRepository";
+import DatasourceModule from "../Datasource/DatasourceModule";
+import EventModule from "../Event/EventModule";
+import LoggingModule from "../Logging/LoggingModule";
+import AuthenticationEventEmitter from "./Event/AuthenticationEventEmitter";
+import AuthenticationEventSubscriber from "./Event/AuthenticationEventSubscriber";
+import LocalAuthGuard from "./Guard/LocalAuthGuard";
+import AuthenticationResolver from "./Resolver/AuthenticationResolver";
+import Authenticator from "./Service/authentication/Authenticator";
+import Bcrypt from "./Service/encryption/Bcrypt";
+import RequestTokenDecoder from "./Service/RequestTokenDecoder";
+import JwtStrategy from "./Strategy/JwtStrategy";
+import LocalStrategy from "./Strategy/LocalStrategy";
+import AuthenticationUseCaseFactory from "./UseCase/AuthenticationUseCaseFactory";
+import Login from "./UseCase/Login";
 
 const authenticator = {
-  provide: 'Authenticator',
-  imports: [ ConfigModule ],
+  provide: "Authenticator",
+  imports: [ConfigModule],
   useFactory: (
     userRepository: UserRepository,
     bcrypt: Bcrypt,
@@ -29,7 +29,7 @@ const authenticator = {
   ) => {
     return new Authenticator(userRepository, bcrypt, jwt, config);
   },
-  inject: [ UserRepository, Bcrypt, JwtService, ConfigService ]
+  inject: [UserRepository, Bcrypt, JwtService, ConfigService],
 };
 
 @Module({
@@ -40,14 +40,14 @@ const authenticator = {
     LoggingModule,
     PassportModule,
     JwtModule.registerAsync({
-      imports: [ ConfigModule ],
-      inject: [ ConfigService ],
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET')
-      })
+        secret: configService.get("JWT_SECRET"),
+      }),
     }),
   ],
-  exports: [ Bcrypt ],
+  exports: [Bcrypt, authenticator], //ajout
   providers: [
     authenticator,
     AuthenticationEventEmitter,
@@ -61,6 +61,6 @@ const authenticator = {
     Login,
     RequestTokenDecoder,
     UserRepository,
-  ]
+  ],
 })
 export default class SecurityModule {}
