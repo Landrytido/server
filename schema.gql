@@ -148,6 +148,7 @@ type Mutation {
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
+  loginWithGoogle(idToken: String!): String!
   register(dto: SaveUserDto!): User!
   removeNoteTaskById(id: Int!): NoteTask!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!

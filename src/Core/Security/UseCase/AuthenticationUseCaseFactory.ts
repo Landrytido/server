@@ -3,8 +3,9 @@ import ServiceFactory from '../../Factory/ServiceFactory';
 import Login from './Login';
 import RefreshToken from './RefreshToken';
 import ValidateToken from './ValidateToken';
+import LoginWithGoogle from './LoginWithGoogle';
 
-type AvailableUseCase = Login | ValidateToken | RefreshToken;
+type AvailableUseCase = Login | ValidateToken | RefreshToken | LoginWithGoogle;
 
 @Injectable()
 export default class AuthenticationUseCaseFactory extends ServiceFactory<AvailableUseCase> {}
