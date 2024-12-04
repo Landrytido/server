@@ -1,5 +1,3 @@
-// src/Core/Security/Resolver/AuthenticationResolver.ts
-
 import { UseGuards } from '@nestjs/common';
 import { Args, Query, Resolver, Mutation } from '@nestjs/graphql';
 import { ContextualGraphqlRequest } from '../../../index';

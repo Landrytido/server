@@ -1,5 +1,3 @@
-// src/Core/Security/UseCase/LoginWithGoogle.ts
-
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
@@ -41,17 +39,14 @@ export default class LoginWithGoogle implements UseCase<Promise<string>, [idToke
       let user = await this.userRepository.findByEmail(email);
 
       if (!user) {
-        // Créer un nouvel utilisateur
         user = await this.userRepository.create({
           email,
-          password: null, // Aucun mot de passe pour les utilisateurs Google
+          password: null,
           firstName,
           lastName,
-          // Autres champs si nécessaire
         });
       }
 
-      // Générer un token JWT
       const token = await this.authenticator.createToken(user);
 
       this.eventEmitter.emit('login_with_google_successfully', { context, email });
