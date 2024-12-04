@@ -13,6 +13,7 @@ import GetSentInvitationsUseCase from "../UseCase/Invitation/GetSentInvitations/
 import GetReceivedInvitationsUseCase from "../UseCase/Invitation/GetReceivedInvitations/GetReceivedInvitationsUseCase";
 import GetRelationUseCase from "../UseCase/Invitation/GetRelations/GetRelationUseCase";
 import { Relation } from "../Entity/Relation";
+import ConvertExternalInvitationUseCase from "../UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
 
 @Resolver(Invitation)
 @UseGuards(GraphqlAuthGuard)
@@ -52,6 +53,19 @@ export default class InvitationResolver {
       context,
       invitationId
     );
+  }
+
+  //ajout =>
+  @Mutation(() => Invitation)
+  async convertExternalInvitation(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("invitationToken", { type: () => String }) invitationToken: string
+  ) {
+    const resultConvertExternalInvitation = await (
+      await this.serviceFactory.create(ConvertExternalInvitationUseCase)
+    ).handle(context, invitationToken);
+    console.log("mutation convert:", resultConvertExternalInvitation);
+    return resultConvertExternalInvitation;
   }
 
   @Query(() => [Invitation])

@@ -53,6 +53,18 @@ export default class InvitationRepository {
     return invitations;
   }
 
+  //Ajout pour convertExternal
+  async findInvitationByToken(invitationToken: string) {
+    const invitation = await this.prisma.invitation.findFirst({
+      where: {
+        tokenForExternalInvitation: invitationToken,
+      },
+    });
+
+    console.log("findInvitationByToken", invitation);
+    return invitation;
+  }
+
   async findRelations(userId: number) {
     const relations = await this.prisma.invitation.findMany({
       where: {

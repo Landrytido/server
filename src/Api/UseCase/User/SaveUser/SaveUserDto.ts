@@ -16,4 +16,7 @@ export default class SaveUserDto {
 
   @Field({ nullable: true })
   lastName?: string | null;
+
+  @Field({ nullable: true })
+  invitationToken?: string; // Le token d'invitation externe
 }

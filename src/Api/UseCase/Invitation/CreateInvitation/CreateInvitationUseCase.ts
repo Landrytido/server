@@ -48,7 +48,7 @@ export default class CreateInvitationUseCase
         });
 
         // Générer le lien d'invitation avec le token
-        const invitationLink = `${process.env.FRONTEND_URL}/accept-invitation?token=${token}`;
+        const invitationLink = `${process.env.FRONTEND_URL}/external-invitation?token=${token}`;
 
         // Envoi de l'e-mail d'invitation avec le lien
         await this.emailService.sendInvitationEmail(
