@@ -14,11 +14,16 @@ import GetReceivedInvitationsUseCase from "../UseCase/Invitation/GetReceivedInvi
 import GetRelationUseCase from "../UseCase/Invitation/GetRelations/GetRelationUseCase";
 import { Relation } from "../Entity/Relation";
 import ConvertExternalInvitationUseCase from "../UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
+import SaveUserDto from "../UseCase/User/SaveUser/SaveUserDto";
+import UncontextualUseCaseFactory from "../UseCase/UncontextualUseCaseFactory";
 
 @Resolver(Invitation)
 @UseGuards(GraphqlAuthGuard)
 export default class InvitationResolver {
-  constructor(private readonly serviceFactory: UseCaseFactory) {}
+  constructor(
+    private readonly serviceFactory: UseCaseFactory,
+    private readonly uncontextualUseCaseFactory: UncontextualUseCaseFactory
+  ) {}
 
   @Mutation(() => Invitation)
   async createInvitation(
@@ -57,13 +62,12 @@ export default class InvitationResolver {
 
   //ajout =>
   @Mutation(() => Invitation)
-  async convertExternalInvitation(
-    @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("invitationToken", { type: () => String }) invitationToken: string
-  ) {
+  async convertExternalInvitation(@Args("dto") dto: SaveUserDto) {
     const resultConvertExternalInvitation = await (
-      await this.serviceFactory.create(ConvertExternalInvitationUseCase)
-    ).handle(context, invitationToken);
+      await this.uncontextualUseCaseFactory.create(
+        ConvertExternalInvitationUseCase
+      )
+    ).handle(dto);
     console.log("mutation convert:", resultConvertExternalInvitation);
     return resultConvertExternalInvitation;
   }

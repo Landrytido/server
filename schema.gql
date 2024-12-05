@@ -130,7 +130,7 @@ type Mutation {
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptInvitation(invitationId: Int!): Invitation!
   addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
-  convertExternalInvitation(invitationToken: String!): Invitation!
+  convertExternalInvitation(dto: SaveUserDto!): Invitation!
   createComment(data: CommentDto!): Comment!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!

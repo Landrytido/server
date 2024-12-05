@@ -37,36 +37,35 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import SaveUserDto from "../SaveUser/SaveUserDto";
 import User from "../../../Entity/User";
-import { ContextualGraphqlRequest, UseCase } from "../../../../index";
+import { UncontextualUseCase } from "../../../../index";
 import UserRepository from "../../../Repository/UserRepository";
-import SaveUserUseCase from "../SaveUser/SaveUserUseCase";
+import ConvertExternalInvitationUseCase from "../../Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
 
 @Injectable()
 export default class CreateUserUseCase
-  implements UseCase<Promise<User>, [dto: SaveUserDto]>
+  implements UncontextualUseCase<Promise<User>, [dto: SaveUserDto]>
 {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly SaveUserUseCase: SaveUserUseCase
+    private readonly convertExternalInvitationUseCase: ConvertExternalInvitationUseCase
   ) {}
 
-  async handle(
-    context: ContextualGraphqlRequest,
-    dto: SaveUserDto
-  ): Promise<User> {
+  async handle(dto: SaveUserDto): Promise<User> {
     try {
       console.log("dto createusercase", dto, dto.invitationToken);
       const userCreated = await this.userRepository.create(dto);
       console.log("userCreated usecase", userCreated);
 
-      // Si un invitationToken est fourni, appeler SaveUserUseCase pour le traiter
+      //ajout =>
       if (dto.invitationToken) {
-        const userWithInvitation = await this.SaveUserUseCase.handle(
-          context,
-          dto
+        console.log("dto.invitation:", dto.invitationToken);
+        dto.id = userCreated.id;
+        console.log("dto.id:", dto.id);
+        await this.convertExternalInvitationUseCase.handle(dto);
+
+        console.log(
+          "Après l'appel à convertExternalInvitationUseCase, invitationToken traité"
         );
-        console.log("userWithInvitation usecase", userWithInvitation);
-        return userWithInvitation; // Renvoie l'utilisateur avec les modifications traitées par SaveUserUseCase
       }
 
       return userCreated;

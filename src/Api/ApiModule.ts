@@ -49,7 +49,7 @@ import ConvertExternalInvitationUseCase from "./UseCase/Invitation/ConvertExtern
     GetAllEventUseCase,
     DeleteEventUseCase,
     CommentRepository,
-    SaveUserUseCase, //ajout
+
     ConvertExternalInvitationUseCase, //ajout
     ...Repositories,
     ...Resolvers,

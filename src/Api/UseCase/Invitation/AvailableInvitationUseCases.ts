@@ -12,5 +12,5 @@ export type AvailableInvitationUseCases =
   | AcceptInvitationUseCase
   | GetSentInvitationsUseCase
   | GetReceivedInvitationsUseCase
-  | GetRelationUseCase
-  | ConvertExternalInvitationUseCase;
+  | GetRelationUseCase;
+// | ConvertExternalInvitationUseCase;

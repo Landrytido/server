@@ -26,22 +26,11 @@ export default class UserResolver {
     );
   }
 
-  // @Mutation(() => User)
-  // async register(@Args("dto") dto: SaveUserDto) {
-  //   return (
-  //     await this.uncontextualUseCaseFactory.create(CreateUserUseCase)
-  //   ).handle(dto);
-  // }
-
-  //Modif =>
   @Mutation(() => User)
-  async register(
-    @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("dto") dto: SaveUserDto
-  ) {
+  async register(@Args("dto") dto: SaveUserDto) {
     return (
       await this.uncontextualUseCaseFactory.create(CreateUserUseCase)
-    ).handle(context, dto);
+    ).handle(dto);
   }
 
   @UseGuards(GraphqlAuthGuard)

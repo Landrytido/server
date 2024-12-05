@@ -1,27 +1,33 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
 import InvitationRepository from "../../../Repository/InvitationRepository";
 import { Invitation } from "@prisma/client";
-import { ContextualGraphqlRequest, UseCase } from "../../../../index";
+import {
+  ContextualGraphqlRequest,
+  UncontextualUseCase,
+  UseCase,
+} from "../../../../index";
+import SaveUserDto from "../../User/SaveUser/SaveUserDto";
 
 @Injectable()
 export default class ConvertExternalInvitationUseCase
-  implements UseCase<Promise<Invitation>, [invitationToken: string]>
+  implements UncontextualUseCase<Promise<Invitation>, [dto: SaveUserDto]>
 {
   constructor(private readonly invitationRepository: InvitationRepository) {}
 
-  async handle(context: ContextualGraphqlRequest, invitationToken: string) {
-    console.log("Token de l'invitation reçu : ", invitationToken);
-    const invitation =
-      await this.invitationRepository.findInvitationByToken(invitationToken);
+  async handle(dto: SaveUserDto): Promise<Invitation> {
+    console.log("Token de l'invitation reçu : ", dto.invitationToken);
+    const invitation = await this.invitationRepository.findInvitationByToken(
+      dto.invitationToken
+    );
 
     if (!invitation || !invitation.isExternal) {
       throw new BadRequestException("Invitation invalide ou déjà interne.");
     }
 
     console.log("Invitation trouvée : ", invitation);
-    console.log("context.userid dans convert", context.userId);
+    console.log("context.userid dans convert", dto.id);
 
-    invitation.receiverId = context.userId;
+    invitation.receiverId = dto.id;
     invitation.isExternal = false;
     invitation.externalEmailInvitation = null;
     invitation.tokenForExternalInvitation = null;
