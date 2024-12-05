@@ -19,6 +19,7 @@ export default class ConvertExternalInvitationUseCase
     }
 
     console.log("Invitation trouvée : ", invitation);
+    console.log("context.userid dans convert", context.userId);
 
     invitation.receiverId = context.userId;
     invitation.isExternal = false;

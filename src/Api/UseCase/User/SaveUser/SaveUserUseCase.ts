@@ -23,15 +23,27 @@ export default class SaveUserUseCase
         throw new ForbiddenException("Not authorized");
       }
 
-      const userSaved = await this.userRepository.save(dto);
-
       //ajout =>
       if (dto.invitationToken) {
+        console.log("dto.invitation:", dto.invitationToken);
         await this.convertExternalInvitationUseCase.handle(
           context,
           dto.invitationToken
         );
+        console.log(
+          "await saveuserusecase",
+          await this.convertExternalInvitationUseCase.handle(
+            context,
+            dto.invitationToken
+          )
+        );
+        console.log(
+          "Après l'appel à convertExternalInvitationUseCase, invitationToken traité"
+        );
       }
+
+      const userSaved = await this.userRepository.save(dto);
+      console.log("userSaved userusecase:", userSaved);
 
       return userSaved;
     } catch (error) {

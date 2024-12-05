@@ -17,6 +17,8 @@ import GetAllEventUseCase from "./UseCase/Event/GetAllEventUseCase";
 import DeleteEventUseCase from "./UseCase/Event/DeleteEventUseCase";
 import CommentRepository from "./Repository/CommentRepository";
 import { EmailService } from "./Services/emailService";
+import SaveUserUseCase from "./UseCase/User/SaveUser/SaveUserUseCase";
+import ConvertExternalInvitationUseCase from "./UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
 
 @Module({
   imports: [
@@ -47,6 +49,8 @@ import { EmailService } from "./Services/emailService";
     GetAllEventUseCase,
     DeleteEventUseCase,
     CommentRepository,
+    SaveUserUseCase, //ajout
+    ConvertExternalInvitationUseCase, //ajout
     ...Repositories,
     ...Resolvers,
     EmailService,
