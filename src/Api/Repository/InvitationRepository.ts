@@ -7,13 +7,11 @@ export default class InvitationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findReceiverIdByEmail(email: string) {
-    console.log("Searching for user with email:", email);
     const result = await this.prisma.user.findUnique({
       where: {
         email,
       },
     });
-    console.log("findReceiverIdByEmail", result);
     return result;
   }
 
@@ -27,7 +25,6 @@ export default class InvitationRepository {
         senderId: senderId,
       },
     });
-    console.log("findInvitationBySenderAndReceiver", result);
     return result;
   }
 
@@ -49,11 +46,9 @@ export default class InvitationRepository {
         sender: true,
       },
     });
-    console.log("findReceivedInvitations repo", invitations);
     return invitations;
   }
 
-  //Ajout pour convertExternal
   async findInvitationByToken(invitationToken: string) {
     const invitation = await this.prisma.invitation.findFirst({
       where: {
@@ -61,7 +56,6 @@ export default class InvitationRepository {
       },
     });
 
-    console.log("findInvitationByToken", invitation);
     return invitation;
   }
 
@@ -76,10 +70,6 @@ export default class InvitationRepository {
         receiver: true,
       },
     });
-    //A supprimer
-    console.log("findRelations", relations);
-
-    //A supprimer
     return relations;
   }
 
@@ -130,7 +120,6 @@ export default class InvitationRepository {
     const result = this.prisma.invitation.delete({
       where: { id: invitationId },
     });
-    console.log("prisma result", result);
     return result;
   }
 }

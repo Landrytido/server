@@ -14,7 +14,6 @@ export default class GetReceivedInvitationsUseCase
       const result = await this.invitationRepository.findReceivedInvitations(
         context.userId
       );
-      console.log("GetRecievedInvitUsecase", result);
       return result;
     } catch (error) {
       throw new BadRequestException(

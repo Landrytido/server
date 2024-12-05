@@ -20,7 +20,6 @@ export default class SaveUserUseCase
       }
 
       const userSaved = await this.userRepository.save(dto);
-      console.log("userSaved userusecase:", userSaved);
 
       return userSaved;
     } catch (error) {

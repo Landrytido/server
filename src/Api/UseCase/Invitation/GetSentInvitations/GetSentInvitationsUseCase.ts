@@ -13,7 +13,6 @@ export default class GetSentInvitationsUseCase
     try {
       const invitationSent =
         await this.invitationRepository.findSentInvitations(context.userId);
-      console.log("invitationSent", invitationSent);
       return invitationSent;
     } catch (error) {
       throw new BadRequestException(

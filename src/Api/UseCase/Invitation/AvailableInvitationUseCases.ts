@@ -4,7 +4,6 @@ import AcceptInvitationUseCase from "./AcceptInvitation/AcceptInvitationUseCase"
 import GetSentInvitationsUseCase from "./GetSentInvitations/GetSentInvitationsUseCase";
 import GetReceivedInvitationsUseCase from "./GetReceivedInvitations/GetReceivedInvitationsUseCase";
 import GetRelationUseCase from "./GetRelations/GetRelationUseCase";
-import ConvertExternalInvitationUseCase from "./ConvertExternalInvitation/ConvertExternalInvitationUseCase";
 
 export type AvailableInvitationUseCases =
   | CreateInvitationUseCase
@@ -13,4 +12,3 @@ export type AvailableInvitationUseCases =
   | GetSentInvitationsUseCase
   | GetReceivedInvitationsUseCase
   | GetRelationUseCase;
-// | ConvertExternalInvitationUseCase;

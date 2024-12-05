@@ -1,11 +1,6 @@
 import SaveInvitationDto from "./SaveInvitationDto";
 import { ContextualGraphqlRequest, UseCase } from "../../../../index";
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import InvitationRepository from "../../../Repository/InvitationRepository";
 import { Invitation } from "@prisma/client";
 import { EmailService } from "src/Api/Services/emailService";
@@ -23,23 +18,17 @@ export default class CreateInvitationUseCase
 
   async handle(context: ContextualGraphqlRequest, dto: SaveInvitationDto) {
     try {
-      console.log("user email:", dto.email); //console log à supp
-
       const receiver = await this.invitationRepository.findReceiverIdByEmail(
         dto.email
       );
-      //=> console.log à supp
-      console.log("receiver:", receiver);
 
       //external invitation logic
       if (receiver == null) {
-        // Si l'utilisateur n'existe pas, gérer l'invitation externe
         const token = await this.authenticator.createToken({
           email: dto.email,
           userId: context.userId,
         });
 
-        // Sauvegarder l'invitation externe dans la base de données
         const savedInvitation = await this.invitationRepository.save({
           externalEmailInvitation: dto.email,
           senderId: context.userId,
@@ -47,10 +36,8 @@ export default class CreateInvitationUseCase
           isExternal: true,
         });
 
-        // Générer le lien d'invitation avec le token
         const invitationLink = `${process.env.FRONTEND_URL}/external-invitation?token=${token}`;
 
-        // Envoi de l'e-mail d'invitation avec le lien
         await this.emailService.sendInvitationEmail(
           dto.email,
           context.userId,
@@ -60,6 +47,7 @@ export default class CreateInvitationUseCase
         return savedInvitation;
       }
 
+      //internal invitation logic
       if (receiver) {
         if (receiver.id == context.userId)
           throw new BadRequestException(
@@ -71,8 +59,6 @@ export default class CreateInvitationUseCase
             context.userId,
             receiver.id
           );
-        // => console.log à supp
-        console.log("const invitation", existingInvitation);
 
         if (existingInvitation)
           throw new BadRequestException(
@@ -84,8 +70,7 @@ export default class CreateInvitationUseCase
           senderId: context.userId,
           isExternal: false,
         });
-        // => console.log à supp
-        console.log("CreateInvitationUseCase", invitationSaved);
+
         return invitationSaved;
       }
     } catch (error) {

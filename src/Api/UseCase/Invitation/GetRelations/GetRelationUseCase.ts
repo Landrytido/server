@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { Invitation } from "@prisma/client";
 import { ContextualGraphqlRequest, UseCase } from "src";
 import { Relation } from "src/Api/Entity/Relation";
 import InvitationRepository from "src/Api/Repository/InvitationRepository";
@@ -15,7 +14,6 @@ export default class GetRelationsUseCase
         context.userId
       );
 
-      // Filtrer uniquement les relations valides
       const validRelations = relations.filter(
         (relation) => relation.isRelation
       );
@@ -36,7 +34,6 @@ export default class GetRelationsUseCase
           receiver: relation.receiver,
         };
       });
-      console.log("emailFriend", relationInfos);
       return relationInfos;
     } catch (error) {
       throw new BadRequestException(

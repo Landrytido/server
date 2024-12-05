@@ -33,7 +33,6 @@ export default class InvitationResolver {
     const result = await (
       await this.serviceFactory.create(CreateInvitationUseCase)
     ).handle(context, dto);
-    console.log("createInvitationResolver", result);
     return result;
   }
 
@@ -45,7 +44,6 @@ export default class InvitationResolver {
     const result = await (
       await this.serviceFactory.create(DeleteInvitationUseCase)
     ).handle(context, invitationId);
-    console.log("mutation deleteInvitation", result);
     return result;
   }
 
@@ -60,7 +58,6 @@ export default class InvitationResolver {
     );
   }
 
-  //ajout =>
   @Mutation(() => Invitation)
   async convertExternalInvitation(@Args("dto") dto: SaveUserDto) {
     const resultConvertExternalInvitation = await (
@@ -68,7 +65,6 @@ export default class InvitationResolver {
         ConvertExternalInvitationUseCase
       )
     ).handle(dto);
-    console.log("mutation convert:", resultConvertExternalInvitation);
     return resultConvertExternalInvitation;
   }
 
@@ -88,7 +84,6 @@ export default class InvitationResolver {
     const result = (
       await this.serviceFactory.create(GetReceivedInvitationsUseCase)
     ).handle(context);
-    console.log("findRecievedInvitations", result);
     return result;
   }
 
@@ -97,7 +92,6 @@ export default class InvitationResolver {
     const result = (
       await this.serviceFactory.create(GetRelationUseCase)
     ).handle(context);
-    console.log("findRelationsResolver", result);
     return result;
   }
 }
