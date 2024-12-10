@@ -1,21 +1,22 @@
-import { HttpModule } from "@nestjs/axios"; 
+import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { EventEmitterModule } from '@nestjs/event-emitter';
-import { S3Module } from 'nestjs-s3'; 
+import { EventEmitterModule } from "@nestjs/event-emitter";
+import { S3Module } from "nestjs-s3";
 import CoreModule from "../Core/CoreModule";
-import GraphqlModule from "../Core/GraphqlModule"; 
+import GraphqlModule from "../Core/GraphqlModule";
 import { Repositories } from "./Repository/Repositories";
-import { Resolvers } from './Resolver/Resolvers';
+import { Resolvers } from "./Resolver/Resolvers";
 import UseCaseFactory from "./UseCase/UseCaseFactory";
 import UncontextualUseCaseFactory from "./UseCase/UncontextualUseCaseFactory";
-import EventResolver from './Resolver/EventResolver';
-import EventRepository from './Repository/EventRepository';
-import SaveEventUseCase from './UseCase/Event/SaveEventUseCase';
-import GetEventUseCase from './UseCase/Event/GetEventUseCase';
-import GetAllEventUseCase from './UseCase/Event/GetAllEventUseCase';
-import DeleteEventUseCase from './UseCase/Event/DeleteEventUseCase';
-import CommentRepository from './Repository/CommentRepository';
+import EventResolver from "./Resolver/EventResolver";
+import EventRepository from "./Repository/EventRepository";
+import SaveEventUseCase from "./UseCase/Event/SaveEventUseCase";
+import GetEventUseCase from "./UseCase/Event/GetEventUseCase";
+import GetAllEventUseCase from "./UseCase/Event/GetAllEventUseCase";
+import DeleteEventUseCase from "./UseCase/Event/DeleteEventUseCase";
+import CommentRepository from "./Repository/CommentRepository";
+import { EmailService } from "./Services/emailService";
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import CommentRepository from './Repository/CommentRepository';
     CommentRepository,
     ...Repositories,
     ...Resolvers,
+    EmailService,
   ],
 })
 export class ApiModule {}
