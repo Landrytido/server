@@ -15,6 +15,18 @@ export default class InvitationRepository {
     return result;
   }
 
+  //=> ajout
+  async findPendingInvitationsByEmail(email: string) {
+    return this.prisma.invitation.findMany({
+      where: {
+        externalEmailInvitation: email,
+        receiverId: null, // Invitation pas encore associée
+        isExternal: true, // Doit être externe
+      },
+    });
+  }
+  //fin
+
   async findInvitationBySenderAndReceiver(
     senderId: number,
     receiverId: number
@@ -23,6 +35,20 @@ export default class InvitationRepository {
       where: {
         receiverId: receiverId,
         senderId: senderId,
+      },
+    });
+    return result;
+  }
+
+  //ajout =>
+  async findInvitationBySenderAndexternalEmailInvitation(
+    senderId: number,
+    externalEmailInvitation: string
+  ) {
+    const result = this.prisma.invitation.findFirst({
+      where: {
+        externalEmailInvitation,
+        senderId,
       },
     });
     return result;

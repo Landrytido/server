@@ -15,7 +15,7 @@ CREATE TABLE `File` (
 CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `email` VARCHAR(255) NOT NULL,
-    `password` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NULL,
     `firstName` VARCHAR(255) NOT NULL,
     `lastName` VARCHAR(255) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -124,7 +124,7 @@ CREATE TABLE `Task` (
 -- CreateTable
 CREATE TABLE `Invitation` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `receiverId` INTEGER NOT NULL,
+    `receiverId` INTEGER NULL,
     `senderId` INTEGER NOT NULL,
     `externalEmailInvitation` VARCHAR(191) NULL,
     `tokenForExternalInvitation` VARCHAR(191) NULL,
@@ -275,7 +275,7 @@ ALTER TABLE `LinkGroup` ADD CONSTRAINT `LinkGroup_userId_fkey` FOREIGN KEY (`use
 ALTER TABLE `Task` ADD CONSTRAINT `Task_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Invitation` ADD CONSTRAINT `Invitation_receiverId_fkey` FOREIGN KEY (`receiverId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Invitation` ADD CONSTRAINT `Invitation_receiverId_fkey` FOREIGN KEY (`receiverId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Invitation` ADD CONSTRAINT `Invitation_senderId_fkey` FOREIGN KEY (`senderId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
