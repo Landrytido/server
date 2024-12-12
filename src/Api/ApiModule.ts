@@ -18,6 +18,8 @@ import DeleteEventUseCase from "./UseCase/Event/DeleteEventUseCase";
 import CommentRepository from "./Repository/CommentRepository";
 import { EmailService } from "./Services/emailService";
 import ConvertExternalInvitationUseCase from "./UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
+import { AcceptLanguageResolver, I18nModule } from "nestjs-i18n";
+import * as path from "path";
 
 @Module({
   imports: [
@@ -26,6 +28,15 @@ import ConvertExternalInvitationUseCase from "./UseCase/Invitation/ConvertExtern
     EventEmitterModule.forRoot({ wildcard: true }),
     GraphqlModule,
     HttpModule,
+    I18nModule.forRoot({
+      fallbackLanguage: "fr",
+      loaderOptions: {
+        path: path.join(__dirname, "../../src/i18n"),
+        watch: true,
+        includeSubfolders: true,
+      },
+      resolvers: [AcceptLanguageResolver],
+    }),
     S3Module.forRoot({
       config: {
         credentials: {

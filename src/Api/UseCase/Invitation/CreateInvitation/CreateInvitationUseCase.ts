@@ -3,8 +3,9 @@ import { ContextualGraphqlRequest, UseCase } from "../../../../index";
 import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import InvitationRepository from "../../../Repository/InvitationRepository";
 import { Invitation } from "@prisma/client";
-import { EmailService } from "src/Api/Services/emailService";
 import Authenticator from "src/Core/Security/Service/authentication/Authenticator";
+import Mailer from "src/Core/Mailing/Mailer";
+import UserRepository from "src/Api/Repository/UserRepository";
 
 @Injectable()
 export default class CreateInvitationUseCase
@@ -12,7 +13,8 @@ export default class CreateInvitationUseCase
 {
   constructor(
     private readonly invitationRepository: InvitationRepository,
-    private readonly emailService: EmailService,
+    private readonly userRepository: UserRepository,
+    private readonly mailer: Mailer,
     @Inject("Authenticator") private authenticator: Authenticator
   ) {}
 
@@ -49,10 +51,11 @@ export default class CreateInvitationUseCase
         });
 
         const invitationLink = `${process.env.FRONTEND_URL}/external-invitation?token=${token}&email=${dto.email}`;
+        const senderUser = await this.userRepository.findById(context.userId);
 
-        await this.emailService.sendInvitationEmail(
+        await this.mailer.sendInvitationEmail(
           dto.email,
-          context.userId,
+          { firstName: senderUser.firstName, lastName: senderUser.lastName },
           invitationLink
         );
 

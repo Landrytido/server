@@ -10,7 +10,10 @@ import TextHelper from "./Helper/TextHelper";
 import UniqidGenerator from "./Helper/UniqidGenerator";
 import LoggingModule from "./Logging/LoggingModule";
 import SecurityModule from "./Security/SecurityModule";
-import { PrismaService } from './Datasource/Prisma'; 
+import { PrismaService } from "./Datasource/Prisma";
+import Mailer from "./Mailing/Mailer";
+import MailMustacheRenderer from "./Mailing/MailMustacheRenderer";
+import UserRepository from "src/Api/Repository/UserRepository";
 
 @Module({
   imports: [
@@ -27,21 +30,27 @@ import { PrismaService } from './Datasource/Prisma';
     EventModule,
     IbanValidator,
     LoggingModule,
+    Mailer,
+    MailMustacheRenderer,
     NumberFormatter,
     PromiseFactory,
     TextHelper,
     SecurityModule,
     UniqidGenerator,
+    UserRepository, //ajout
     PrismaService,
   ],
   controllers: [],
   providers: [
     DateFactory,
     IbanValidator,
+    Mailer,
+    MailMustacheRenderer,
     NumberFormatter,
     PromiseFactory,
     TextHelper,
     UniqidGenerator,
+    UserRepository, //ajout
     PrismaService,
   ],
 })
