@@ -28,7 +28,6 @@ export default class GetTaskByUserIdUseCase
         context
       );
 
-      // const user = await this.userRepository.findById(context.userId);
       const user = {
         id: userContext.id,
         email: userContext.email,
@@ -77,7 +76,7 @@ export default class GetTaskByUserIdUseCase
         }
     `;
 
-    const variables = {}; // No variables needed for worksByOwnerMail as per your schema
+    const variables = {};
 
     try {
         const response = await lastValueFrom(
@@ -102,7 +101,6 @@ export default class GetTaskByUserIdUseCase
             return response.data.data.worksByOwnerMail; // Return the works from the response
         }
 
-        throw new NotFoundException("No tasks found in the external system.");
     } catch (error) {
         console.error("Error retrieving external tasks:", error.message);
         if (error.response) {
