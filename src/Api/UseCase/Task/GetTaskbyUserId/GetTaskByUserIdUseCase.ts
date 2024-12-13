@@ -1,17 +1,60 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { Task } from "@prisma/client";
+import { HttpService } from "@nestjs/axios";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JwtService } from "@nestjs/jwt";
+import Task from "../../../Entity/Task";
+import { lastValueFrom } from "rxjs";
 import { ContextualGraphqlRequest, UseCase } from "src";
 import TaskRepository from "src/Api/Repository/TaskRepository";
+import UseCaseFactory from "../../UseCaseFactory";
+import GetLoggedUserUseCase from "../../User/GetLoggedUser/GetLoggedUserUseCase";
 
 @Injectable()
 export default class GetTaskByUserIdUseCase
-  implements UseCase<Promise<Task[]>, []>
+  implements UseCase<Promise<Task[]>, null>
 {
-  constructor(private readonly taskRepository: TaskRepository) {}
+  constructor(private readonly taskRepository: TaskRepository,
+    private readonly httpService: HttpService,
+    private readonly jwtService: JwtService,
+    readonly configService: ConfigService,
+    readonly serviceFactory: UseCaseFactory,
+  ) {}
 
-  async handle(context: ContextualGraphqlRequest) {
+  async handle(context: ContextualGraphqlRequest) : Promise<Task[]>{
     try {
-      return await this.taskRepository.findByUserId(context.userId);
+      const localTasks = await this.taskRepository.findByUserId(context.userId);
+
+      const userContext= await (await this.serviceFactory.create(GetLoggedUserUseCase)).handle(
+        context
+      );
+
+      // const user = await this.userRepository.findById(context.userId);
+      const user = {
+        id: userContext.id,
+        email: userContext.email,
+        password: null,
+        firstName: userContext.firstName,
+        lastName: userContext.lastName,
+        createdAt: userContext.createdAt,
+        updatedAt: userContext.updatedAt
+      }
+
+      // TIO OR TASKS
+      let externalTasks : Task[]  = (await this.fetchExternalTasks(context.email));
+      externalTasks= (externalTasks as any).map(task=>({
+        id: task.id,
+        title: task.name,
+        description: task.description,
+        dueDate: new Date(task.updatedAt) ,
+        completed: task.status === 'DONE',
+        userId: context.userId,
+        noteId: -1,
+        user
+      }));
+
+
+
+      return  [...localTasks.map(localTask=>({...localTask , user})), ...externalTasks] ;
     } catch (error) {
       throw new BadRequestException(
         "GetTaskByUserIdUseCaseFailed",
@@ -19,4 +62,63 @@ export default class GetTaskByUserIdUseCase
       );
     }
   }
+
+  private async fetchExternalTasks(email: string): Promise<Task[]> {
+    const query = `
+        query worksByOwnerMail {
+            worksByOwnerMail {
+                id
+                name
+                description
+                status
+                rate
+                updatedAt
+            }
+        }
+    `;
+
+    const variables = {}; // No variables needed for worksByOwnerMail as per your schema
+
+    try {
+        const response = await lastValueFrom(
+            this.httpService.post(
+                this.configService.get('TIO_URL_GRAPHQL'),
+                {
+                    // operationName,
+                    query,
+                    variables,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${this.getAuthToken(email)}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            ),
+        );
+
+        // Handling the response
+        if (response.data && response.data.data) {
+            return response.data.data.worksByOwnerMail; // Return the works from the response
+        }
+
+        throw new NotFoundException("No tasks found in the external system.");
+    } catch (error) {
+        console.error("Error retrieving external tasks:", error.message);
+        if (error.response) {
+            console.error("Error details:", error.response.data);
+        }
+    }
+}
+
+private getAuthToken(email: string): string {
+      const payload = {
+          email,
+          permissions: ['READ:TASKS'],
+          exp: Math.floor(Date.now() / 1000) + 60 , // Expiration dans 1 minute
+        };
+
+        return this.jwtService.sign(payload, { secret: this.configService.get('JWT_SECRET_TIO') });
+    }
+
 }

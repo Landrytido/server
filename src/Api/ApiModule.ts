@@ -15,6 +15,8 @@ import GetEventUseCase from './UseCase/Event/GetEventUseCase';
 import DeleteEventUseCase from './UseCase/Event/DeleteEventUseCase';
 import GetAllEventUseCase from './UseCase/Event/GetAllEventUseCase';
 import SaveEventUseCase from './UseCase/Event/SaveEventUseCase';
+import { JwtModule } from "@nestjs/jwt";
+import GetLoggedUserUseCase from "./UseCase/User/GetLoggedUser/GetLoggedUserUseCase";
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -32,6 +34,7 @@ import SaveEventUseCase from './UseCase/Event/SaveEventUseCase';
         forcePathStyle: true,
       },
     }),
+    JwtModule
   ],
   controllers: [],
   providers: [
@@ -43,6 +46,7 @@ import SaveEventUseCase from './UseCase/Event/SaveEventUseCase';
     GetEventUseCase,
     GetAllEventUseCase,
     DeleteEventUseCase,
+    GetLoggedUserUseCase,
     ...Repositories,
     ...Resolvers,
   ],
