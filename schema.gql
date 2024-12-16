@@ -221,6 +221,7 @@ type Query {
   findByLinkId(linkId: Int!): [LinkClick!]!
   findByUser: [LinkClick!]!
   findCommentsByNoteId(noteId: Float!): [Comment!]!
+  findExternalEmailByToken(token: String!): String!
   findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
   findLinkGroupsByUserId: [LinkGroup!]!

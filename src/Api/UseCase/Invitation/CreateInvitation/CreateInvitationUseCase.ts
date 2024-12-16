@@ -26,13 +26,12 @@ export default class CreateInvitationUseCase
 
       //external invitation logic
       if (receiver == null) {
-        //ajout =>
         const existingExternalInvitation =
           await this.invitationRepository.findInvitationBySenderAndexternalEmailInvitation(
             context.userId,
             dto.email
           );
-        //fin
+
         if (existingExternalInvitation)
           throw new BadRequestException(
             "You've already sent an invitation to this user"
@@ -50,7 +49,7 @@ export default class CreateInvitationUseCase
           isExternal: true,
         });
 
-        const invitationLink = `${process.env.FRONTEND_URL}/external-invitation?token=${token}&email=${dto.email}`;
+        const invitationLink = `${process.env.FRONTEND_URL}/external-invitation?token=${token}`;
         const senderUser = await this.userRepository.findById(context.userId);
 
         await this.mailer.sendInvitationEmail(

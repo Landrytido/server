@@ -15,17 +15,15 @@ export default class InvitationRepository {
     return result;
   }
 
-  //=> ajout
   async findPendingInvitationsByEmail(email: string) {
     return this.prisma.invitation.findMany({
       where: {
         externalEmailInvitation: email,
-        receiverId: null, // Invitation pas encore associée
-        isExternal: true, // Doit être externe
+        receiverId: null,
+        isExternal: true,
       },
     });
   }
-  //fin
 
   async findInvitationBySenderAndReceiver(
     senderId: number,
@@ -40,7 +38,6 @@ export default class InvitationRepository {
     return result;
   }
 
-  //ajout =>
   async findInvitationBySenderAndexternalEmailInvitation(
     senderId: number,
     externalEmailInvitation: string
@@ -75,13 +72,13 @@ export default class InvitationRepository {
     return invitations;
   }
 
-  async findInvitationByToken(invitationToken: string) {
+  async findInvitationByToken(token: string) {
     const invitation = await this.prisma.invitation.findFirst({
       where: {
-        tokenForExternalInvitation: invitationToken,
+        tokenForExternalInvitation: token,
       },
     });
-
+    console.log("invitation token repo:", invitation);
     return invitation;
   }
 

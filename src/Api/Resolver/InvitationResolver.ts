@@ -16,9 +16,9 @@ import { Relation } from "../Entity/Relation";
 import ConvertExternalInvitationUseCase from "../UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
 import SaveUserDto from "../UseCase/User/SaveUser/SaveUserDto";
 import UncontextualUseCaseFactory from "../UseCase/UncontextualUseCaseFactory";
+import GetExternalEmailByTokenUseCase from "../UseCase/Invitation/GetExternalEmailByToken/GetExternalEmailByTokenUseCase";
 
 @Resolver(Invitation)
-@UseGuards(GraphqlAuthGuard)
 export default class InvitationResolver {
   constructor(
     private readonly serviceFactory: UseCaseFactory,
@@ -26,6 +26,7 @@ export default class InvitationResolver {
   ) {}
 
   @Mutation(() => Invitation)
+  @UseGuards(GraphqlAuthGuard)
   async createInvitation(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("dto") dto: SaveInvitationDto
@@ -37,6 +38,7 @@ export default class InvitationResolver {
   }
 
   @Mutation(() => Invitation)
+  @UseGuards(GraphqlAuthGuard)
   async deleteInvitation(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("invitationId", { type: () => Int }) invitationId: number
@@ -48,6 +50,7 @@ export default class InvitationResolver {
   }
 
   @Mutation(() => Invitation)
+  @UseGuards(GraphqlAuthGuard)
   async acceptInvitation(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("invitationId", { type: () => Int }) invitationId: number
@@ -59,6 +62,7 @@ export default class InvitationResolver {
   }
 
   @Mutation(() => Invitation)
+  @UseGuards(GraphqlAuthGuard)
   async convertExternalInvitation(@Args("dto") dto: SaveUserDto) {
     const resultConvertExternalInvitation = await (
       await this.uncontextualUseCaseFactory.create(
@@ -69,6 +73,7 @@ export default class InvitationResolver {
   }
 
   @Query(() => [Invitation])
+  @UseGuards(GraphqlAuthGuard)
   async findSentInvitations(
     @ContextualRequest() context: ContextualGraphqlRequest
   ) {
@@ -78,6 +83,7 @@ export default class InvitationResolver {
   }
 
   @Query(() => [Invitation])
+  @UseGuards(GraphqlAuthGuard)
   async findReceivedInvitations(
     @ContextualRequest() context: ContextualGraphqlRequest
   ) {
@@ -88,10 +94,21 @@ export default class InvitationResolver {
   }
 
   @Query(() => [Relation])
+  @UseGuards(GraphqlAuthGuard)
   async findRelations(@ContextualRequest() context: ContextualGraphqlRequest) {
     const result = (
       await this.serviceFactory.create(GetRelationUseCase)
     ).handle(context);
+    return result;
+  }
+
+  @Query(() => String)
+  async findExternalEmailByToken(@Args("token") token: string) {
+    const result = await (
+      await this.uncontextualUseCaseFactory.create(
+        GetExternalEmailByTokenUseCase
+      )
+    ).handle(token);
     return result;
   }
 }
