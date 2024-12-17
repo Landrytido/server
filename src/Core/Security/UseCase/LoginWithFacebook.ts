@@ -1,3 +1,5 @@
+// src/Core/Security/UseCase/LoginWithFacebook.ts
+
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import UserRepository from '../../../Api/Repository/UserRepository';
@@ -7,7 +9,7 @@ import Authenticator from '../Service/authentication/Authenticator';
 import axios from 'axios';
 
 @Injectable()
-export default class LoginWithGoogle implements UseCase<Promise<string>, [accessToken: string]> {
+export default class LoginWithFacebook implements UseCase<Promise<string>, [accessToken: string]> {
   constructor(
     @Inject('Authenticator') private authenticator: Authenticator,
     private readonly userRepository: UserRepository,
@@ -17,22 +19,28 @@ export default class LoginWithGoogle implements UseCase<Promise<string>, [access
 
   async handle(context: ContextualGraphqlRequest, accessToken: string): Promise<string> {
     try {
-      // Appeler l'endpoint userinfo de Google avec l'access_token
-      const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      // Vérifier le token Facebook via Graph API
+      const fields = 'email,first_name,last_name';
+      const url = `https://graph.facebook.com/me?fields=${fields}&access_token=${accessToken}`;
 
+      const response = await axios.get(url);
       const payload = response.data;
 
       if (!payload || !payload.email) {
-        throw new BadRequestException('Invalid Google access token or missing email');
+        throw new BadRequestException('Invalid Facebook token or missing email');
       }
 
       const email = payload.email;
-      const firstName = payload.given_name || null;
-      const lastName = payload.family_name || null;
+      let firstName = payload.first_name || null;
+      let lastName = payload.last_name || null;
+
+      // Si firstName ou lastName n'est pas fourni, on les met à null pour obliger l'utilisateur à compléter plus tard.
+      if (!firstName || firstName.trim() === '') {
+        firstName = null;
+      }
+      if (!lastName || lastName.trim() === '') {
+        lastName = null;
+      }
 
       let user = await this.userRepository.findByEmail(email);
 
@@ -45,12 +53,14 @@ export default class LoginWithGoogle implements UseCase<Promise<string>, [access
         });
       }
 
+      // Générer un token JWT
       const token = await this.authenticator.createToken(user);
-      this.eventEmitter.emit('login_with_google_successfully', { context, email });
+
+      this.eventEmitter.emit('login_with_facebook_successfully', { context, email });
 
       return token;
     } catch (error: any) {
-      this.eventEmitter.emit('login_with_google_failed', { context, error: error.message });
+      this.eventEmitter.emit('login_with_facebook_failed', { context, error: error.message });
       throw new BadRequestException(error.message);
     }
   }

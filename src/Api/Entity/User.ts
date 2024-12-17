@@ -23,11 +23,12 @@ export default class User {
 
   password: string;
 
-  @Field()
-  firstName: string;
+  @Field({ nullable: true })
+  firstName?: string; // Permettre le nullable
 
-  @Field()
-  lastName: string;
+  @Field({ nullable: true })
+  lastName?: string;  // Permettre le nullable
+
 
   @Field(() => [Session])
   sessions?: Session[];

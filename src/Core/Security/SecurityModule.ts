@@ -18,6 +18,8 @@ import LocalStrategy from './Strategy/LocalStrategy';
 import AuthenticationUseCaseFactory from './UseCase/AuthenticationUseCaseFactory';
 import Login from './UseCase/Login';
 import LoginWithGoogle from './UseCase/LoginWithGoogle';
+import LoginWithFacebook from './UseCase/LoginWithFacebook';
+import LoginWithGithub from './UseCase/LoginWithGithub';
 
 const authenticator = {
   provide: 'Authenticator',
@@ -63,6 +65,8 @@ const authenticator = {
     RequestTokenDecoder,
     UserRepository,
     LoginWithGoogle,
+    LoginWithFacebook,
+    LoginWithGithub,
   ]
 })
 export default class SecurityModule {}
