@@ -43,15 +43,13 @@ export default class GetTaskByUserIdUseCase
       externalTasks= (externalTasks as any).map(task=>({
         id: task.id,
         title: task.name,
-        description: task.description,
+        description: task.description || '',
         dueDate: new Date(task.updatedAt) ,
         completed: task.status === 'DONE',
         userId: context.userId,
         noteId: -1,
         user
       }));
-
-
 
       return  [...localTasks.map(localTask=>({...localTask , user})), ...externalTasks] ;
     } catch (error) {
