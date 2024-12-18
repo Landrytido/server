@@ -25,6 +25,10 @@ export default class Authenticator {
       throw new Error(`User not found with email "${email}"`);
     }
 
+    if (!user.password) {
+      throw new Error('User does not have a password, please login with Google');
+    }
+
     if (!(await this.hashable.compare(password, user.password))) {
       throw new InvalidUserPasswordException();
     }

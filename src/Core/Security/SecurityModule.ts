@@ -17,6 +17,7 @@ import JwtStrategy from './Strategy/JwtStrategy';
 import LocalStrategy from './Strategy/LocalStrategy';
 import AuthenticationUseCaseFactory from './UseCase/AuthenticationUseCaseFactory';
 import Login from './UseCase/Login';
+import LoginWithGoogle from './UseCase/LoginWithGoogle';
 
 const authenticator = {
   provide: 'Authenticator',
@@ -61,6 +62,7 @@ const authenticator = {
     Login,
     RequestTokenDecoder,
     UserRepository,
+    LoginWithGoogle,
   ]
 })
 export default class SecurityModule {}

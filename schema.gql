@@ -17,6 +17,12 @@ type Comment {
   userId: Int!
 }
 
+input CommentDto {
+  content: String!
+  noteId: Int!
+  userId: Int!
+}
+
 input CreateLinkGroupDto {
   description: String
   name: String!
@@ -43,6 +49,12 @@ type Event {
   userId: Int!
 }
 
+input GetNoteTasksByUserIdDto {
+  completed: Boolean
+  noteId: Int!
+  userId: Int!
+}
+
 type Invitation {
   id: Int!
   isRelation: Boolean!
@@ -50,6 +62,13 @@ type Invitation {
   receiverId: Int!
   sender: User!
   senderId: Int!
+}
+
+"""Level of difficulty for the score (easy, medium, hard)"""
+enum Level {
+  EASY
+  HARD
+  MEDIUM
 }
 
 type Link {
@@ -82,25 +101,23 @@ type LinkGroup {
   userId: Int!
 }
 
-type Meet {
+type MeetSharedWithMember {
+  meetId: Int!
+  user: User!
+  userId: Int!
+}
+
+type Meeting {
   createdAt: DateTime!
   description: String!
   endDate: DateTime!
   id: Int!
   isRecurring: Boolean!
   location: String!
-  recurrence: Recurrence!
-  sharedWith: [MeetSharedWithMember!]!
+  recurrence: Recurrence
   startDate: DateTime!
   title: String!
   updatedAt: DateTime!
-  user: User!
-  userId: Int!
-}
-
-type MeetSharedWithMember {
-  meet: Meet!
-  meetId: Int!
   user: User!
   userId: Int!
 }
@@ -109,6 +126,8 @@ type Mutation {
   RemoveById(id: Int!): Task!
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptInvitation(invitationId: Int!): Invitation!
+  addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
+  createComment(data: CommentDto!): Comment!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
@@ -116,20 +135,30 @@ type Mutation {
   createNotebook(dto: SaveNotebookDto!): Notebook!
   createTag(dto: SaveTagDto!): Tag!
   delete(id: Int!): LinkClick!
+  deleteComment(commentId: Float!): Boolean!
   deleteEvent(id: Int!): Event!
   deleteInvitation(invitationId: Int!): Invitation!
   deleteLink(id: Int!): Link!
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
+  deleteMeeting(id: Int!): Meeting!
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
+  deleteSearchHistory(searchHistoryId: Int!): Boolean!
+  loginWithGoogle(idToken: String!): String!
   register(dto: SaveUserDto!): User!
+  removeNoteTaskById(id: Int!): NoteTask!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: saveEventDto!): Event!
+  saveMeeting(dto: SaveMeetingDto!): Meeting!
+  saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
+  saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveTask(dto: SaveTaskDto!): Task!
   saveUser(dto: SaveUserDto!): User!
+  updateComment(commentId: Float!, data: CommentDto!): Comment!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
+  updateNoteTask(dto: UpdateNoteTaskDto!): NoteTask!
   updateNotebook(dto: SaveNotebookDto!, notebookId: Int!): Notebook!
 }
 
@@ -156,6 +185,19 @@ type NoteCollaboration {
   userId: Int!
 }
 
+type NoteTask {
+  completed: Boolean!
+  id: Int!
+  note: Note!
+  noteId: Int!
+  parent: NoteTask
+  parentId: Int
+  subtasks: [NoteTask!]
+  title: String!
+  user: User!
+  userId: Int!
+}
+
 type Notebook {
   id: Int!
   notes: [Note!]!
@@ -174,6 +216,7 @@ type Query {
   eventByUserId(userId: Int!): [Event!]!
   findByLinkId(linkId: Int!): [LinkClick!]!
   findByUser: [LinkClick!]!
+  findCommentsByNoteId(noteId: Float!): [Comment!]!
   findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
   findLinkGroupsByUserId: [LinkGroup!]!
@@ -181,6 +224,7 @@ type Query {
   findLinksByUserId: [Link!]!
   findLinksByUserIdWithMinClicks(minClicks: Int!): [Link!]!
   findNoteById(noteId: Int!): Note!
+  findNoteTaskById(id: Int!): NoteTask!
   findNotebookById(notebookId: Int!): Notebook!
   findNotebooks: [Notebook!]!
   findNotebooksByUserId: [Notebook!]!
@@ -194,12 +238,20 @@ type Query {
   findTaskById(id: Int!): Task!
   getAllEvent: [Event!]!
   getAllLinkGroups: [LinkGroup!]!
+  getAllMeeting: [Meeting!]!
   getAllTask: [Task!]!
   getEvent(id: Int!): Event!
   getLoggedUser: User!
+  getMeeting(id: Int!): Meeting!
+  getSearchHistoryByUserId: [SearchHistory!]!
   login(dto: AuthenticationDto!): String!
+  meetingByUserId(userId: Int!): [Meeting!]!
+  noteTasksByUserId(dto: GetNoteTasksByUserIdDto!): [NoteTask!]!
   refreshToken: String!
   tasksByUserId(userId: Int!): [Task!]!
+  topScores(level: Level = EASY, limit: Int = 10): [Score!]!
+  topThreeScores: [Score!]!
+  userScores(userId: Int!): [Score!]!
   validateToken(dto: TokenValidationDto!): Boolean!
 }
 
@@ -236,10 +288,31 @@ input SaveLinkDto {
   userId: Int
 }
 
+input SaveMeetingDto {
+  description: String!
+  endDate: DateTime!
+  id: Int
+  isRecurring: Boolean!
+  location: String!
+  recurrence: String
+  startDate: DateTime!
+  title: String!
+  userId: Int!
+}
+
 input SaveNoteDto {
   content: String
   notebookId: Int
   title: String!
+}
+
+input SaveNoteTaskDto {
+  completed: Boolean
+  id: Int
+  noteId: Int!
+  parentId: Int
+  title: String!
+  userId: Int!
 }
 
 input SaveNotebookDto {
@@ -265,6 +338,31 @@ input SaveUserDto {
   id: Int
   lastName: String
   password: String!
+}
+
+type Score {
+  createdAt: DateTime!
+  firstName: String!
+  id: Int!
+  lastName: String!
+  level: Level!
+  time: Int!
+  userId: Int!
+}
+
+type SearchHistory {
+  id: Int!
+  searchDate: DateTime!
+  searchTerm: String!
+  user: User!
+  userId: Int!
+}
+
+input SearchHistoryDto {
+  id: Int
+  searchDate: DateTime!
+  searchTerm: String!
+  userId: Int!
 }
 
 type Session {
@@ -302,6 +400,13 @@ input UpdateLinkDto {
   url: String
 }
 
+input UpdateNoteTaskDto {
+  completed: Boolean
+  id: Int!
+  parentId: Int
+  title: String
+}
+
 type User {
   collaborations: [NoteCollaboration!]!
   comments: [Comment!]!
@@ -314,11 +419,11 @@ type User {
   lastName: String!
   linkGroups: [LinkGroup!]!
   links: [Link!]!
-  meets: [Meet!]!
   meetsShared: [MeetSharedWithMember!]!
   notebooks: [Notebook!]!
   notes: [Note!]!
   resetTokens: [ResetToken!]!
+  searchHistory: [SearchHistory!]!
   sessions: [Session!]!
   tasks: [Task!]!
   updatedAt: DateTime!

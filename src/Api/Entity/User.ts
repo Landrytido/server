@@ -8,10 +8,10 @@ import Link from "./Link";
 import Task from "./Task";
 import { NoteCollaboration } from "./NoteCollaboration";
 import Invitation from "./Invitation";
-import Meet from "./Meet";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import ResetToken from "./ResetToken";
 import Comment from "./Comment";
+import SearchHistory  from "./SearchHistory";
 
 @ObjectType()
 export default class User {
@@ -59,9 +59,6 @@ export default class User {
   @Field(() => [Invitation])
   invitationsReceived?: Invitation[];
 
-  @Field(() => [Meet])
-  meets?: Meet[];
-
   @Field(() => [MeetSharedWithMember])
   meetsShared?: MeetSharedWithMember[];
 
@@ -73,6 +70,9 @@ export default class User {
 
   @Field(() => GraphQLISODateTime)
   updatedAt: Date;
+
+  @Field(() => [SearchHistory])
+  searchHistory?: SearchHistory[];
 
   context?: ContextualGraphqlRequest;
 }
