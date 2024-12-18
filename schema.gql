@@ -134,11 +134,8 @@ type Mutation {
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptInvitation(invitationId: Int!): Invitation!
   addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
-<<<<<<< HEAD
   completeProfile(firstName: String!, lastName: String!): User!
-=======
   convertExternalInvitation(dto: SaveUserDto!): Invitation!
->>>>>>> origin/dev
   createComment(data: CommentDto!): Comment!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
@@ -437,12 +434,8 @@ type User {
   comments: [Comment!]!
   createdAt: DateTime!
   email: String!
-<<<<<<< HEAD
   firstName: String
-=======
-  firstName: String!
   friends: [Relation!]!
->>>>>>> origin/dev
   id: Int!
   invitationsReceived: [Invitation!]!
   invitationsSent: [Invitation!]!
