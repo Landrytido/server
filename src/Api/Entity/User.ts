@@ -11,7 +11,8 @@ import Invitation from "./Invitation";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import ResetToken from "./ResetToken";
 import Comment from "./Comment";
-import SearchHistory  from "./SearchHistory";
+import SearchHistory from "./SearchHistory";
+import { Relation } from "./Relation";
 
 @ObjectType()
 export default class User {
@@ -58,6 +59,10 @@ export default class User {
 
   @Field(() => [Invitation])
   invitationsReceived?: Invitation[];
+
+  @Field(() => [Relation])
+  friends?: Relation[];
+  // ajout de ce field voir si je garde ?
 
   @Field(() => [MeetSharedWithMember])
   meetsShared?: MeetSharedWithMember[];

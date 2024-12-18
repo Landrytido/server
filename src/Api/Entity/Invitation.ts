@@ -8,20 +8,30 @@ export default class Invitation {
   @Field(() => Int)
   id: number;
 
-  @Field(() => Int)
-  receiverId: number;
+  @Field(() => Int, { nullable: true })
+  receiverId?: number;
 
   @Field(() => Int)
   senderId: number;
 
-  @Field(() => User)
-  receiver: User;
+  @Field(() => User, { nullable: true })
+  receiver?: User;
 
   @Field(() => User)
   sender: User;
 
   @Field()
   isRelation: boolean;
+
+  // Champs pour gérer les invitations externes
+  @Field({ nullable: true })
+  externalEmailInvitation?: string;
+
+  @Field({ nullable: true })
+  tokenForExternalInvitation?: string;
+
+  @Field({ defaultValue: false })
+  isExternal: boolean;
 
   context?: ContextualGraphqlRequest;
 }

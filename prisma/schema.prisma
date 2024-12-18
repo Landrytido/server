@@ -35,6 +35,7 @@ model User {
   collaborations      NoteCollaboration[]
   invitationsSent     Invitation[]            @relation("InvitationsSent")
   invitationsReceived Invitation[]            @relation("InvitationsReceived")
+  
   events              Event[]
   eventsShared        EventSharedWithMember[]
   resetTokens         ResetToken[]
@@ -140,12 +141,17 @@ model Task {
 
 model Invitation {
   id         Int     @id @default(autoincrement())
-  receiverId Int
+  receiverId Int?
   senderId   Int
-  receiver   User    @relation("InvitationsReceived", fields: [receiverId], references: [id])
+  receiver   User?    @relation("InvitationsReceived", fields: [receiverId], references: [id])
   sender     User    @relation("InvitationsSent", fields: [senderId], references: [id])
+  externalEmailInvitation   String?
+  tokenForExternalInvitation String?
+  isExternal                Boolean  @default(false)
   isRelation Boolean @default(false)
 }
+
+
 
 model Event {
   id          Int                     @id @default(autoincrement())

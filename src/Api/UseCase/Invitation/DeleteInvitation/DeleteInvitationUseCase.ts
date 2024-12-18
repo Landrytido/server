@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ContextualGraphqlRequest, UseCase } from "../../../../index";
-
 import InvitationRepository from "../../../Repository/InvitationRepository";
 import { Invitation } from "@prisma/client";
 
@@ -12,7 +11,8 @@ export default class DeleteInvitationUseCase
 
   async handle(context: ContextualGraphqlRequest, invitationId: number) {
     try {
-      return await this.invitationRepository.remove(invitationId);
+      const result = await this.invitationRepository.remove(invitationId);
+      return result;
     } catch (error) {
       throw new BadRequestException(
         "DeleteInvitationUseCaseFailed",
