@@ -12,11 +12,17 @@ import UncontextualUseCaseFactory from "./UseCase/UncontextualUseCaseFactory";
 import EventResolver from "./Resolver/EventResolver";
 import EventRepository from "./Repository/EventRepository";
 import SaveEventUseCase from "./UseCase/Event/SaveEventUseCase";
+import { JwtModule } from "@nestjs/jwt";
+import GetLoggedUserUseCase from "./UseCase/User/GetLoggedUser/GetLoggedUserUseCase";
 import GetEventUseCase from "./UseCase/Event/GetEventUseCase";
 import GetAllEventUseCase from "./UseCase/Event/GetAllEventUseCase";
 import DeleteEventUseCase from "./UseCase/Event/DeleteEventUseCase";
 import CommentRepository from "./Repository/CommentRepository";
 import { EmailService } from "./Services/emailService";
+import ConvertExternalInvitationUseCase from "./UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
+import { AcceptLanguageResolver, I18nModule } from "nestjs-i18n";
+import * as path from "path";
+import GetExternalEmailByTokenUseCase from "./UseCase/Invitation/GetExternalEmailByToken/GetExternalEmailByTokenUseCase";
 
 @Module({
   imports: [
@@ -25,6 +31,15 @@ import { EmailService } from "./Services/emailService";
     EventEmitterModule.forRoot({ wildcard: true }),
     GraphqlModule,
     HttpModule,
+    I18nModule.forRoot({
+      fallbackLanguage: "fr",
+      loaderOptions: {
+        path: path.join(__dirname, "../../src/i18n"),
+        watch: true,
+        includeSubfolders: true,
+      },
+      resolvers: [AcceptLanguageResolver],
+    }),
     S3Module.forRoot({
       config: {
         credentials: {
@@ -35,6 +50,7 @@ import { EmailService } from "./Services/emailService";
         forcePathStyle: true,
       },
     }),
+    JwtModule,
   ],
   controllers: [],
   providers: [
@@ -46,7 +62,10 @@ import { EmailService } from "./Services/emailService";
     GetEventUseCase,
     GetAllEventUseCase,
     DeleteEventUseCase,
+    GetLoggedUserUseCase,
     CommentRepository,
+    ConvertExternalInvitationUseCase,
+    GetExternalEmailByTokenUseCase,
     ...Repositories,
     ...Resolvers,
     EmailService,

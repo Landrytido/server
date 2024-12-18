@@ -12,14 +12,16 @@ export default class SaveUserUseCase
 
   async handle(
     context: ContextualGraphqlRequest,
-    dto: SaveUserDto,
+    dto: SaveUserDto
   ): Promise<User> {
     try {
       if (dto.id && context.userId !== dto.id) {
         throw new ForbiddenException("Not authorized");
       }
 
-      return this.userRepository.save(dto);
+      const userSaved = await this.userRepository.save(dto);
+
+      return userSaved;
     } catch (error) {
       throw new ForbiddenException(error.message);
     }

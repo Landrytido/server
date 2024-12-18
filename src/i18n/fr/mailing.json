@@ -1,0 +1,12 @@
+{
+  "invitation": {
+    "emailSubject": "vous a envoyé une invitation",
+    "subject": "Vous avez reçu une invitation !",
+    "title": "Invitation à rejoindre MyWebCompanion",
+    "greeting": "Bonjour,",
+    "description": "vous a envoyé une demande d'amis.",
+    "otherDescription": "Pour accepter l'invitation, veuillez vous inscrire en cliquant sur le bouton ci-dessous.",
+    "acceptInvitation": "Accepter l'invitation",
+    "contactUs": "Si vous avez des questions, n'hésitez pas à nous contacter."
+  }
+}

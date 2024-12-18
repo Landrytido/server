@@ -7,9 +7,20 @@ export default class InvitationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findReceiverIdByEmail(email: string) {
-    return this.prisma.user.findUnique({
+    const result = await this.prisma.user.findUnique({
       where: {
         email,
+      },
+    });
+    return result;
+  }
+
+  async findPendingInvitationsByEmail(email: string) {
+    return this.prisma.invitation.findMany({
+      where: {
+        externalEmailInvitation: email,
+        receiverId: null,
+        isExternal: true,
       },
     });
   }
@@ -18,12 +29,26 @@ export default class InvitationRepository {
     senderId: number,
     receiverId: number
   ) {
-    return this.prisma.invitation.findFirst({
+    const result = this.prisma.invitation.findFirst({
       where: {
         receiverId: receiverId,
         senderId: senderId,
       },
     });
+    return result;
+  }
+
+  async findInvitationBySenderAndexternalEmailInvitation(
+    senderId: number,
+    externalEmailInvitation: string
+  ) {
+    const result = this.prisma.invitation.findFirst({
+      where: {
+        externalEmailInvitation,
+        senderId,
+      },
+    });
+    return result;
   }
 
   async findSentInvitations(senderId: number) {
@@ -47,8 +72,18 @@ export default class InvitationRepository {
     return invitations;
   }
 
-  findRelations(userId: number) {
-    const relations = this.prisma.invitation.findMany({
+  async findInvitationByToken(token: string) {
+    const invitation = await this.prisma.invitation.findFirst({
+      where: {
+        tokenForExternalInvitation: token,
+      },
+    });
+    console.log("invitation token repo:", invitation);
+    return invitation;
+  }
+
+  async findRelations(userId: number) {
+    const relations = await this.prisma.invitation.findMany({
       where: {
         OR: [{ receiverId: userId }, { senderId: userId }],
         AND: [{ isRelation: true }],
@@ -58,7 +93,6 @@ export default class InvitationRepository {
         receiver: true,
       },
     });
-
     return relations;
   }
 
@@ -106,8 +140,9 @@ export default class InvitationRepository {
   }
 
   async remove(invitationId: number) {
-    return this.prisma.invitation.delete({
+    const result = this.prisma.invitation.delete({
       where: { id: invitationId },
     });
+    return result;
   }
 }
