@@ -12,34 +12,45 @@ import AcceptInvitationUseCase from "../UseCase/Invitation/AcceptInvitation/Acce
 import GetSentInvitationsUseCase from "../UseCase/Invitation/GetSentInvitations/GetSentInvitationsUseCase";
 import GetReceivedInvitationsUseCase from "../UseCase/Invitation/GetReceivedInvitations/GetReceivedInvitationsUseCase";
 import GetRelationUseCase from "../UseCase/Invitation/GetRelations/GetRelationUseCase";
+import { Relation } from "../Entity/Relation";
+import ConvertExternalInvitationUseCase from "../UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
+import SaveUserDto from "../UseCase/User/SaveUser/SaveUserDto";
+import UncontextualUseCaseFactory from "../UseCase/UncontextualUseCaseFactory";
+import GetExternalEmailByTokenUseCase from "../UseCase/Invitation/GetExternalEmailByToken/GetExternalEmailByTokenUseCase";
 
 @Resolver(Invitation)
-@UseGuards(GraphqlAuthGuard)
 export default class InvitationResolver {
-  constructor(private readonly serviceFactory: UseCaseFactory) {}
+  constructor(
+    private readonly serviceFactory: UseCaseFactory,
+    private readonly uncontextualUseCaseFactory: UncontextualUseCaseFactory
+  ) {}
 
   @Mutation(() => Invitation)
+  @UseGuards(GraphqlAuthGuard)
   async createInvitation(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("dto") dto: SaveInvitationDto
   ) {
-    return await (
+    const result = await (
       await this.serviceFactory.create(CreateInvitationUseCase)
     ).handle(context, dto);
+    return result;
   }
 
   @Mutation(() => Invitation)
+  @UseGuards(GraphqlAuthGuard)
   async deleteInvitation(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("invitationId", { type: () => Int }) invitationId: number
   ) {
-    return (await this.serviceFactory.create(DeleteInvitationUseCase)).handle(
-      context,
-      invitationId
-    );
+    const result = await (
+      await this.serviceFactory.create(DeleteInvitationUseCase)
+    ).handle(context, invitationId);
+    return result;
   }
 
   @Mutation(() => Invitation)
+  @UseGuards(GraphqlAuthGuard)
   async acceptInvitation(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("invitationId", { type: () => Int }) invitationId: number
@@ -50,7 +61,19 @@ export default class InvitationResolver {
     );
   }
 
+  @Mutation(() => Invitation)
+  @UseGuards(GraphqlAuthGuard)
+  async convertExternalInvitation(@Args("dto") dto: SaveUserDto) {
+    const resultConvertExternalInvitation = await (
+      await this.uncontextualUseCaseFactory.create(
+        ConvertExternalInvitationUseCase
+      )
+    ).handle(dto);
+    return resultConvertExternalInvitation;
+  }
+
   @Query(() => [Invitation])
+  @UseGuards(GraphqlAuthGuard)
   async findSentInvitations(
     @ContextualRequest() context: ContextualGraphqlRequest
   ) {
@@ -60,18 +83,32 @@ export default class InvitationResolver {
   }
 
   @Query(() => [Invitation])
+  @UseGuards(GraphqlAuthGuard)
   async findReceivedInvitations(
     @ContextualRequest() context: ContextualGraphqlRequest
   ) {
-    return (
+    const result = (
       await this.serviceFactory.create(GetReceivedInvitationsUseCase)
     ).handle(context);
+    return result;
   }
 
-  @Query(() => [Invitation])
+  @Query(() => [Relation])
+  @UseGuards(GraphqlAuthGuard)
   async findRelations(@ContextualRequest() context: ContextualGraphqlRequest) {
-    return (await this.serviceFactory.create(GetRelationUseCase)).handle(
-      context
-    );
+    const result = (
+      await this.serviceFactory.create(GetRelationUseCase)
+    ).handle(context);
+    return result;
+  }
+
+  @Query(() => String)
+  async findExternalEmailByToken(@Args("token") token: string) {
+    const result = await (
+      await this.uncontextualUseCaseFactory.create(
+        GetExternalEmailByTokenUseCase
+      )
+    ).handle(token);
+    return result;
   }
 }

@@ -11,12 +11,13 @@ export default class GetReceivedInvitationsUseCase
 
   async handle(context: ContextualGraphqlRequest) {
     try {
-      return await this.invitationRepository.findReceivedInvitations(
+      const result = await this.invitationRepository.findReceivedInvitations(
         context.userId
       );
+      return result;
     } catch (error) {
       throw new BadRequestException(
-        "GetSentInvitationsUseCaseFailed",
+        "GetRecievedInvitationsUseCaseFailed",
         error.message
       );
     }

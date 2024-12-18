@@ -56,12 +56,15 @@ input GetNoteTasksByUserIdDto {
 }
 
 type Invitation {
+  externalEmailInvitation: String
   id: Int!
+  isExternal: Boolean!
   isRelation: Boolean!
-  receiver: User!
-  receiverId: Int!
+  receiver: User
+  receiverId: Int
   sender: User!
   senderId: Int!
+  tokenForExternalInvitation: String
 }
 
 """Level of difficulty for the score (easy, medium, hard)"""
@@ -131,7 +134,11 @@ type Mutation {
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptInvitation(invitationId: Int!): Invitation!
   addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
+<<<<<<< HEAD
   completeProfile(firstName: String!, lastName: String!): User!
+=======
+  convertExternalInvitation(dto: SaveUserDto!): Invitation!
+>>>>>>> origin/dev
   createComment(data: CommentDto!): Comment!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
@@ -224,6 +231,7 @@ type Query {
   findByLinkId(linkId: Int!): [LinkClick!]!
   findByUser: [LinkClick!]!
   findCommentsByNoteId(noteId: Float!): [Comment!]!
+  findExternalEmailByToken(token: String!): String!
   findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
   findLinkGroupsByUserId: [LinkGroup!]!
@@ -239,7 +247,7 @@ type Query {
   findNotesByUserId: [Note!]!
   findOne(id: Int!): LinkClick!
   findReceivedInvitations: [Invitation!]!
-  findRelations: [Invitation!]!
+  findRelations: [Relation!]!
   findSentInvitations: [Invitation!]!
   findTagById(id: Float!): Tag!
   findTaskById(id: Int!): Task!
@@ -268,6 +276,15 @@ enum Recurrence {
   MONTHLY
   NONE
   WEEKLY
+}
+
+type Relation {
+  friendEmail: String!
+  friendFirstName: String!
+  friendLastName: String!
+  invitationId: Int!
+  receiver: User!
+  sender: User!
 }
 
 type ResetToken {
@@ -343,6 +360,7 @@ input SaveUserDto {
   email: String!
   firstName: String!
   id: Int
+  invitationToken: String
   lastName: String
   password: String!
 }
@@ -419,7 +437,12 @@ type User {
   comments: [Comment!]!
   createdAt: DateTime!
   email: String!
+<<<<<<< HEAD
   firstName: String
+=======
+  firstName: String!
+  friends: [Relation!]!
+>>>>>>> origin/dev
   id: Int!
   invitationsReceived: [Invitation!]!
   invitationsSent: [Invitation!]!
