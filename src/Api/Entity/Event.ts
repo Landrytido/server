@@ -3,6 +3,7 @@ import User from "./User";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import { ContextualGraphqlRequest } from "src";
 import { Recurrence } from "src/main";
+import { Notification } from "./Notification";
 
 @ObjectType()
 export class Event {
@@ -44,6 +45,9 @@ export class Event {
 
   @Field(() => [MeetSharedWithMember])
   sharedWith: MeetSharedWithMember[];
+
+  @Field(() => [Notification], { nullable: true })
+  notification?: Notification[];
 
   context?: ContextualGraphqlRequest;
 }
