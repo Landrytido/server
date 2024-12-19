@@ -39,8 +39,10 @@ export default class GetTaskByUserIdUseCase
       }
 
       // TIO OR TASKS
-      let externalTasks : Task[]  = (await this.fetchExternalTasks(context.email));
-      externalTasks= (externalTasks as any).map(task=>({
+      let externalTasks : Task[]  =[];
+      try{
+        const externalTasksResult =(await this.fetchExternalTasks(context.email) as any);
+       externalTasks = (externalTasksResult || []).map(task=>({
         id: task.id,
         title: task.name,
         description: task.description || '',
@@ -50,6 +52,9 @@ export default class GetTaskByUserIdUseCase
         noteId: -1,
         user
       }));
+    } catch (error) {
+
+    }
 
       return  [...localTasks.map(localTask=>({...localTask , user})), ...externalTasks] ;
     } catch (error) {
@@ -61,6 +66,13 @@ export default class GetTaskByUserIdUseCase
   }
 
   private async fetchExternalTasks(email: string): Promise<Task[]> {
+    const urlTIO =  this.configService.get('TIO_URL_GRAPHQL');
+    const secret = this.configService.get('JWT_SECRET_TIO');
+
+    if(!urlTIO || !secret){
+      return [];
+    }
+
     const query = `
         query worksByOwnerMail {
             worksByOwnerMail {
@@ -79,7 +91,7 @@ export default class GetTaskByUserIdUseCase
     try {
         const response = await lastValueFrom(
             this.httpService.post(
-                this.configService.get('TIO_URL_GRAPHQL'),
+              urlTIO,
                 {
                     // operationName,
                     query,
@@ -87,7 +99,7 @@ export default class GetTaskByUserIdUseCase
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${this.getAuthToken(email)}`,
+                        Authorization: `Bearer ${this.getAuthToken(email, secret)}`,
                         'Content-Type': 'application/json',
                     },
                 }
@@ -107,14 +119,14 @@ export default class GetTaskByUserIdUseCase
     }
 }
 
-private getAuthToken(email: string): string {
+private getAuthToken(email: string, secret: string): string {
       const payload = {
           email,
           permissions: ['READ:TASKS'],
           exp: Math.floor(Date.now() / 1000) + 60 , // Expiration dans 1 minute
         };
 
-        return this.jwtService.sign(payload, { secret: this.configService.get('JWT_SECRET_TIO') });
+        return this.jwtService.sign(payload, { secret });
     }
 
 }
