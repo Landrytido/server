@@ -15,6 +15,9 @@ export class NotificationPreference {
   type: NotificationType;
 
   @Field(() => Int)
+  timeBefore: number;
+
+  @Field(() => Int)
   timeUnit: TimeUnit;
 
   @Field(() => GraphQLISODateTime)

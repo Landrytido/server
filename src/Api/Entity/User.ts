@@ -13,6 +13,7 @@ import ResetToken from "./ResetToken";
 import Comment from "./Comment";
 import SearchHistory from "./SearchHistory";
 import { Relation } from "./Relation";
+import { NotificationPreference } from "./NotificationPreference";
 
 @ObjectType()
 export default class User {
@@ -28,8 +29,7 @@ export default class User {
   firstName?: string; // Permettre le nullable
 
   @Field({ nullable: true })
-  lastName?: string;  // Permettre le nullable
-
+  lastName?: string; // Permettre le nullable
 
   @Field(() => [Session])
   sessions?: Session[];
@@ -63,7 +63,9 @@ export default class User {
 
   @Field(() => [Relation])
   friends?: Relation[];
-  // ajout de ce field voir si je garde ?
+
+  @Field(() => [NotificationPreference])
+  notificationPreferences?: NotificationPreference[];
 
   @Field(() => [MeetSharedWithMember])
   meetsShared?: MeetSharedWithMember[];

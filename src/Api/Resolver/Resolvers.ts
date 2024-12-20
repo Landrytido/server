@@ -13,6 +13,7 @@ import CommentResolver from "./CommentResolver";
 import { ScoreResolver } from "./ScoreResolver";
 import NoteTaskResolver from "./NoteTasksResolver";
 import MeetingResolver from "./MeetingResolver";
+import NotificationPreferenceResolver from "./NotificationPreferenceResolver";
 
 export const Resolvers = [
   UserResolver,
@@ -29,4 +30,5 @@ export const Resolvers = [
   ScoreResolver,
   NoteTaskResolver,
   MeetingResolver,
+  NotificationPreferenceResolver,
 ];

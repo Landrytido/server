@@ -18,7 +18,6 @@ import GetEventUseCase from "./UseCase/Event/GetEventUseCase";
 import GetAllEventUseCase from "./UseCase/Event/GetAllEventUseCase";
 import DeleteEventUseCase from "./UseCase/Event/DeleteEventUseCase";
 import CommentRepository from "./Repository/CommentRepository";
-import { EmailService } from "./Services/emailService";
 import ConvertExternalInvitationUseCase from "./UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
 import { AcceptLanguageResolver, I18nModule } from "nestjs-i18n";
 import * as path from "path";
@@ -68,7 +67,6 @@ import GetExternalEmailByTokenUseCase from "./UseCase/Invitation/GetExternalEmai
     GetExternalEmailByTokenUseCase,
     ...Repositories,
     ...Resolvers,
-    EmailService,
   ],
 })
 export class ApiModule {}
