@@ -1,12 +1,12 @@
-import { HttpModule } from "@nestjs/axios"; 
+import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { EventEmitterModule } from '@nestjs/event-emitter';
-import { S3Module } from 'nestjs-s3'; 
+import { EventEmitterModule } from "@nestjs/event-emitter";
+import { S3Module } from "nestjs-s3";
 import CoreModule from "../Core/CoreModule";
-import GraphqlModule from "../Core/GraphqlModule"; 
+import GraphqlModule from "../Core/GraphqlModule";
 import { Repositories } from "./Repository/Repositories";
-import { Resolvers } from './Resolver/Resolvers';
+import { Resolvers } from "./Resolver/Resolvers";
 import UseCaseFactory from "./UseCase/UseCaseFactory";
 import UncontextualUseCaseFactory from "./UseCase/UncontextualUseCaseFactory";
 import EventResolver from './Resolver/EventResolver';
@@ -19,6 +19,13 @@ import CommentRepository from './Repository/CommentRepository';
 import FileRepository from "./Repository/FileRepository";
 import SaveFileUseCase from "./UseCase/File/SaveFile/SaveFileUseCase";
 import {PuppeteerService} from "./UseCase/Link/Service/PupeeterService";
+import { JwtModule } from "@nestjs/jwt";
+import GetLoggedUserUseCase from "./UseCase/User/GetLoggedUser/GetLoggedUserUseCase";
+import { EmailService } from "./Services/emailService";
+import ConvertExternalInvitationUseCase from "./UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
+import { AcceptLanguageResolver, I18nModule } from "nestjs-i18n";
+import * as path from "path";
+import GetExternalEmailByTokenUseCase from "./UseCase/Invitation/GetExternalEmailByToken/GetExternalEmailByTokenUseCase";
 
 @Module({
   imports: [
@@ -27,6 +34,15 @@ import {PuppeteerService} from "./UseCase/Link/Service/PupeeterService";
     EventEmitterModule.forRoot({ wildcard: true }),
     GraphqlModule,
     HttpModule,
+    I18nModule.forRoot({
+      fallbackLanguage: "fr",
+      loaderOptions: {
+        path: path.join(__dirname, "../../src/i18n"),
+        watch: true,
+        includeSubfolders: true,
+      },
+      resolvers: [AcceptLanguageResolver],
+    }),
     S3Module.forRoot({
       config: {
         credentials: {
@@ -37,6 +53,7 @@ import {PuppeteerService} from "./UseCase/Link/Service/PupeeterService";
         forcePathStyle: true,
       },
     }),
+    JwtModule
   ],
   controllers: [],
   providers: [
@@ -48,12 +65,16 @@ import {PuppeteerService} from "./UseCase/Link/Service/PupeeterService";
     GetEventUseCase,
     GetAllEventUseCase,
     DeleteEventUseCase,
+    GetLoggedUserUseCase,
     CommentRepository,
       FileRepository,
       SaveFileUseCase,
       PuppeteerService,
+    ConvertExternalInvitationUseCase,
+    GetExternalEmailByTokenUseCase,
     ...Repositories,
     ...Resolvers,
+    EmailService,
   ],
 })
 export class ApiModule {}

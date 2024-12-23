@@ -14,6 +14,7 @@ import { AvailableSearchHistoryUseCases } from "./SearchHistory/AvailableSearchH
 import { AvailableCommentUseCases } from "./Comment/AvailableCommentUseCases";
 import { AvailableNoteTaskUseCases } from "./NoteTasks/AvailableNoteTaskskUseCases";
 import {AvailableFileUseCases} from "./File/AvailableFileUseCases";
+import { AvailableMeetingUseCases } from "./Meeting/AvailableMeetingUseCase";
 
 export type UseCases =
   | AvailableUserUseCases
@@ -28,6 +29,9 @@ export type UseCases =
   | AvailableLinkClickUseCases
   | AvailableSearchHistoryUseCases
   | AvailableCommentUseCases
+  | AvailableMeetingUseCases
+  | AvailableNoteTaskUseCases;
+  
   | AvailableNoteTaskUseCases
     |AvailableFileUseCases;
 

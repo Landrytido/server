@@ -8,11 +8,11 @@ import Link from "./Link";
 import Task from "./Task";
 import { NoteCollaboration } from "./NoteCollaboration";
 import Invitation from "./Invitation";
-import Meet from "./Meet";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import ResetToken from "./ResetToken";
 import Comment from "./Comment";
-import SearchHistory  from "./SearchHistory";
+import SearchHistory from "./SearchHistory";
+import { Relation } from "./Relation";
 
 @ObjectType()
 export default class User {
@@ -24,11 +24,12 @@ export default class User {
 
   password: string;
 
-  @Field()
-  firstName: string;
+  @Field({ nullable: true })
+  firstName?: string; // Permettre le nullable
 
-  @Field()
-  lastName: string;
+  @Field({ nullable: true })
+  lastName?: string;  // Permettre le nullable
+
 
   @Field(() => [Session])
   sessions?: Session[];
@@ -60,8 +61,9 @@ export default class User {
   @Field(() => [Invitation])
   invitationsReceived?: Invitation[];
 
-  @Field(() => [Meet])
-  meets?: Meet[];
+  @Field(() => [Relation])
+  friends?: Relation[];
+  // ajout de ce field voir si je garde ?
 
   @Field(() => [MeetSharedWithMember])
   meetsShared?: MeetSharedWithMember[];

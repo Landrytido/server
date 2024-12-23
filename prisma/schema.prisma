@@ -21,8 +21,8 @@ model File {
 model User {
   id                  Int                     @id @default(autoincrement())
   email               String                  @unique @db.VarChar(255)
-  password            String                  @db.VarChar(255)
-  firstName           String                  @db.VarChar(255)
+  password            String?                 @db.VarChar(255)
+  firstName           String?                  @db.VarChar(255)
   lastName            String?                 @db.VarChar(255)
   createdAt           DateTime                @default(now())
   updatedAt           DateTime                @default(now()) @updatedAt
@@ -36,6 +36,7 @@ model User {
   collaborations      NoteCollaboration[]
   invitationsSent     Invitation[]            @relation("InvitationsSent")
   invitationsReceived Invitation[]            @relation("InvitationsReceived")
+  
   events              Event[]
   eventsShared        EventSharedWithMember[]
   resetTokens         ResetToken[]
@@ -43,6 +44,7 @@ model User {
   searchHistory       SearchHistory[]
   scores              Score[]
   noteTasks           NoteTask[]
+  meeting             Meeting[]
 }
 
 model SearchHistory {
@@ -142,12 +144,17 @@ model Task {
 
 model Invitation {
   id         Int     @id @default(autoincrement())
-  receiverId Int
+  receiverId Int?
   senderId   Int
-  receiver   User    @relation("InvitationsReceived", fields: [receiverId], references: [id])
+  receiver   User?    @relation("InvitationsReceived", fields: [receiverId], references: [id])
   sender     User    @relation("InvitationsSent", fields: [senderId], references: [id])
+  externalEmailInvitation   String?
+  tokenForExternalInvitation String?
+  isExternal                Boolean  @default(false)
   isRelation Boolean @default(false)
 }
+
+
 
 model Event {
   id          Int                     @id @default(autoincrement())
@@ -238,4 +245,18 @@ model NoteTask {
   user      User     @relation(fields: [userId], references: [id])
   parent    NoteTask?  @relation("NoteTaskRelation", fields: [parentId], references: [id], onDelete: Cascade)
   subtasks  NoteTask[] @relation("NoteTaskRelation")
+}
+model Meeting {
+  id          Int                     @id @default(autoincrement())
+  title       String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  isRecurring Boolean?                @default(false)
+  recurrence  Recurrence?             @default(NONE)
+  location    String
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @default(now()) @updatedAt
+  userId      Int
+  user        User                    @relation(fields: [userId], references: [id])
 }

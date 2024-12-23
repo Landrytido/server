@@ -17,10 +17,13 @@ import JwtStrategy from './Strategy/JwtStrategy';
 import LocalStrategy from './Strategy/LocalStrategy';
 import AuthenticationUseCaseFactory from './UseCase/AuthenticationUseCaseFactory';
 import Login from './UseCase/Login';
+import LoginWithGoogle from './UseCase/LoginWithGoogle';
+import LoginWithFacebook from './UseCase/LoginWithFacebook';
+import LoginWithGithub from './UseCase/LoginWithGithub';
 
 const authenticator = {
-  provide: 'Authenticator',
-  imports: [ ConfigModule ],
+  provide: "Authenticator",
+  imports: [ConfigModule],
   useFactory: (
     userRepository: UserRepository,
     bcrypt: Bcrypt,
@@ -29,7 +32,7 @@ const authenticator = {
   ) => {
     return new Authenticator(userRepository, bcrypt, jwt, config);
   },
-  inject: [ UserRepository, Bcrypt, JwtService, ConfigService ]
+  inject: [UserRepository, Bcrypt, JwtService, ConfigService],
 };
 
 @Module({
@@ -40,14 +43,14 @@ const authenticator = {
     LoggingModule,
     PassportModule,
     JwtModule.registerAsync({
-      imports: [ ConfigModule ],
-      inject: [ ConfigService ],
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET')
-      })
+        secret: configService.get("JWT_SECRET"),
+      }),
     }),
   ],
-  exports: [ Bcrypt ],
+  exports: [Bcrypt, authenticator], //ajout
   providers: [
     authenticator,
     AuthenticationEventEmitter,
@@ -61,6 +64,9 @@ const authenticator = {
     Login,
     RequestTokenDecoder,
     UserRepository,
+    LoginWithGoogle,
+    LoginWithFacebook,
+    LoginWithGithub,
   ]
 })
 export default class SecurityModule {}

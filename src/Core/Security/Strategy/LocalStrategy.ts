@@ -1,16 +1,18 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-local';
-import AuthenticationEventEmitter, { AuthenticationEvents } from '../Event/AuthenticationEventEmitter';
-import Authenticator from '../Service/authentication/Authenticator';
+import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { PassportStrategy } from "@nestjs/passport";
+import { Strategy } from "passport-local";
+import AuthenticationEventEmitter, {
+  AuthenticationEvents,
+} from "../Event/AuthenticationEventEmitter";
+import Authenticator from "../Service/authentication/Authenticator";
 
 @Injectable()
 export default class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @Inject('Authenticator') private authenticator: Authenticator,
+    @Inject("Authenticator") private authenticator: Authenticator,
     private readonly eventEmitter: AuthenticationEventEmitter
   ) {
-    super({ usernameField: 'email' });
+    super({ usernameField: "email" });
   }
 
   async validate(email: string, password: string): Promise<any> {
@@ -18,13 +20,13 @@ export default class LocalStrategy extends PassportStrategy(Strategy) {
       const user = await this.authenticator.authenticate(email, password);
 
       this.eventEmitter.emit(AuthenticationEvents.SUCCESSFULLY_AUTHENTICATED, {
-        userId: user.id
+        userId: user.id,
       });
 
       return user;
     } catch (error) {
       this.eventEmitter.emit(AuthenticationEvents.ERROR, {
-        message: error.message
+        message: error.message,
       });
       throw new UnauthorizedException();
     }

@@ -74,12 +74,15 @@ input GetNoteTasksByUserIdDto {
 }
 
 type Invitation {
+  externalEmailInvitation: String
   id: Int!
+  isExternal: Boolean!
   isRelation: Boolean!
-  receiver: User!
-  receiverId: Int!
+  receiver: User
+  receiverId: Int
   sender: User!
   senderId: Int!
+  tokenForExternalInvitation: String
 }
 
 """Level of difficulty for the score (easy, medium, hard)"""
@@ -120,25 +123,27 @@ type LinkGroup {
   userId: Int!
 }
 
-type Meet {
+input LoginWithGithubDto {
+  code: String!
+}
+
+type MeetSharedWithMember {
+  meetId: Int!
+  user: User!
+  userId: Int!
+}
+
+type Meeting {
   createdAt: DateTime!
   description: String!
   endDate: DateTime!
   id: Int!
   isRecurring: Boolean!
   location: String!
-  recurrence: Recurrence!
-  sharedWith: [MeetSharedWithMember!]!
+  recurrence: Recurrence
   startDate: DateTime!
   title: String!
   updatedAt: DateTime!
-  user: User!
-  userId: Int!
-}
-
-type MeetSharedWithMember {
-  meet: Meet!
-  meetId: Int!
   user: User!
   userId: Int!
 }
@@ -148,6 +153,8 @@ type Mutation {
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptInvitation(invitationId: Int!): Invitation!
   addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
+  completeProfile(firstName: String!, lastName: String!): User!
+  convertExternalInvitation(dto: SaveUserDto!): Invitation!
   createComment(data: CommentDto!): Comment!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
@@ -162,13 +169,18 @@ type Mutation {
   deleteLink(id: Int!): Link!
   deleteLinkClick(idLinkClick: Int!): LinkClick!
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
+  deleteMeeting(id: Int!): Meeting!
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
+  loginWithFacebook(accessToken: String!): String!
+  loginWithGithub(dto: LoginWithGithubDto!): String!
+  loginWithGoogle(accessToken: String!): String!
   register(dto: SaveUserDto!): User!
   removeNoteTaskById(id: Int!): NoteTask!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: saveEventDto!): Event!
+  saveMeeting(dto: SaveMeetingDto!): Meeting!
   saveFile(dto: FileDto!): File!
   saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
@@ -237,6 +249,7 @@ type Query {
   findByLinkId(linkId: Int!): [LinkClick!]!
   findByUser: [LinkClick!]!
   findCommentsByNoteId(noteId: Float!): [Comment!]!
+  findExternalEmailByToken(token: String!): String!
   findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
   findLinkGroupsByUserId: [LinkGroup!]!
@@ -253,17 +266,20 @@ type Query {
   findNotesByUserId: [Note!]!
   findOne(id: Int!): LinkClick!
   findReceivedInvitations: [Invitation!]!
-  findRelations: [Invitation!]!
+  findRelations: [Relation!]!
   findSentInvitations: [Invitation!]!
   findTagById(id: Float!): Tag!
   findTaskById(id: Int!): Task!
   getAllEvent: [Event!]!
   getAllLinkGroups: [LinkGroup!]!
+  getAllMeeting: [Meeting!]!
   getAllTask: [Task!]!
   getEvent(id: Int!): Event!
   getLoggedUser: User!
+  getMeeting(id: Int!): Meeting!
   getSearchHistoryByUserId: [SearchHistory!]!
   login(dto: AuthenticationDto!): String!
+  meetingByUserId(userId: Int!): [Meeting!]!
   noteTasksByUserId(dto: GetNoteTasksByUserIdDto!): [NoteTask!]!
   refreshToken: String!
   tasksByUserId(userId: Int!): [Task!]!
@@ -279,6 +295,15 @@ enum Recurrence {
   MONTHLY
   NONE
   WEEKLY
+}
+
+type Relation {
+  friendEmail: String!
+  friendFirstName: String!
+  friendLastName: String!
+  invitationId: Int!
+  receiver: User!
+  sender: User!
 }
 
 type ResetToken {
@@ -306,6 +331,18 @@ input SaveLinkDto {
   name: String!
   url: String!
   userId: Int
+}
+
+input SaveMeetingDto {
+  description: String!
+  endDate: DateTime!
+  id: Int
+  isRecurring: Boolean!
+  location: String!
+  recurrence: String
+  startDate: DateTime!
+  title: String!
+  userId: Int!
 }
 
 input SaveNoteDto {
@@ -344,6 +381,7 @@ input SaveUserDto {
   email: String!
   firstName: String!
   id: Int
+  invitationToken: String
   lastName: String
   password: String!
 }
@@ -421,14 +459,14 @@ type User {
   comments: [Comment!]!
   createdAt: DateTime!
   email: String!
-  firstName: String!
+  firstName: String
+  friends: [Relation!]!
   id: Int!
   invitationsReceived: [Invitation!]!
   invitationsSent: [Invitation!]!
-  lastName: String!
+  lastName: String
   linkGroups: [LinkGroup!]!
   links: [Link!]!
-  meets: [Meet!]!
   meetsShared: [MeetSharedWithMember!]!
   notebooks: [Notebook!]!
   notes: [Note!]!
