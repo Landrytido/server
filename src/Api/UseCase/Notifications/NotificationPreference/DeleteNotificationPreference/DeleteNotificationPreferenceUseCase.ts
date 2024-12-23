@@ -9,7 +9,7 @@ import NotificationPreferenceRepository from "src/Api/Repository/NotificationPre
 import InsufficientPermissionException from "src/Core/Exception/InsufficientPermissionException";
 
 @Injectable()
-export default class DeleteNotificationUseCase
+export default class DeleteNotificationPreferenceUseCase
   implements
     UseCase<
       Promise<NotificationPreference>,
