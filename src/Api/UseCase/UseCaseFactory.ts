@@ -14,7 +14,7 @@ import { AvailableSearchHistoryUseCases } from "./SearchHistory/AvailableSearchH
 import { AvailableCommentUseCases } from "./Comment/AvailableCommentUseCases";
 import { AvailableNoteTaskUseCases } from "./NoteTasks/AvailableNoteTaskskUseCases";
 import { AvailableMeetingUseCases } from "./Meeting/AvailableMeetingUseCase";
-import { AvailableNotificationPreference } from "./Notifications/NotificationPreference/AvailableNotificationPreferenceUseCases";
+import { AvailableNotificationPreferenceUseCases } from "./Notifications/NotificationPreference/AvailableNotificationPreferenceUseCases";
 
 export type UseCases =
   | AvailableUserUseCases
@@ -31,7 +31,7 @@ export type UseCases =
   | AvailableCommentUseCases
   | AvailableMeetingUseCases
   | AvailableNoteTaskUseCases
-  | AvailableNotificationPreference;
+  | AvailableNotificationPreferenceUseCases;
 
 @Injectable()
 export default class UseCaseFactory extends ServiceFactory<UseCases> {}

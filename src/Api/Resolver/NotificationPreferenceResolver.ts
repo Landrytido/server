@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from "@nestjs/graphql";
+import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { NotificationPreference } from "../Entity/NotificationPreference";
 import UseCaseFactory from "../UseCase/UseCaseFactory";
 import { UseGuards } from "@nestjs/common";
@@ -8,6 +8,8 @@ import { ContextualGraphqlRequest } from "src";
 import { SaveNotificationPreferenceDto } from "../UseCase/Notifications/NotificationPreference/CreateNotificationPreference/SaveNotificationPreferenceDto";
 
 import CreateNotificationPreferenceUseCase from "../UseCase/Notifications/NotificationPreference/CreateNotificationPreference/CreateNotificationPreferenceUseCase";
+import DeleteNotificationUseCase from "../UseCase/Notifications/NotificationPreference/DeleteNotificationPreference/DeleteNotificationPreferenceUseCase";
+import GetNotificationPreferenceUseCase from "../UseCase/Notifications/NotificationPreference/GetNotificationPreference/GetNotificationPreferenceUseCase";
 
 @Resolver(NotificationPreference)
 @UseGuards(GraphqlAuthGuard)
@@ -26,5 +28,25 @@ export default class NotificationPreferenceResolver {
     return createdPreferences;
   }
 
-  // @Mutation(() => NotificationPreference)
+  @Mutation(() => NotificationPreference)
+  async deleteNotificationPreference(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("notificationPreferenceId", { type: () => Int })
+    notificationPreferenceId: number
+  ) {
+    const deletedNotificationPreference = await (
+      await this.serviceFactory.create(DeleteNotificationUseCase)
+    ).handle(context, notificationPreferenceId);
+    return deletedNotificationPreference;
+  }
+
+  @Query(() => NotificationPreference)
+  async getNotificationPreference(
+    @ContextualRequest() context: ContextualGraphqlRequest
+  ) {
+    const getNotificationPreference = await (
+      await this.serviceFactory.create(GetNotificationPreferenceUseCase)
+    ).handle(context);
+    return getNotificationPreference;
+  }
 }

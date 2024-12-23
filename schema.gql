@@ -155,6 +155,7 @@ type Mutation {
   deleteMeeting(id: Int!): Meeting!
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
+  deleteNotificationPreference(notificationPreferenceId: Int!): NotificationPreference!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
   loginWithFacebook(accessToken: String!): String!
   loginWithGithub(dto: LoginWithGithubDto!): String!
@@ -286,6 +287,7 @@ type Query {
   getEvent(id: Int!): Event!
   getLoggedUser: User!
   getMeeting(id: Int!): Meeting!
+  getNotificationPreference: NotificationPreference!
   getSearchHistoryByUserId: [SearchHistory!]!
   login(dto: AuthenticationDto!): String!
   meetingByUserId(userId: Int!): [Meeting!]!

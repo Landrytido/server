@@ -21,16 +21,10 @@ export default class CreateNotificationPreferenceUseCase
     dto: SaveNotificationPreferenceDto
   ) {
     try {
-      const userFound = await this.notificationPreference.findUserById(
-        context.userId
-      );
-
       console.log("user", context.userId);
-      console.log("user2", userFound);
 
       const savedPreferences = await this.notificationPreference.save({
-        // userId: context.userId,
-        userId: userFound.userId, //a modifier si besoin
+        userId: context.userId,
         type: dto.type,
         timeBefore: dto.timeBefore,
         timeUnit: dto.timeUnit,
