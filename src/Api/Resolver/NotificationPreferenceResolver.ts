@@ -25,4 +25,6 @@ export default class NotificationPreferenceResolver {
     console.log("notifPref resolver:", createdPreferences); //à supp
     return createdPreferences;
   }
+
+  // @Mutation(() => NotificationPreference)
 }

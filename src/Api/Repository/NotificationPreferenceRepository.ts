@@ -25,12 +25,6 @@ export default class NotificationPreferenceRepository {
           Prisma.NotificationPreferenceUncheckedUpdateInput
         >
   ) {
-    // const existingPreference =
-    //   await this.prisma.notificationPreference.findFirst({
-    //     where: { userId: data.userId as number },
-    //   });
-    // console.log("existingPreference", existingPreference);
-
     const existingPreference = await this.findUserById(data.userId as number);
     console.log("existingPreference", existingPreference);
 
@@ -56,5 +50,20 @@ export default class NotificationPreferenceRepository {
     });
     console.log("Notification preference created", createdPreference);
     return createdPreference;
+  }
+
+  async findById(preferenceNotificationId: number) {
+    const idFound = await this.prisma.notificationPreference.findUnique({
+      where: { id: preferenceNotificationId },
+    });
+    return idFound;
+  }
+
+  async delete(preferenceNotificationId: number) {
+    const removedPreferences = await this.prisma.notificationPreference.delete({
+      where: { id: preferenceNotificationId },
+    });
+    console.log("removed notification", removedPreferences);
+    return removedPreferences;
   }
 }

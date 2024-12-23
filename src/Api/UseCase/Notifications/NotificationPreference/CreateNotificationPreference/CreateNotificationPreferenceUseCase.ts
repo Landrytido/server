@@ -21,13 +21,16 @@ export default class CreateNotificationPreferenceUseCase
     dto: SaveNotificationPreferenceDto
   ) {
     try {
-      const user = await this.notificationPreference.findUserById(
+      const userFound = await this.notificationPreference.findUserById(
         context.userId
       );
 
+      console.log("user", context.userId);
+      console.log("user2", userFound);
+
       const savedPreferences = await this.notificationPreference.save({
         // userId: context.userId,
-        userId: user.userId, //a modifier si besoin
+        userId: userFound.userId, //a modifier si besoin
         type: dto.type,
         timeBefore: dto.timeBefore,
         timeUnit: dto.timeUnit,
@@ -36,6 +39,7 @@ export default class CreateNotificationPreferenceUseCase
       console.log("notifPref useCase", savedPreferences); //à supp
       return savedPreferences;
     } catch (error) {
+      console.log(error);
       throw new BadRequestException(
         "CreateNotificationPreferenceUseCase failed",
         error.message
