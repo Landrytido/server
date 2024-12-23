@@ -2,3 +2,4 @@ import CreateNotificationPreferenceUseCase from "./CreateNotificationPreference/
 
 export type AvailableNotificationPreference =
   CreateNotificationPreferenceUseCase;
+// | DeleteNotificationUseCase;

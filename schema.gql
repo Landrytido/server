@@ -237,7 +237,7 @@ type NotificationPreference {
   createdAt: DateTime!
   id: Int!
   timeBefore: Int!
-  timeUnit: Int!
+  timeUnit: TimeUnit!
   type: NotificationType!
   updatedAt: DateTime!
   userId: User!

@@ -1,9 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import {
-  NotificationPreference,
-  NotificationType,
-  TimeUnit,
-} from "@prisma/client";
+import { NotificationPreference } from "@prisma/client";
 import { ContextualGraphqlRequest, UseCase } from "src";
 import { SaveNotificationPreferenceDto } from "./SaveNotificationPreferenceDto";
 import NotificationPreferenceRepository from "src/Api/Repository/NotificationPreferenceRepository";
@@ -24,24 +20,19 @@ export default class CreateNotificationPreferenceUseCase
     context: ContextualGraphqlRequest,
     dto: SaveNotificationPreferenceDto
   ) {
-    // Exemple d'implémentation :
-    // const result: NotificationPreference = {
-    //   id: 1, // Exemple - remplacer par l'ID réel généré
-    //   userId: context.userId, // Assurez-vous que userId est bien défini
-    //   type: NotificationType.EMAIL, // Remplacer par une valeur réelle
-    //   timeBefore: dto.timeBefore,
-    //   timeUnit: TimeUnit.HOURS, // Remplacer par une valeur réelle
-    //   createdAt: new Date(),
-    //   updatedAt: new Date(),
-    // };
-
     try {
+      const user = await this.notificationPreference.findUserById(
+        context.userId
+      );
+
       const savedPreferences = await this.notificationPreference.save({
-        userId: context.userId,
-        type: NotificationType.EMAIL,
+        // userId: context.userId,
+        userId: user.userId, //a modifier si besoin
+        type: dto.type,
         timeBefore: dto.timeBefore,
-        timeUnit: TimeUnit.HOURS,
+        timeUnit: dto.timeUnit,
       });
+
       console.log("notifPref useCase", savedPreferences); //à supp
       return savedPreferences;
     } catch (error) {
