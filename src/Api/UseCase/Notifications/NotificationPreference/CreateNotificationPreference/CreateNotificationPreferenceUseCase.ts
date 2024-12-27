@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { NotificationPreference } from "@prisma/client";
+import { NotificationPreference, Prisma } from "@prisma/client";
 import { ContextualGraphqlRequest, UseCase } from "src";
 import { SaveNotificationPreferenceDto } from "./SaveNotificationPreferenceDto";
 import NotificationPreferenceRepository from "src/Api/Repository/NotificationPreferenceRepository";
