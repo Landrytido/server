@@ -96,6 +96,7 @@ type Link {
   clicks: [LinkClick!]
   description: String
   id: Int!
+  image: File
   imageId: Int
   linkGroup: LinkGroup!
   linkGroupId: Int!
@@ -180,8 +181,8 @@ type Mutation {
   removeNoteTaskById(id: Int!): NoteTask!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: saveEventDto!): Event!
-  saveMeeting(dto: SaveMeetingDto!): Meeting!
   saveFile(dto: FileDto!): File!
+  saveMeeting(dto: SaveMeetingDto!): Meeting!
   saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveTask(dto: SaveTaskDto!): Task!

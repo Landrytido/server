@@ -30,10 +30,9 @@ export type UseCases =
   | AvailableSearchHistoryUseCases
   | AvailableCommentUseCases
   | AvailableMeetingUseCases
-  | AvailableNoteTaskUseCases;
-  
   | AvailableNoteTaskUseCases
-    |AvailableFileUseCases;
+  | AvailableNoteTaskUseCases
+  |AvailableFileUseCases;
 
 
 @Injectable()

@@ -35,7 +35,6 @@ export default class LinkGroupResolver {
 
   @UseGuards(GraphqlAuthGuard)
   @Mutation(() => LinkGroup)
-
   async createLinkGroup(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("dto") dto: CreateLinkGroupDto,
@@ -114,13 +113,18 @@ export default class LinkGroupResolver {
     ).handle(context);
   }
 
-  @ResolveField(() => User)
+ @ResolveField(() => User)
   async user(@Parent() linkGroup: LinkGroup) {
     return this.prisma.user.findUnique({ where: { id: linkGroup.userId } });
   }
 
   @ResolveField(() => [Link])
   async links(@Parent() linkGroup: LinkGroup) {
-    return this.prisma.link.findMany({ where: { linkGroupId: linkGroup.id } });
+    return this.prisma.link.findMany({
+      where: { linkGroupId: linkGroup.id },
+      include: {
+        image: true, // Inclure l'image associée à chaque lien
+      },
+    });
   }
 }

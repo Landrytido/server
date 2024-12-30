@@ -112,7 +112,7 @@ enum PermissionLevel {
 model Link {
   id          Int         @id @default(autoincrement())
   name        String
-  url         String
+  url         String      @db.Text
   description String?
   linkGroupId Int
   userId      Int

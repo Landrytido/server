@@ -9,16 +9,16 @@ import { Repositories } from "./Repository/Repositories";
 import { Resolvers } from "./Resolver/Resolvers";
 import UseCaseFactory from "./UseCase/UseCaseFactory";
 import UncontextualUseCaseFactory from "./UseCase/UncontextualUseCaseFactory";
-import EventResolver from './Resolver/EventResolver';
-import EventRepository from './Repository/EventRepository';
-import SaveEventUseCase from './UseCase/Event/SaveEventUseCase';
-import GetEventUseCase from './UseCase/Event/GetEventUseCase';
-import GetAllEventUseCase from './UseCase/Event/GetAllEventUseCase';
-import DeleteEventUseCase from './UseCase/Event/DeleteEventUseCase';
-import CommentRepository from './Repository/CommentRepository';
+import EventResolver from "./Resolver/EventResolver";
+import EventRepository from "./Repository/EventRepository";
+import SaveEventUseCase from "./UseCase/Event/SaveEventUseCase";
+import GetEventUseCase from "./UseCase/Event/GetEventUseCase";
+import GetAllEventUseCase from "./UseCase/Event/GetAllEventUseCase";
+import DeleteEventUseCase from "./UseCase/Event/DeleteEventUseCase";
+import CommentRepository from "./Repository/CommentRepository";
 import FileRepository from "./Repository/FileRepository";
 import SaveFileUseCase from "./UseCase/File/SaveFile/SaveFileUseCase";
-import {PuppeteerService} from "./UseCase/Link/Service/PupeeterService";
+import { PuppeteerService } from "./UseCase/Link/Service/puppeteer.service";
 import { JwtModule } from "@nestjs/jwt";
 import GetLoggedUserUseCase from "./UseCase/User/GetLoggedUser/GetLoggedUserUseCase";
 import { EmailService } from "./Services/emailService";
@@ -26,6 +26,7 @@ import ConvertExternalInvitationUseCase from "./UseCase/Invitation/ConvertExtern
 import { AcceptLanguageResolver, I18nModule } from "nestjs-i18n";
 import * as path from "path";
 import GetExternalEmailByTokenUseCase from "./UseCase/Invitation/GetExternalEmailByToken/GetExternalEmailByTokenUseCase";
+import { S3UploadService } from "./UseCase/Link/Service/s3-upload.service";
 
 @Module({
   imports: [
@@ -53,7 +54,7 @@ import GetExternalEmailByTokenUseCase from "./UseCase/Invitation/GetExternalEmai
         forcePathStyle: true,
       },
     }),
-    JwtModule
+    JwtModule,
   ],
   controllers: [],
   providers: [
@@ -67,9 +68,10 @@ import GetExternalEmailByTokenUseCase from "./UseCase/Invitation/GetExternalEmai
     DeleteEventUseCase,
     GetLoggedUserUseCase,
     CommentRepository,
-      FileRepository,
-      SaveFileUseCase,
-      PuppeteerService,
+    FileRepository,
+    SaveFileUseCase,
+    PuppeteerService,
+    S3UploadService,
     ConvertExternalInvitationUseCase,
     GetExternalEmailByTokenUseCase,
     ...Repositories,
