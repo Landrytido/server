@@ -22,6 +22,8 @@ import ConvertExternalInvitationUseCase from "./UseCase/Invitation/ConvertExtern
 import { AcceptLanguageResolver, I18nModule } from "nestjs-i18n";
 import * as path from "path";
 import GetExternalEmailByTokenUseCase from "./UseCase/Invitation/GetExternalEmailByToken/GetExternalEmailByTokenUseCase";
+import { ScheduleModule } from "@nestjs/schedule";
+import { Jobs } from "./Jobs/Jobs";
 
 @Module({
   imports: [
@@ -50,6 +52,7 @@ import GetExternalEmailByTokenUseCase from "./UseCase/Invitation/GetExternalEmai
       },
     }),
     JwtModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [],
   providers: [
@@ -67,6 +70,7 @@ import GetExternalEmailByTokenUseCase from "./UseCase/Invitation/GetExternalEmai
     GetExternalEmailByTokenUseCase,
     ...Repositories,
     ...Resolvers,
+    ...Jobs,
   ],
 })
 export class ApiModule {}

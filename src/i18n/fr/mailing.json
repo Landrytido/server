@@ -8,5 +8,11 @@
     "otherDescription": "Pour accepter l'invitation, veuillez vous inscrire en cliquant sur le bouton ci-dessous.",
     "acceptInvitation": "Accepter l'invitation",
     "contactUs": "Si vous avez des questions, n'hésitez pas à nous contacter."
+  },
+
+  "calendarNotification": {
+    "emailSubject": "Notification :",
+    "subject": "Événement/tâches/meeting à venir",
+    "showDetails": "Afficher tous les détails de l'événement"
   }
 }
