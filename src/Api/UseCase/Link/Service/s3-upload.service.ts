@@ -1,7 +1,7 @@
 // src/Api/UseCase/Link/Service/s3-upload.service.ts
 
 import { Injectable, Logger } from '@nestjs/common';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as url from 'url';
@@ -21,7 +21,7 @@ export class S3UploadService {
 
     const parsed = new url.URL(publicUrl);
     const domainParts = parsed.host.split('.');
-    this.bucketName = domainParts[0]; // "bedev-cdn"
+    this.bucketName = domainParts[0]; 
     this.prefix = parsed.pathname.replace(/^\/+/, '');
 
     const endpointHost = domainParts.slice(1).join('.');
@@ -32,9 +32,9 @@ export class S3UploadService {
         accessKeyId: process.env.CDN_ACCESS_KEY_ID || '',
         secretAccessKey: process.env.CDN_ACCESS_KEY || '',
       },
-      endpoint: endpointUrl, // https://s3.fr-par.scw.cloud
-      forcePathStyle: false, // Par défaut pour Scaleway
-      region: 'fr-par',      // À adapter si besoin, mais fr-par marche souvent
+      endpoint: endpointUrl, 
+      forcePathStyle: false, 
+      region: 'fr-par',      
     });
 
     this.logger.debug(`S3UploadService: Bucket = ${this.bucketName}, Prefix = ${this.prefix}, Endpoint = ${endpointUrl}`);
@@ -63,6 +63,21 @@ export class S3UploadService {
       return uploadedUrl;
     } catch (error) {
       this.logger.error('Erreur lors de l\'upload S3', error);
+      throw error;
+    }
+  }
+
+  public async deleteFile(fileKey: string): Promise<void> {
+    try {
+      const deleteCommand = new DeleteObjectCommand({
+        Bucket: this.bucketName,
+        Key: this.prefix ? `${this.prefix}/${fileKey}` : fileKey,
+      });
+
+      await this.s3Client.send(deleteCommand);
+      this.logger.log(`Fichier supprimé de S3 : ${fileKey}`);
+    } catch (error) {
+      this.logger.error('Erreur lors de la suppression S3', error);
       throw error;
     }
   }

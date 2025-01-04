@@ -123,7 +123,7 @@ export default class LinkGroupResolver {
     return this.prisma.link.findMany({
       where: { linkGroupId: linkGroup.id },
       include: {
-        image: true, // Inclure l'image associée à chaque lien
+        image: true, 
       },
     });
   }

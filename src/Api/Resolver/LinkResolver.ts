@@ -95,15 +95,12 @@ export default class LinkResolver {
   }
 
   @UseGuards(GraphqlAuthGuard)
-  @Mutation(() => Link)
+  @Mutation(() => Boolean)
   async deleteLink(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("id", { type: () => Int }) id: number
   ) {
-    return (await this.serviceFactory.create(DeleteLinkUseCase)).handle(
-      context,
-      id
-    );
+    return (await this.serviceFactory.create(DeleteLinkUseCase)).handle(context, id);
   }
 
   @UseGuards(GraphqlAuthGuard)
