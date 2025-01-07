@@ -14,8 +14,14 @@ export default class MeetingRepository {
 
   async saveMeeting(
     data:
-      | Prisma.XOR<Prisma.MeetingCreateInput, Prisma.MeetingUncheckedCreateInput>
-      | Prisma.XOR<Prisma.MeetingUpdateInput, Prisma.MeetingUncheckedUpdateInput>
+      | Prisma.XOR<
+          Prisma.MeetingCreateInput,
+          Prisma.MeetingUncheckedCreateInput
+        >
+      | Prisma.XOR<
+          Prisma.MeetingUpdateInput,
+          Prisma.MeetingUncheckedUpdateInput
+        >
   ) {
     if (!data.id) {
       return this.prisma.meeting.create({
@@ -42,7 +48,32 @@ export default class MeetingRepository {
   }
 
   async findAll() {
-    return this.prisma.meeting.findMany();
+    return this.prisma.meeting.findMany({
+      include: {
+        user: {
+          select: {
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        notificationPreference: {
+          select: {
+            id: true,
+            type: true,
+            timeBefore: true,
+            timeUnit: true,
+          },
+        },
+      },
+    });
+  }
+
+  async markNotificationAsSent(meetingId: number) {
+    await this.prisma.meeting.update({
+      where: { id: meetingId },
+      data: { notificationSent: true },
+    });
   }
 
   async findByUserId(userId: number) {

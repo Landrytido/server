@@ -28,4 +28,7 @@ export default class SaveMeetingDto {
 
   @Field(() => Int)
   userId: number;
+
+  @Field(() => Int, { nullable: true })
+  notificationPreferenceId?: number;
 }

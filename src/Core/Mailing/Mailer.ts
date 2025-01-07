@@ -73,24 +73,45 @@ export default class Mailer {
   }
 
   async sendCalendarNotificationEmail(
-    recipientEmail: string,
-    eventTitle: string,
-    timeBefore: number,
-    timeUnit: string
+    recipientData: {
+      email: string;
+      firstName: string;
+      lastName: string;
+    },
+
+    eventDetails: {
+      title: string;
+      description: string;
+      startDate: Date;
+      endDate: Date;
+      location: string;
+    },
+    eventType: "meeting" | "task" | "event"
   ) {
+    const translations = (this.i18n.getTranslations() as Record<string, any>).fr
+      .mailing.calendarNotification;
+
     const data = {
-      eventTitle,
-      timeBefore,
-      timeUnit,
-      t: (this.i18n.getTranslations() as Record<string, any>).fr.mailing
-        .calendarNotification,
+      eventTitle: eventDetails.title,
+      startDate: eventDetails.startDate.toLocaleString(),
+      endDate: eventDetails.endDate.toLocaleString(),
+      description: eventDetails.description,
+      organizerFirstName: recipientData.firstName,
+      organizerLastName: recipientData.lastName,
+      organizerEmail: recipientData.email,
+      location: eventDetails.location,
+      currentYear: new Date().getFullYear(),
+      t: {
+        ...translations,
+        subject: translations.subject[eventType],
+      },
     };
 
-    const subject = `${data.t.emailSubject} : ${data.eventTitle}`;
+    const subject = `${data.t.emailSubject} : ${data.t.subject} !`;
     await this.sendEmailToUser(
-      recipientEmail,
+      recipientData.email,
       subject,
-      "fr/calendarNotification",
+      "fr/calendarNotification.html",
       data
     );
   }

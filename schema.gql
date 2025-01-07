@@ -40,7 +40,11 @@ type Event {
   id: Int!
   isRecurring: Boolean!
   location: String!
-  notification: [Notification!]
+  notificationCustom: NotificationCustom!
+  notificationCustomId: Int
+  notificationPreference: NotificationPreference!
+  notificationPreferenceId: Int
+  notificationSent: Boolean
   recurrence: Recurrence!
   sharedWith: [MeetSharedWithMember!]!
   startDate: DateTime!
@@ -122,7 +126,11 @@ type Meeting {
   id: Int!
   isRecurring: Boolean!
   location: String!
-  notification: [Notification!]
+  notificationCustom: NotificationCustom!
+  notificationCustomId: Int
+  notificationPreference: NotificationPreference!
+  notificationPreferenceId: Int
+  notificationSent: Boolean
   recurrence: Recurrence
   startDate: DateTime!
   title: String!
@@ -221,7 +229,7 @@ type Notebook {
   userId: Int!
 }
 
-type Notification {
+type NotificationCustom {
   createdAt: DateTime!
   eventId: Int
   id: Int!
@@ -348,6 +356,7 @@ input SaveMeetingDto {
   id: Int
   isRecurring: Boolean!
   location: String!
+  notificationPreferenceId: Int
   recurrence: String
   startDate: DateTime!
   title: String!
@@ -446,7 +455,11 @@ type Task {
   description: String!
   dueDate: DateTime!
   id: Int!
-  notification: [Notification!]
+  notificationCustom: NotificationCustom!
+  notificationCustomId: Int
+  notificationPreference: NotificationPreference!
+  notificationPreferenceId: Int
+  notificationSent: Boolean
   title: String!
   user: User!
   userId: Int!

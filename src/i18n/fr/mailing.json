@@ -11,8 +11,17 @@
   },
 
   "calendarNotification": {
-    "emailSubject": "Notification :",
-    "subject": "Événement/tâches/meeting à venir",
-    "showDetails": "Afficher tous les détails de l'événement"
+    "emailSubject": "Rappel",
+    "subject": {
+      "meeting": "Un meeting à venir",
+      "task": "Une tâche à venir",
+      "event": "Un événement à venir"
+    },
+    "location": "Mode de participation",
+    "descriptionData": "Description",
+    "organizerData": "Organisateur",
+    "guestData": "Invités",
+    "showDetails": "Afficher tous les détails de l'événement",
+    "contactUs": "Si vous avez des questions, n'hésitez pas à nous contacter."
   }
 }

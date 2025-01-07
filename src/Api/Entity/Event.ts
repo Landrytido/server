@@ -3,7 +3,8 @@ import User from "./User";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import { ContextualGraphqlRequest } from "src";
 import { Recurrence } from "src/main";
-import { Notification } from "./Notification";
+import { NotificationCustom } from "./NotificationCustom";
+import { NotificationPreference } from "./NotificationPreference";
 
 @ObjectType()
 export class Event {
@@ -46,8 +47,20 @@ export class Event {
   @Field(() => [MeetSharedWithMember])
   sharedWith: MeetSharedWithMember[];
 
-  @Field(() => [Notification], { nullable: true })
-  notification?: Notification[];
+  @Field(() => Int, { nullable: true })
+  notificationCustomId?: number;
+
+  @Field(() => NotificationCustom)
+  notificationCustom?: NotificationCustom;
+
+  @Field(() => Int, { nullable: true })
+  notificationPreferenceId?: number;
+
+  @Field(() => NotificationPreference)
+  notificationPreference?: NotificationPreference;
+
+  @Field(() => Boolean, { nullable: true })
+  notificationSent?: boolean;
 
   context?: ContextualGraphqlRequest;
 }

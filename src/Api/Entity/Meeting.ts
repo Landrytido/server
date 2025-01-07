@@ -2,7 +2,8 @@ import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import { ContextualGraphqlRequest } from "src";
 import { Recurrence } from "src/main";
-import { Notification } from "./Notification";
+import { NotificationCustom } from "./NotificationCustom";
+import { NotificationPreference } from "./NotificationPreference";
 
 @ObjectType()
 export class Meeting {
@@ -42,8 +43,20 @@ export class Meeting {
   @Field(() => User)
   user: User;
 
-  @Field(() => [Notification], { nullable: true })
-  notification?: Notification[];
+  @Field(() => Int, { nullable: true }) //a changer ça ne peut pas être un id
+  notificationCustomId?: number;
+
+  @Field(() => NotificationCustom)
+  notificationCustom?: NotificationCustom;
+
+  @Field(() => Int, { nullable: true })
+  notificationPreferenceId?: number;
+
+  @Field(() => NotificationPreference)
+  notificationPreference?: NotificationPreference;
+
+  @Field(() => Boolean, { nullable: true })
+  notificationSent?: boolean;
 
   context?: ContextualGraphqlRequest;
 }

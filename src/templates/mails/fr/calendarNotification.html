@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #3a406e;
+      background-color: white;
+      text-align: center;
+    "
+  >
+    <table
+      class="body-wrap"
+      style="
+        width: 600px;
+        margin: 0 auto;
+        border: 1px solid #3a406e;
+        border-radius: 15px;
+      "
+    >
+      <tr>
+        <td>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td
+                class="logo-container"
+                style="
+                  text-align: center;
+                  padding-bottom: 10px;
+                  background-color: #ededed;
+                  border-top-left-radius: 15px;
+                  border-top-right-radius: 15px;
+                "
+              >
+                <a
+                  href="{{frontendUrl}}"
+                  style="text-decoration: none; color: inherit"
+                >
+                  <h1
+                    style="
+                      color: #3a406e;
+                      font-family: Arial, sans-serif;
+                      font-weight: bold;
+                      font-size: 1.5rem;
+                    "
+                  >
+                    My Web Companion
+                  </h1>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 0 1rem">
+                <p
+                  style="
+                    background-color: #e8f0fe;
+                    color: #3793af;
+                    font-weight: bold;
+                    font-size: 1.2rem;
+                  "
+                >
+                  {{t.subject}}
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td
+                class="content-block"
+                style="
+                  padding: 0 1rem;
+                  font-size: 1rem;
+                  line-height: 1.5;
+                  text-align: left;
+                "
+              >
+                <h2 style="font-size: 1.3rem; margin-top: 0">{{eventTitle}}</h2>
+                <p style="margin-bottom: 1rem">{{startDate}} - {{endDate}}</p>
+                <p style="margin-bottom: 1rem; font-weight: bold">
+                  {{t.location}} :
+                  <span style="font-weight: normal">{{location}}</span>
+                </p>
+                <p style="margin-bottom: 1.5rem; font-weight: bold">
+                  {{t.descriptionData}} :
+                  <span style="font-weight: normal">{{description}}</span>
+                </p>
+                <p style="font-weight: bold">{{t.organizerData}} :</p>
+                <p style="font-size: bold; margin-bottom: 0.5rem">
+                  {{organizerFirstName}} {{organizerLastName}}
+                </p>
+                <p
+                  style="
+                    margin-bottom: 20px;
+                    margin-top: 0;
+                    color: rgba(58, 58, 58, 0.8666666667);
+                  "
+                >
+                  {{organizerEmail}}
+                </p>
+                <p style="font-weight: bold">
+                  {{t.guestData}} :
+                  <span style="font-weight: normal">Pas d'invités.</span>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: center">
+                <p style="margin-bottom: 2rem">
+                  <a
+                    href="{{link}}"
+                    style="
+                      background-color: #3a406e;
+                      color: #6bdbcb;
+                      padding: 10px 20px;
+                      text-decoration: none;
+                      border-radius: 5px;
+                    "
+                    >{{t.showDetails}}</a
+                  >
+                </p>
+                <p style="margin-bottom: 1rem">{{t.contactUs}}</p>
+                <hr style="margin: 30px 0" />
+                <p>{{currentYear}} &copy; MyWebCompanion</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
