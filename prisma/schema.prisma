@@ -273,7 +273,8 @@ model Meeting {
   notificationPreference    NotificationPreference?  @relation(fields: [notificationPreferenceId], references: [id])
   notificationCustomId      Int?                     @unique
   notificationCustom        NotificationCustom?      @relation("MeetingNotificationCustom", fields: [notificationCustomId], references:[id])
-  notificationSent          Boolean?                 @default(false)      
+  notificationSent          Boolean?                 @default(false)
+  token                     String?                  @unique                           
 }
 
 model NotificationPreference {

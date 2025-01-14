@@ -70,9 +70,15 @@ export default class MeetingRepository {
   }
 
   async markNotificationAsSent(meetingId: number) {
-    await this.prisma.meeting.update({
+    return this.prisma.meeting.update({
       where: { id: meetingId },
       data: { notificationSent: true },
+    });
+  }
+
+  async findByToken(token: string) {
+    return this.prisma.meeting.findUnique({
+      where: { token },
     });
   }
 

@@ -33,6 +33,8 @@ export class SendCalendarEmailNotificationJob {
           if (now >= reminderTime && meeting.notificationSent === false) {
             const recipientData = meeting.user;
 
+            const meetingLink = `${process.env.FRONTEND_URL}/meeting?meetingToken=${meeting.token}`;
+
             this.mailer.sendCalendarNotificationEmail(
               {
                 email: recipientData.email,
@@ -46,6 +48,7 @@ export class SendCalendarEmailNotificationJob {
                 endDate: meeting.endDate,
                 location: meeting.location,
               },
+              meetingLink,
               "meeting"
             );
 

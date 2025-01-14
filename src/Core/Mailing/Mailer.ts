@@ -86,6 +86,7 @@ export default class Mailer {
       endDate: Date;
       location: string;
     },
+    meetingLink: string,
     eventType: "meeting" | "task" | "event"
   ) {
     const translations = (this.i18n.getTranslations() as Record<string, any>).fr
@@ -100,6 +101,7 @@ export default class Mailer {
       organizerLastName: recipientData.lastName,
       organizerEmail: recipientData.email,
       location: eventDetails.location,
+      link: meetingLink,
       currentYear: new Date().getFullYear(),
       t: {
         ...translations,

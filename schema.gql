@@ -134,6 +134,7 @@ type Meeting {
   recurrence: Recurrence
   startDate: DateTime!
   title: String!
+  token: String
   updatedAt: DateTime!
   user: User!
   userId: Int!
@@ -305,6 +306,7 @@ type Query {
   topScores(level: Level = EASY, limit: Int = 10): [Score!]!
   topThreeScores: [Score!]!
   userScores(userId: Int!): [Score!]!
+  validateEventToken(dto: TokenValidationDto!): ValidateEventTokenResponse!
   validateToken(dto: TokenValidationDto!): Boolean!
 }
 
@@ -510,6 +512,11 @@ type User {
   sessions: [Session!]!
   tasks: [Task!]!
   updatedAt: DateTime!
+}
+
+type ValidateEventTokenResponse {
+  eventId: Int
+  isValid: Boolean!
 }
 
 input saveEventDto {

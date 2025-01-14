@@ -55,6 +55,9 @@ export class Meeting {
   @Field(() => NotificationPreference)
   notificationPreference?: NotificationPreference;
 
+  @Field(() => String, { nullable: true })
+  token?: string;
+
   @Field(() => Boolean, { nullable: true })
   notificationSent?: boolean;
 
