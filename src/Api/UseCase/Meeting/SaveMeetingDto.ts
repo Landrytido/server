@@ -26,6 +26,12 @@ export default class SaveMeetingDto {
   @Field()
   location: string;
 
+  @Field({ nullable: true })
+  place?: string;
+
+  @Field({ nullable: true })
+  link?: string;
+
   @Field(() => Int)
   userId: number;
 

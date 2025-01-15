@@ -34,36 +34,60 @@ export default class SaveMeetingUseCase
 
       // Transformation des données pour Prisma
       const prismaData: any = { ...dto };
+
+      if (dto.location === "Présentiel") {
+        prismaData.place = dto.place;
+        prismaData.link = null;
+      } else if (dto.location === "Distanciel") {
+        prismaData.link = dto.link;
+        prismaData.place = null;
+      }
+
       if (!dto.id) {
         // Supprimez `id` pour une création
         delete prismaData.id;
       }
 
-      let meeting = await this.meetingRepository.saveMeeting(prismaData);
-      console.log("meeting dans savemeetingusecase", meeting);
-
       if (dto.notificationPreferenceId) {
-        console.log(
-          "dto.userid et context.userid et meeting.userId",
-          dto.userId,
-          context.userId,
-          meeting.userId
-        ); //a supprimer
         const userData = await this.userRepository.findById(userId);
         const email = userData.email;
 
+        // Générer un token avec les informations de l'utilisateur
         const token = await this.authenticator.createToken({ userId, email });
-        console.log("token dans savemeetingusecase", token);
-        meeting = await this.meetingRepository.saveMeeting({
-          id: meeting.id,
-          token,
-        });
+        prismaData.token = token; // Ajouter le token dans les données Prisma
       }
 
-      console.log("meeting dans savemeetingusecase 2", meeting); //asupp
+      // Sauvegarde unique avec toutes les données nécessaires
+      const meeting = await this.meetingRepository.saveMeeting(prismaData);
 
-      // Sauvegarde ou mise à jour via le repository
+      console.log("Meeting final sauvegardé :", meeting);
+
       return meeting;
+      // let meeting = await this.meetingRepository.saveMeeting(prismaData);
+      // console.log("meeting dans savemeetingusecase", meeting);
+
+      // if (dto.notificationPreferenceId) {
+      //   console.log(
+      //     "dto.userid et context.userid et meeting.userId",
+      //     dto.userId,
+      //     context.userId,
+      //     meeting.userId
+      //   ); //a supprimer
+      //   const userData = await this.userRepository.findById(userId);
+      //   const email = userData.email;
+
+      //   const token = await this.authenticator.createToken({ userId, email });
+      //   console.log("token dans savemeetingusecase", token);
+      //   meeting = await this.meetingRepository.saveMeeting({
+      //     id: meeting.id,
+      //     token,
+      //   });
+      // }
+
+      // console.log("meeting dans savemeetingusecase 2", meeting); //asupp
+
+      // // Sauvegarde ou mise à jour via le repository
+      // return meeting;
     } catch (error) {
       throw new ForbiddenException(error.message);
     }

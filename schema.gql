@@ -125,12 +125,14 @@ type Meeting {
   endDate: DateTime!
   id: Int!
   isRecurring: Boolean!
+  link: String
   location: String!
   notificationCustom: NotificationCustom!
   notificationCustomId: Int
   notificationPreference: NotificationPreference!
   notificationPreferenceId: Int
   notificationSent: Boolean
+  place: String
   recurrence: Recurrence
   startDate: DateTime!
   title: String!
@@ -357,8 +359,10 @@ input SaveMeetingDto {
   endDate: DateTime!
   id: Int
   isRecurring: Boolean!
+  link: String
   location: String!
   notificationPreferenceId: Int
+  place: String
   recurrence: String
   startDate: DateTime!
   title: String!

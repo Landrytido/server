@@ -31,6 +31,12 @@ export class Meeting {
   @Field()
   location: string;
 
+  @Field({ nullable: true })
+  place?: string;
+
+  @Field({ nullable: true })
+  link?: string;
+
   @Field(() => GraphQLISODateTime)
   createdAt: Date;
 

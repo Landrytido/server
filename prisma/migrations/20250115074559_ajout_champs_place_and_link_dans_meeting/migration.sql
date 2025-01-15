@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `Meeting` ADD COLUMN `link` VARCHAR(191) NULL,
+    ADD COLUMN `place` VARCHAR(191) NULL;

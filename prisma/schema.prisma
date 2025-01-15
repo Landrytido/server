@@ -265,6 +265,8 @@ model Meeting {
   isRecurring               Boolean?                 @default(false)
   recurrence                Recurrence?              @default(NONE)
   location                  String
+  place                     String?
+  link                      String?
   createdAt                 DateTime                 @default(now())
   updatedAt                 DateTime                 @default(now()) @updatedAt
   userId                    Int
