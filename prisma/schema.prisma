@@ -139,10 +139,9 @@ model Task {
   user                      User                     @relation(fields: [userId], references: [id])
   notificationPreferenceId  Int?
   notificationPreference    NotificationPreference?  @relation(fields: [notificationPreferenceId], references: [id])
-  notificationCustomId      Int?                     @unique
-  notificationCustom        NotificationCustom?      @relation("TaskNotificationCustom", fields: [notificationCustomId], references:[id])
-  notificationSent          Boolean?                 @default(false)       
-}
+  notificationSent          Boolean?                 @default(false)
+  token                     String?                  @unique     
+  }
 
 model Invitation {
   id                         Int                         @id @default(autoincrement())
@@ -167,6 +166,8 @@ model Event {
   isRecurring               Boolean?                @default(false)
   recurrence                Recurrence?             @default(NONE)
   location                  String
+  place                     String?
+  link                      String?
   createdAt                 DateTime                @default(now())
   updatedAt                 DateTime                @default(now()) @updatedAt
   userId                    Int
@@ -174,9 +175,8 @@ model Event {
   sharedWith                EventSharedWithMember[]
   notificationPreferenceId  Int?
   notificationPreference    NotificationPreference?  @relation(fields: [notificationPreferenceId], references: [id])
-  notificationCustomId      Int?                     @unique
-  notificationCustom        NotificationCustom?      @relation("EventNotificationCustom", fields: [notificationCustomId], references:[id])
-  notificationSent          Boolean?                 @default(false)       
+  notificationSent          Boolean?                 @default(false)
+  token                     String?                  @unique     
 
 }
 
@@ -273,8 +273,6 @@ model Meeting {
   user                      User                     @relation(fields: [userId], references: [id])
   notificationPreferenceId  Int?
   notificationPreference    NotificationPreference?  @relation(fields: [notificationPreferenceId], references: [id])
-  notificationCustomId      Int?                     @unique
-  notificationCustom        NotificationCustom?      @relation("MeetingNotificationCustom", fields: [notificationCustomId], references:[id])
   notificationSent          Boolean?                 @default(false)
   token                     String?                  @unique                           
 }
@@ -293,17 +291,6 @@ model NotificationPreference {
   meetings                  Meeting[]
 }
 
-model NotificationCustom {
-  id                        Int                     @id @default(autoincrement())
-  type                      NotificationType        
-  timeBefore                Int                     
-  timeUnit                  TimeUnit                
-  createdAt                 DateTime                @default(now())
-  updatedAt                 DateTime                @default(now()) @updatedAt
-  task                      Task?                   @relation("TaskNotificationCustom")
-  event                     Event?                  @relation("EventNotificationCustom")
-  meeting                   Meeting?                @relation("MeetingNotificationCustom")
-}
 
 enum NotificationType {
   EMAIL

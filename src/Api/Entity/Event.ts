@@ -32,6 +32,12 @@ export class Event {
   @Field()
   location: string;
 
+  @Field({ nullable: true })
+  place?: string;
+
+  @Field({ nullable: true })
+  link?: string;
+
   @Field(() => GraphQLISODateTime)
   createdAt: Date;
 
@@ -48,16 +54,13 @@ export class Event {
   sharedWith: MeetSharedWithMember[];
 
   @Field(() => Int, { nullable: true })
-  notificationCustomId?: number;
-
-  @Field(() => NotificationCustom)
-  notificationCustom?: NotificationCustom;
-
-  @Field(() => Int, { nullable: true })
   notificationPreferenceId?: number;
 
   @Field(() => NotificationPreference)
   notificationPreference?: NotificationPreference;
+
+  @Field(() => String, { nullable: true })
+  token?: string;
 
   @Field(() => Boolean, { nullable: true })
   notificationSent?: boolean;

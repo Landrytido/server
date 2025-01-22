@@ -18,10 +18,16 @@
       "event": "Un événement à venir"
     },
     "location": "Mode de participation",
+    "place": "Lieu",
+    "url": "Lien",
     "descriptionData": "Description",
     "organizerData": "Organisateur",
     "guestData": "Invités",
-    "showDetails": "Afficher tous les détails de l'événement",
+    "showDetails": {
+      "meeting": "Afficher tous les détails de l'événement",
+      "task": "Afficher tous les détails de la tâche",
+      "event": "Afficher tous les détails de l'événement"
+    },
     "contactUs": "Si vous avez des questions, n'hésitez pas à nous contacter."
   }
 }

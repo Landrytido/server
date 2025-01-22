@@ -40,14 +40,53 @@ export default class EventRepository {
       where: { id },
     });
   }
+  //Asupprimer si tout ok
+  // async findAll() {
+  //   return this.prisma.event.findMany();
+  // }
+  //Asupp
 
   async findAll() {
-    return this.prisma.event.findMany();
+    return this.prisma.event.findMany({
+      include: {
+        user: {
+          select: {
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        notificationPreference: {
+          select: {
+            id: true,
+            type: true,
+            timeBefore: true,
+            timeUnit: true,
+          },
+        },
+      },
+    });
   }
 
-  async findByUserId(userId : number){
+  //asupp si ça marche pas
+  async markNotificationAsSent(eventId: number) {
+    await this.prisma.event.update({
+      where: { id: eventId },
+      data: { notificationSent: true },
+    });
+  }
+
+  async findByToken(token: string) {
+    return this.prisma.event.findUnique({
+      where: { token },
+    });
+  }
+
+  //asupp
+
+  async findByUserId(userId: number) {
     return this.prisma.event.findMany({
-      where : {userId : userId}
-    })
+      where: { userId: userId },
+    });
   }
 }

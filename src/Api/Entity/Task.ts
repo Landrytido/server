@@ -28,16 +28,13 @@ export default class Task {
   user: User;
 
   @Field(() => Int, { nullable: true })
-  notificationCustomId?: number;
-
-  @Field(() => NotificationCustom)
-  notificationCustom?: NotificationCustom;
-
-  @Field(() => Int, { nullable: true })
   notificationPreferenceId?: number;
 
   @Field(() => NotificationPreference)
   notificationPreference?: NotificationPreference;
+
+  @Field(() => String, { nullable: true })
+  token?: string;
 
   @Field(() => Boolean, { nullable: true })
   notificationSent?: boolean;

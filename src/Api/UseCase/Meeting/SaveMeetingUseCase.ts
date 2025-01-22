@@ -12,7 +12,7 @@ export default class SaveMeetingUseCase
 {
   constructor(
     private readonly meetingRepository: MeetingRepository,
-    private readonly userRepository: UserRepository,
+    // private readonly userRepository: UserRepository,
     @Inject("Authenticator") private authenticator: Authenticator
   ) {}
 
@@ -49,45 +49,21 @@ export default class SaveMeetingUseCase
       }
 
       if (dto.notificationPreferenceId) {
-        const userData = await this.userRepository.findById(userId);
-        const email = userData.email;
+        // const userData = await this.userRepository.findById(userId);
+        // const email = userData.email; a remeetre sil faut
 
-        // Générer un token avec les informations de l'utilisateur
+        const email = context.email;
+
+        // Génération d'un token avec les informations du user
         const token = await this.authenticator.createToken({ userId, email });
-        prismaData.token = token; // Ajouter le token dans les données Prisma
+        prismaData.token = token;
       }
 
-      // Sauvegarde unique avec toutes les données nécessaires
       const meeting = await this.meetingRepository.saveMeeting(prismaData);
 
       console.log("Meeting final sauvegardé :", meeting);
 
       return meeting;
-      // let meeting = await this.meetingRepository.saveMeeting(prismaData);
-      // console.log("meeting dans savemeetingusecase", meeting);
-
-      // if (dto.notificationPreferenceId) {
-      //   console.log(
-      //     "dto.userid et context.userid et meeting.userId",
-      //     dto.userId,
-      //     context.userId,
-      //     meeting.userId
-      //   ); //a supprimer
-      //   const userData = await this.userRepository.findById(userId);
-      //   const email = userData.email;
-
-      //   const token = await this.authenticator.createToken({ userId, email });
-      //   console.log("token dans savemeetingusecase", token);
-      //   meeting = await this.meetingRepository.saveMeeting({
-      //     id: meeting.id,
-      //     token,
-      //   });
-      // }
-
-      // console.log("meeting dans savemeetingusecase 2", meeting); //asupp
-
-      // // Sauvegarde ou mise à jour via le repository
-      // return meeting;
     } catch (error) {
       throw new ForbiddenException(error.message);
     }

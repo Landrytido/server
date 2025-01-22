@@ -39,16 +39,17 @@ type Event {
   endDate: DateTime!
   id: Int!
   isRecurring: Boolean!
+  link: String
   location: String!
-  notificationCustom: NotificationCustom!
-  notificationCustomId: Int
   notificationPreference: NotificationPreference!
   notificationPreferenceId: Int
   notificationSent: Boolean
+  place: String
   recurrence: Recurrence!
   sharedWith: [MeetSharedWithMember!]!
   startDate: DateTime!
   title: String!
+  token: String
   updatedAt: DateTime!
   user: User!
   userId: Int!
@@ -127,8 +128,6 @@ type Meeting {
   isRecurring: Boolean!
   link: String
   location: String!
-  notificationCustom: NotificationCustom!
-  notificationCustomId: Int
   notificationPreference: NotificationPreference!
   notificationPreferenceId: Int
   notificationSent: Boolean
@@ -230,19 +229,6 @@ type Notebook {
   title: String!
   user: User!
   userId: Int!
-}
-
-type NotificationCustom {
-  createdAt: DateTime!
-  eventId: Int
-  id: Int!
-  meetingId: Int
-  preferenceId: Int
-  taskId: Int
-  timeBefore: Int!
-  timeUnit: TimeUnit!
-  type: NotificationType!
-  updatedAt: DateTime!
 }
 
 type NotificationPreference {
@@ -403,6 +389,7 @@ input SaveTaskDto {
   description: String!
   dueDate: DateTime
   id: Int
+  notificationPreferenceId: Int
   title: String!
   userId: Int!
 }
@@ -461,12 +448,11 @@ type Task {
   description: String!
   dueDate: DateTime!
   id: Int!
-  notificationCustom: NotificationCustom!
-  notificationCustomId: Int
   notificationPreference: NotificationPreference!
   notificationPreferenceId: Int
   notificationSent: Boolean
   title: String!
+  token: String
   user: User!
   userId: Int!
 }
@@ -519,15 +505,20 @@ type User {
 }
 
 type ValidateEventTokenResponse {
-  eventId: Int
+  entityId: Int
+  entityType: String
   isValid: Boolean!
+  userId: Int
 }
 
 input saveEventDto {
   description: String!
   endDate: DateTime!
   id: Int
+  link: String
   location: String!
+  notificationPreferenceId: Int
+  place: String
   startDate: DateTime!
   title: String!
   userId: Int!

@@ -70,7 +70,7 @@ export default class MeetingRepository {
   }
 
   async markNotificationAsSent(meetingId: number) {
-    return this.prisma.meeting.update({
+    await this.prisma.meeting.update({
       where: { id: meetingId },
       data: { notificationSent: true },
     });

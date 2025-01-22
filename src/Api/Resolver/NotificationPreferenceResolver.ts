@@ -24,7 +24,6 @@ export default class NotificationPreferenceResolver {
     const createdPreferences = await (
       await this.serviceFactory.create(CreateNotificationPreferenceUseCase)
     ).handle(context, dto);
-    console.log("notifPref resolver:", createdPreferences); //à supp
     return createdPreferences;
   }
 

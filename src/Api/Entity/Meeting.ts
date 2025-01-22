@@ -49,12 +49,6 @@ export class Meeting {
   @Field(() => User)
   user: User;
 
-  @Field(() => Int, { nullable: true }) //a changer ça ne peut pas être un id
-  notificationCustomId?: number;
-
-  @Field(() => NotificationCustom)
-  notificationCustom?: NotificationCustom;
-
   @Field(() => Int, { nullable: true })
   notificationPreferenceId?: number;
 

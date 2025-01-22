@@ -80,16 +80,47 @@
                   text-align: left;
                 "
               >
-                <h2 style="font-size: 1.3rem; margin-top: 0">{{eventTitle}}</h2>
+                <h2 style="font-size: 1.3rem; margin-top: 0">{{title}}</h2>
+                <!-- Conditionnage affichage de la section -->
+                {{#isEventOrMeeting}}
                 <p style="margin-bottom: 1rem">{{startDate}} - {{endDate}}</p>
-                <p style="margin-bottom: 1rem; font-weight: bold">
-                  {{t.location}} :
-                  <span style="font-weight: normal">{{location}}</span>
+
+                <p style="margin-bottom: 1rem">
+                  <strong>{{t.location}} :</strong>
+                  {{location}}
                 </p>
+
+                {{#place}}
+                <p style="margin-bottom: 1rem">
+                  <strong>{{t.place}}:</strong> {{place}}
+                </p>
+                {{/place}} {{#url}}
+                <p style="margin-bottom: 1rem">
+                  <strong>{{t.url}} :</strong>
+                  <a
+                    href="{{url}}"
+                    style="color: #3a406e; text-decoration: none"
+                    >{{url}}</a
+                  >
+                </p>
+                {{/url}} {{/isEventOrMeeting}}
+                <!-- Fin Conditionnage affichage de la section -->
+
+                <!-- Début Conditionnage affichage de la section -->
+                {{^isEventOrMeeting}}
+                <p style="margin-bottom: 1rem">{{dueDate}}</p>
+                {{/isEventOrMeeting}}
+                <!-- Fin Conditionnage affichage de la section -->
+
+                {{#description}}
                 <p style="margin-bottom: 1.5rem; font-weight: bold">
                   {{t.descriptionData}} :
                   <span style="font-weight: normal">{{description}}</span>
                 </p>
+                {{/description}} {{#isEventOrMeeting}}
+                <!-- Conditionnage affichage de la section -->
+                <hr style="margin: 1.5rem auto; width: 60%" />
+
                 <p style="font-weight: bold">{{t.organizerData}} :</p>
                 <p style="font-size: bold; margin-bottom: 0.5rem">
                   {{organizerFirstName}} {{organizerLastName}}
@@ -101,12 +132,19 @@
                     color: rgba(58, 58, 58, 0.8666666667);
                   "
                 >
-                  {{organizerEmail}}
+                  <a
+                    href="mailto:{{organizerEmail}}"
+                    style="color: inherit; text-decoration: none"
+                  >
+                    {{organizerEmail}}
+                  </a>
                 </p>
                 <p style="font-weight: bold">
                   {{t.guestData}} :
                   <span style="font-weight: normal">Pas d'invités.</span>
                 </p>
+                {{/isEventOrMeeting}}
+                <!-- Fin de la condition -->
               </td>
             </tr>
             <tr>
