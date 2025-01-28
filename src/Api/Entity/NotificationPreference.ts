@@ -1,7 +1,8 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
-import { NotificationType, TimeUnit } from "src/main";
+import { TimeUnit } from "src/main";
 import { ContextualGraphqlRequest } from "src";
+import { NotificationPreferenceType } from "./NotificationPreferenceType";
 
 @ObjectType()
 export class NotificationPreference {
@@ -11,8 +12,8 @@ export class NotificationPreference {
   @Field(() => User)
   userId: number;
 
-  @Field(() => [NotificationType])
-  types: [NotificationType];
+  @Field(() => [NotificationPreferenceType])
+  types: [NotificationPreferenceType];
 
   @Field(() => Int)
   timeBefore: number;
