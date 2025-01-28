@@ -26,6 +26,7 @@ import LinkGroup from "../Entity/LinkGroup";
 import User from "../Entity/User";
 import LinkClick from "../Entity/LinkClick";
 import GetLinksByUserIdWithMinClicksUseCase from "../UseCase/Link/GetLinksByUserIdWithMinClicks/GetLinksByUserIdWithMinClicksUseCase";
+import FileDto from "../UseCase/File/FileDto";
 
 @Resolver(Link)
 export default class LinkResolver {
@@ -38,11 +39,11 @@ export default class LinkResolver {
   @Mutation(() => Link)
   async createLink(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("dto") dto: SaveLinkDto
+    @Args("dto") dto: SaveLinkDto,
   ) {
     return (await this.serviceFactory.create(CreateLinkUseCase)).handle(
       context,
-      dto
+      dto,
     );
   }
 
@@ -94,15 +95,12 @@ export default class LinkResolver {
   }
 
   @UseGuards(GraphqlAuthGuard)
-  @Mutation(() => Link)
+  @Mutation(() => Boolean)
   async deleteLink(
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("id", { type: () => Int }) id: number
   ) {
-    return (await this.serviceFactory.create(DeleteLinkUseCase)).handle(
-      context,
-      id
-    );
+    return (await this.serviceFactory.create(DeleteLinkUseCase)).handle(context, id);
   }
 
   @UseGuards(GraphqlAuthGuard)

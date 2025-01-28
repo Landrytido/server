@@ -13,6 +13,7 @@ model File {
   initialFilename String   @db.VarChar(255)
   path            String   @db.VarChar(255)
   uri             String   @db.VarChar(255)
+  linkImage       Link[]    @relation("link_image")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now())
 }
@@ -66,7 +67,7 @@ model Session {
 model Note {
   id             Int                 @id @default(autoincrement())
   title          String
-  content        String?             @db.LongText   
+  content        String?             @db.LongText
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
   userId         Int
@@ -111,13 +112,15 @@ enum PermissionLevel {
 model Link {
   id          Int         @id @default(autoincrement())
   name        String
-  url         String
+  url         String      @db.Text
   description String?
   linkGroupId Int
   userId      Int
   linkGroup   LinkGroup   @relation(fields: [linkGroupId], references: [id])
   user        User        @relation(fields: [userId], references: [id])
   clicks      LinkClick[]
+  imageId     Int?
+  image       File? @relation("link_image", fields: [imageId], references: [id])
 }
 
 model LinkGroup {
@@ -192,7 +195,7 @@ model Comment {
   userId    Int
   noteId    Int
   user      User     @relation(fields: [userId], references: [id])
-  note      Note     @relation("NoteComments", fields: [noteId], references: [id], onDelete: Cascade)        
+  note      Note     @relation("NoteComments", fields: [noteId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
 
@@ -215,7 +218,7 @@ model LinkClick {
 }
 
 enum Level {
-  EASY 
+  EASY
   MEDIUM
   HARD
 }

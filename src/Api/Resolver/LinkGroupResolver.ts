@@ -23,6 +23,8 @@ import CreateLinkGroupDto from "../UseCase/LinkGroup/CreateLinkGroup/CreateLinkG
 import User from "../Entity/User";
 import Link from "../Entity/Link";
 import { PrismaService } from "../../Core/Datasource/Prisma";
+import GetSortedLinkGroupsWithTotalClicksUseCase
+  from "../UseCase/LinkGroup/GetSortedLinkGroupsWithTotalClicks/GetSortedLinkGroupsWithTotalClicksUseCase";
 
 @Resolver(LinkGroup)
 export default class LinkGroupResolver {
@@ -93,6 +95,16 @@ export default class LinkGroupResolver {
 
   @UseGuards(GraphqlAuthGuard)
   @Query(() => [LinkGroup])
+  async findLinkGroupsSortByUserId(
+      @ContextualRequest() context: ContextualGraphqlRequest,
+  ) {
+    return (
+        await this.serviceFactory.create(GetSortedLinkGroupsWithTotalClicksUseCase)
+    ).handle(context);
+  }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Query(() => [LinkGroup])
   async findLinkGroupsByUserId(
     @ContextualRequest() context: ContextualGraphqlRequest,
   ) {
@@ -101,13 +113,18 @@ export default class LinkGroupResolver {
     ).handle(context);
   }
 
-  @ResolveField(() => User)
+ @ResolveField(() => User)
   async user(@Parent() linkGroup: LinkGroup) {
     return this.prisma.user.findUnique({ where: { id: linkGroup.userId } });
   }
 
   @ResolveField(() => [Link])
   async links(@Parent() linkGroup: LinkGroup) {
-    return this.prisma.link.findMany({ where: { linkGroupId: linkGroup.id } });
+    return this.prisma.link.findMany({
+      where: { linkGroupId: linkGroup.id },
+      include: {
+        image: true, 
+      },
+    });
   }
 }

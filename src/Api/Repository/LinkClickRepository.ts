@@ -20,6 +20,9 @@ export default class LinkClickRepository {
   async findByUserId(userId: number) {
     return this.prisma.linkClick.findMany({
       where: { userId },
+      orderBy: {
+        clicks: 'desc',
+      },
     });
   }
 
@@ -27,9 +30,13 @@ export default class LinkClickRepository {
     return this.prisma.linkClick.delete({ where: { id: +id } });
   }
 
-  async saveClicks(linkId: number) {
+  async deleteAllLinkClick() {
+    return this.prisma.linkClick.deleteMany({});
+  }
+
+  async saveClicks(linkId: number, userId: number) {
     const existingLinkClick = await this.prisma.linkClick.findFirst({
-      where: { linkId },
+      where: { linkId, userId },
     });
 
     if (existingLinkClick) {
@@ -44,8 +51,10 @@ export default class LinkClickRepository {
     return this.prisma.linkClick.create({
       data: {
         link: { connect: { id: linkId } },
+        user: { connect: { id: userId } },
         clicks: 1,
       },
     });
   }
+
 }

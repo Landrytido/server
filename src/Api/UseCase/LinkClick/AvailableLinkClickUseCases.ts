@@ -4,6 +4,7 @@ import GetLinkClickByIdUseCase from "./GetLinkClick/GetLinkClickByIdUseCase";
 import DeleteLinkClickUseCase from "./DeleteLinkClick/DeleteLinkClickUseCase";
 import GetLinkClickByLinkUseCase from "./GetLinkClickByLink/GetLinkClickByLink";
 import GetLinkClickByUserUseCase from "./GetLinkClickByUser/GetLinkClickByUserUseCase";
+import DeleteAllLinkClicksUseCase from "./DeleteAllLinkClick/DeleteAllLinkClickUseCase";
 
 export type AvailableLinkClickUseCases =
   | SaveLinkClickUseCase
@@ -11,4 +12,5 @@ export type AvailableLinkClickUseCases =
   | GetLinkClickByIdUseCase
   | DeleteLinkClickUseCase
   | GetLinkClickByLinkUseCase
-  | GetLinkClickByUserUseCase;
+  | GetLinkClickByUserUseCase
+    |DeleteAllLinkClicksUseCase;

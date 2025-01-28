@@ -14,6 +14,13 @@ export default class LinkGroupRepository {
   async findByUserId(userId: number) {
     return this.prisma.linkGroup.findMany({
       where: { userId },
+      include: {
+        links: {
+          include: {
+            clicks: true,
+          },
+        },
+      },
     });
   }
 

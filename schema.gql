@@ -49,6 +49,24 @@ type Event {
   userId: Int!
 }
 
+type File {
+  createdAt: DateTime!
+  filename: String!
+  id: Int!
+  initialFilename: String!
+  linkImage: [Link!]!
+  path: String!
+  updatedAt: DateTime!
+  uri: String!
+}
+
+input FileDto {
+  filename: String!
+  initialFilename: String!
+  path: String!
+  uri: String!
+}
+
 input GetNoteTasksByUserIdDto {
   completed: Boolean
   noteId: Int!
@@ -75,9 +93,11 @@ enum Level {
 }
 
 type Link {
-  clicks: [LinkClick!]!
-  description: String!
+  clicks: [LinkClick!]
+  description: String
   id: Int!
+  image: File
+  imageId: Int
   linkGroup: LinkGroup!
   linkGroupId: Int!
   name: String!
@@ -143,11 +163,12 @@ type Mutation {
   createNote(dto: SaveNoteDto!): Note!
   createNotebook(dto: SaveNotebookDto!): Notebook!
   createTag(dto: SaveTagDto!): Tag!
-  delete(id: Int!): LinkClick!
+  deleteAllLinkClicks: Boolean!
   deleteComment(commentId: Float!): Boolean!
   deleteEvent(id: Int!): Event!
   deleteInvitation(invitationId: Int!): Invitation!
-  deleteLink(id: Int!): Link!
+  deleteLink(id: Int!): Boolean!
+  deleteLinkClick(idLinkClick: Int!): LinkClick!
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
   deleteMeeting(id: Int!): Meeting!
   deleteNote(noteId: Int!): Note!
@@ -160,6 +181,7 @@ type Mutation {
   removeNoteTaskById(id: Int!): NoteTask!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: saveEventDto!): Event!
+  saveFile(dto: FileDto!): File!
   saveMeeting(dto: SaveMeetingDto!): Meeting!
   saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
@@ -232,6 +254,7 @@ type Query {
   findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
   findLinkGroupsByUserId: [LinkGroup!]!
+  findLinkGroupsSortByUserId: [LinkGroup!]!
   findLinksByLinkGroupId(linkGroupId: Int!): [Link!]!
   findLinksByUserId: [Link!]!
   findLinksByUserIdWithMinClicks(minClicks: Int!): [Link!]!
@@ -299,10 +322,12 @@ input SaveInvitationDto {
 input SaveLinkClickDto {
   id: Int
   linkId: Int!
+  userId: Int
 }
 
 input SaveLinkDto {
   description: String
+  imageId: Int
   linkGroupId: Int!
   name: String!
   url: String!
@@ -418,6 +443,7 @@ input TokenValidationDto {
 
 input UpdateLinkDto {
   description: String
+  imageId: Int
   name: String!
   url: String
 }
