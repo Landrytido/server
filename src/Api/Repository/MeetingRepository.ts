@@ -9,6 +9,16 @@ export default class MeetingRepository {
   async findById(id: number) {
     return this.prisma.meeting.findUnique({
       where: { id },
+      include: {
+        notificationPreference: {
+          select: {
+            id: true,
+            timeBefore: true,
+            timeUnit: true,
+            types: true,
+          },
+        },
+      },
     });
   }
 
@@ -60,7 +70,7 @@ export default class MeetingRepository {
         notificationPreference: {
           select: {
             id: true,
-            type: true,
+            types: true,
             timeBefore: true,
             timeUnit: true,
           },
@@ -79,6 +89,16 @@ export default class MeetingRepository {
   async findByToken(token: string) {
     return this.prisma.meeting.findUnique({
       where: { token },
+      include: {
+        notificationPreference: {
+          select: {
+            id: true,
+            timeBefore: true,
+            timeUnit: true,
+            types: true,
+          },
+        },
+      },
     });
   }
 

@@ -14,6 +14,16 @@ export default class TaskRepository {
   async findById(taskId: number) {
     return await this.prisma.task.findUnique({
       where: { id: taskId },
+      include: {
+        notificationPreference: {
+          select: {
+            id: true,
+            timeBefore: true,
+            timeUnit: true,
+            types: true,
+          },
+        },
+      },
     });
   }
 
@@ -42,7 +52,7 @@ export default class TaskRepository {
         notificationPreference: {
           select: {
             id: true,
-            type: true,
+            types: true,
             timeBefore: true,
             timeUnit: true,
           },
@@ -87,6 +97,16 @@ export default class TaskRepository {
   async findByToken(token: string) {
     return this.prisma.task.findUnique({
       where: { token },
+      include: {
+        notificationPreference: {
+          select: {
+            id: true,
+            timeBefore: true,
+            timeUnit: true,
+            types: true,
+          },
+        },
+      },
     });
   }
   //asupp

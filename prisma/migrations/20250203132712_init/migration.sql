@@ -118,10 +118,10 @@ CREATE TABLE `Task` (
     `completed` BOOLEAN NOT NULL DEFAULT false,
     `userId` INTEGER NOT NULL,
     `notificationPreferenceId` INTEGER NULL,
-    `notificationCustomId` INTEGER NULL,
     `notificationSent` BOOLEAN NULL DEFAULT false,
+    `token` VARCHAR(191) NULL,
 
-    UNIQUE INDEX `Task_notificationCustomId_key`(`notificationCustomId`),
+    UNIQUE INDEX `Task_token_key`(`token`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -148,14 +148,16 @@ CREATE TABLE `Event` (
     `isRecurring` BOOLEAN NULL DEFAULT false,
     `recurrence` ENUM('NONE', 'DAILY', 'WEEKLY', 'MONTHLY', 'ANNUAL') NULL DEFAULT 'NONE',
     `location` VARCHAR(191) NOT NULL,
+    `place` VARCHAR(191) NULL,
+    `link` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `userId` INTEGER NOT NULL,
     `notificationPreferenceId` INTEGER NULL,
-    `notificationCustomId` INTEGER NULL,
     `notificationSent` BOOLEAN NULL DEFAULT false,
+    `token` VARCHAR(191) NULL,
 
-    UNIQUE INDEX `Event_notificationCustomId_key`(`notificationCustomId`),
+    UNIQUE INDEX `Event_token_key`(`token`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -233,14 +235,16 @@ CREATE TABLE `Meeting` (
     `isRecurring` BOOLEAN NULL DEFAULT false,
     `recurrence` ENUM('NONE', 'DAILY', 'WEEKLY', 'MONTHLY', 'ANNUAL') NULL DEFAULT 'NONE',
     `location` VARCHAR(191) NOT NULL,
+    `place` VARCHAR(191) NULL,
+    `link` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `userId` INTEGER NOT NULL,
     `notificationPreferenceId` INTEGER NULL,
-    `notificationCustomId` INTEGER NULL,
     `notificationSent` BOOLEAN NULL DEFAULT false,
+    `token` VARCHAR(191) NULL,
 
-    UNIQUE INDEX `Meeting_notificationCustomId_key`(`notificationCustomId`),
+    UNIQUE INDEX `Meeting_token_key`(`token`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -248,7 +252,6 @@ CREATE TABLE `Meeting` (
 CREATE TABLE `NotificationPreference` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
-    `type` ENUM('EMAIL', 'PUSH') NOT NULL,
     `timeBefore` INTEGER NOT NULL,
     `timeUnit` ENUM('MINUTES', 'HOURS', 'DAYS') NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -259,13 +262,10 @@ CREATE TABLE `NotificationPreference` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `NotificationCustom` (
+CREATE TABLE `NotificationPreferenceType` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `type` ENUM('EMAIL', 'PUSH') NOT NULL,
-    `timeBefore` INTEGER NOT NULL,
-    `timeUnit` ENUM('MINUTES', 'HOURS', 'DAYS') NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `notificationPreferenceId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -316,9 +316,6 @@ ALTER TABLE `Task` ADD CONSTRAINT `Task_userId_fkey` FOREIGN KEY (`userId`) REFE
 ALTER TABLE `Task` ADD CONSTRAINT `Task_notificationPreferenceId_fkey` FOREIGN KEY (`notificationPreferenceId`) REFERENCES `NotificationPreference`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Task` ADD CONSTRAINT `Task_notificationCustomId_fkey` FOREIGN KEY (`notificationCustomId`) REFERENCES `NotificationCustom`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `Invitation` ADD CONSTRAINT `Invitation_receiverId_fkey` FOREIGN KEY (`receiverId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -329,9 +326,6 @@ ALTER TABLE `Event` ADD CONSTRAINT `Event_userId_fkey` FOREIGN KEY (`userId`) RE
 
 -- AddForeignKey
 ALTER TABLE `Event` ADD CONSTRAINT `Event_notificationPreferenceId_fkey` FOREIGN KEY (`notificationPreferenceId`) REFERENCES `NotificationPreference`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Event` ADD CONSTRAINT `Event_notificationCustomId_fkey` FOREIGN KEY (`notificationCustomId`) REFERENCES `NotificationCustom`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `EventSharedWithMember` ADD CONSTRAINT `EventSharedWithMember_eventId_fkey` FOREIGN KEY (`eventId`) REFERENCES `Event`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -373,10 +367,10 @@ ALTER TABLE `Meeting` ADD CONSTRAINT `Meeting_userId_fkey` FOREIGN KEY (`userId`
 ALTER TABLE `Meeting` ADD CONSTRAINT `Meeting_notificationPreferenceId_fkey` FOREIGN KEY (`notificationPreferenceId`) REFERENCES `NotificationPreference`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Meeting` ADD CONSTRAINT `Meeting_notificationCustomId_fkey` FOREIGN KEY (`notificationCustomId`) REFERENCES `NotificationCustom`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `NotificationPreference` ADD CONSTRAINT `NotificationPreference_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `NotificationPreference` ADD CONSTRAINT `NotificationPreference_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `NotificationPreferenceType` ADD CONSTRAINT `NotificationPreferenceType_notificationPreferenceId_fkey` FOREIGN KEY (`notificationPreferenceId`) REFERENCES `NotificationPreference`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `_NoteTags` ADD CONSTRAINT `_NoteTags_A_fkey` FOREIGN KEY (`A`) REFERENCES `Note`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

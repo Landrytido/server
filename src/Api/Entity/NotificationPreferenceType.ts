@@ -8,11 +8,14 @@ export class NotificationPreferenceType {
   @Field(() => Int)
   id: number;
 
-  @Field(() => [NotificationType])
-  type: [NotificationType];
+  @Field(() => NotificationType)
+  type: NotificationType;
+
+  @Field(() => Int)
+  notificationPreferenceId: number;
 
   @Field(() => NotificationPreference)
-  NotificationPreferenceId: number;
+  notificationPreference: NotificationPreference;
 
   @Field(() => GraphQLISODateTime)
   createdAt: Date;

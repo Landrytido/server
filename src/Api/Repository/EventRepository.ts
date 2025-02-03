@@ -9,6 +9,16 @@ export default class EventRepository {
   async findById(id: number) {
     return this.prisma.event.findUnique({
       where: { id },
+      include: {
+        notificationPreference: {
+          select: {
+            id: true,
+            timeBefore: true,
+            timeUnit: true,
+            types: true,
+          },
+        },
+      },
     });
   }
 
@@ -59,7 +69,7 @@ export default class EventRepository {
         notificationPreference: {
           select: {
             id: true,
-            type: true,
+            types: true,
             timeBefore: true,
             timeUnit: true,
           },
@@ -79,6 +89,16 @@ export default class EventRepository {
   async findByToken(token: string) {
     return this.prisma.event.findUnique({
       where: { token },
+      include: {
+        notificationPreference: {
+          select: {
+            id: true,
+            timeBefore: true,
+            timeUnit: true,
+            types: true,
+          },
+        },
+      },
     });
   }
 

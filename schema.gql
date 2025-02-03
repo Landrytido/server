@@ -236,9 +236,19 @@ type NotificationPreference {
   id: Int!
   timeBefore: Int!
   timeUnit: TimeUnit!
+  types: [NotificationPreferenceType!]!
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
+type NotificationPreferenceType {
+  createdAt: DateTime!
+  id: Int!
+  notificationPreference: NotificationPreference!
+  notificationPreferenceId: Int!
   type: NotificationType!
   updatedAt: DateTime!
-  userId: User!
 }
 
 enum NotificationType {
@@ -377,7 +387,7 @@ input SaveNotebookDto {
 input SaveNotificationPreferenceDto {
   timeBefore: Int!
   timeUnit: TimeUnit!
-  type: NotificationType!
+  types: [NotificationType!]!
 }
 
 input SaveTagDto {

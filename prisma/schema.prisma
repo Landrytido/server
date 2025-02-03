@@ -296,6 +296,8 @@ model NotificationPreferenceType {
   type                     NotificationType
   notificationPreference   NotificationPreference @relation(fields: [notificationPreferenceId], references: [id])
   notificationPreferenceId Int
+  createdAt                 DateTime                     @default(now())
+  updatedAt                 DateTime                     @default(now()) @updatedAt
 }
 
 

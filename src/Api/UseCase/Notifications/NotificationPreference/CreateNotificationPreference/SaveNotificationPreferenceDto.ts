@@ -3,8 +3,8 @@ import { NotificationType, TimeUnit } from "src/main";
 
 @InputType()
 export class SaveNotificationPreferenceDto {
-  @Field(() => NotificationType)
-  type: NotificationType;
+  @Field(() => [NotificationType])
+  types: NotificationType[];
 
   @Field(() => Int)
   timeBefore: number;

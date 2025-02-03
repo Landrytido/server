@@ -22,10 +22,25 @@ export default class CreateNotificationPreferenceUseCase
   ) {
     try {
       console.log("user", context.userId);
+      console.log("DTO reçu:", dto);
+
+      // Vérifie que `types` contient bien des valeurs
+      if (!dto.types || dto.types.length === 0) {
+        throw new BadRequestException(
+          "At least one notification type must be selected."
+        );
+      }
+
+      // Formatage des types pour Prisma
+      const typesData = dto.types.map((type) => ({ type }));
+      console.log("typesData :", typesData);
 
       const savedPreferences = await this.notificationPreference.save({
         userId: context.userId,
-        type: dto.type,
+        types: {
+          deleteMany: {},
+          create: typesData, // Ajoute les nouvelles préférences
+        },
         timeBefore: dto.timeBefore,
         timeUnit: dto.timeUnit,
       });

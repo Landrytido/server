@@ -3,6 +3,7 @@ import User from "./User";
 import { TimeUnit } from "src/main";
 import { ContextualGraphqlRequest } from "src";
 import { NotificationPreferenceType } from "./NotificationPreferenceType";
+import { NotificationType } from "@prisma/client";
 
 @ObjectType()
 export class NotificationPreference {
@@ -10,10 +11,13 @@ export class NotificationPreference {
   id: number;
 
   @Field(() => User)
+  user: User;
+
+  @Field(() => Int)
   userId: number;
 
   @Field(() => [NotificationPreferenceType])
-  types: [NotificationPreferenceType];
+  types: NotificationPreferenceType[];
 
   @Field(() => Int)
   timeBefore: number;
