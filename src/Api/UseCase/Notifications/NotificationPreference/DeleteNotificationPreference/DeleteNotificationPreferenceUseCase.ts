@@ -43,6 +43,7 @@ export default class DeleteNotificationPreferenceUseCase
 
       const removedPreferences =
         await this.notificationPreferenceRepository.delete(notificationId.id);
+      console.log("removedPref :", removedPreferences);
       return removedPreferences;
     } catch (error) {
       throw new BadRequestException(

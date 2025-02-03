@@ -294,7 +294,7 @@ model NotificationPreference {
 model NotificationPreferenceType {
   id                       Int                    @id @default(autoincrement())
   type                     NotificationType
-  notificationPreference   NotificationPreference @relation(fields: [notificationPreferenceId], references: [id])
+  notificationPreference   NotificationPreference @relation(fields: [notificationPreferenceId], references: [id], onDelete: Cascade)
   notificationPreferenceId Int
   createdAt                 DateTime                     @default(now())
   updatedAt                 DateTime                     @default(now()) @updatedAt
