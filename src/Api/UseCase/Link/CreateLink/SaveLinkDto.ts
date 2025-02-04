@@ -16,4 +16,7 @@ export class SaveLinkDto {
 
   @Field(() => Int, { nullable: true })
   userId?: number;
+
+  @Field(() => Int, { nullable: true })
+  imageId?: number | null;
 }

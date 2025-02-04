@@ -1,4 +1,5 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
+import {ContextualGraphqlRequest} from "../../../index";
 
 @ObjectType()
 export default class FileEntity {
@@ -22,4 +23,6 @@ export default class FileEntity {
 
   @Field(() => GraphQLISODateTime)
   updatedAt: Date;
+
+  context? : ContextualGraphqlRequest;
 }

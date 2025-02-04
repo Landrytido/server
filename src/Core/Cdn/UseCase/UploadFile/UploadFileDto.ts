@@ -1,6 +1,7 @@
-import { FileUpload } from "graphql-upload";
-
 export default class UploadFileDto {
-  file: FileUpload;
+  file: Express.Multer.File;
   path: string;
+  quality?: string;
+  width?: string;
+  height?: string;
 }

@@ -2,7 +2,7 @@ import { ContextualGraphqlRequest, UseCase } from "src";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import SearchHistory from "src/Api/Entity/SearchHistory";
 import SearchHistoryRepository from "src/Api/Repository/SearchHistoryRepository";
-import SearchHistoryDto from "src/Api/Dto/SearchHistoryDto";
+import SearchHistoryDto from "src/Api/UseCase/SearchHistory/SearchHistoryDto";
 
 @Injectable()
 export default class CreateSearchHistoryUseCase
@@ -19,7 +19,7 @@ export default class CreateSearchHistoryUseCase
         searchTerm: dto.searchTerm,
         searchDate: dto.searchDate,
         userId: dto.userId,
-      });;
+      });
     } catch (error) {
       throw new BadRequestException(
         "CreateSearchHistoryUseCaseFailed",

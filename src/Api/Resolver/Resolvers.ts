@@ -1,7 +1,6 @@
 import LinkGroupResolver from "./LinkGroupResolver";
 import LinkResolver from "./LinkResolver";
 import LinkClickResolver from "./LinkClickResolver";
-
 import TagResolver from "./TagResolver";
 import TaskResolver from "./TaskResolver";
 import NotebookResolver from "./NotebookResolver";
@@ -12,6 +11,7 @@ import SearchHistoryResolver from "./SearchHistoryResolver";
 import CommentResolver from "./CommentResolver";
 import { ScoreResolver } from "./ScoreResolver";
 import NoteTaskResolver from "./NoteTasksResolver";
+import FileResolver from "./FileResolver";
 import MeetingResolver from "./MeetingResolver";
 import NotificationPreferenceResolver from "./NotificationPreferenceResolver";
 
@@ -29,6 +29,7 @@ export const Resolvers = [
   CommentResolver,
   ScoreResolver,
   NoteTaskResolver,
+  FileResolver,
   MeetingResolver,
   NotificationPreferenceResolver,
 ];

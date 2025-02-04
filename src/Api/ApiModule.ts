@@ -18,12 +18,16 @@ import GetEventUseCase from "./UseCase/Event/GetEventUseCase";
 import GetAllEventUseCase from "./UseCase/Event/GetAllEventUseCase";
 import DeleteEventUseCase from "./UseCase/Event/DeleteEventUseCase";
 import CommentRepository from "./Repository/CommentRepository";
+import FileRepository from "./Repository/FileRepository";
+import SaveFileUseCase from "./UseCase/File/SaveFile/SaveFileUseCase";
+import { PuppeteerService } from "./UseCase/Link/Service/puppeteer.service";
 import ConvertExternalInvitationUseCase from "./UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
 import { AcceptLanguageResolver, I18nModule } from "nestjs-i18n";
 import * as path from "path";
 import GetExternalEmailByTokenUseCase from "./UseCase/Invitation/GetExternalEmailByToken/GetExternalEmailByTokenUseCase";
 import { ScheduleModule } from "@nestjs/schedule";
 import { Jobs } from "./Jobs/Jobs";
+import { S3UploadService } from "./UseCase/Link/Service/s3-upload.service";
 
 @Module({
   imports: [
@@ -66,6 +70,10 @@ import { Jobs } from "./Jobs/Jobs";
     DeleteEventUseCase,
     GetLoggedUserUseCase,
     CommentRepository,
+    FileRepository,
+    SaveFileUseCase,
+    PuppeteerService,
+    S3UploadService,
     ConvertExternalInvitationUseCase,
     GetExternalEmailByTokenUseCase,
     ...Repositories,
