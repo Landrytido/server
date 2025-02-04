@@ -91,7 +91,7 @@ CREATE TABLE `NoteCollaboration` (
 CREATE TABLE `Link` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `url` VARCHAR(191) NOT NULL,
+    `url` TEXT NOT NULL,
     `description` VARCHAR(191) NULL,
     `linkGroupId` INTEGER NOT NULL,
     `userId` INTEGER NOT NULL,
@@ -267,6 +267,8 @@ CREATE TABLE `NotificationPreferenceType` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `type` ENUM('EMAIL', 'PUSH') NOT NULL,
     `notificationPreferenceId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -374,7 +376,7 @@ ALTER TABLE `Meeting` ADD CONSTRAINT `Meeting_notificationPreferenceId_fkey` FOR
 ALTER TABLE `NotificationPreference` ADD CONSTRAINT `NotificationPreference_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `NotificationPreferenceType` ADD CONSTRAINT `NotificationPreferenceType_notificationPreferenceId_fkey` FOREIGN KEY (`notificationPreferenceId`) REFERENCES `NotificationPreference`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `NotificationPreferenceType` ADD CONSTRAINT `NotificationPreferenceType_notificationPreferenceId_fkey` FOREIGN KEY (`notificationPreferenceId`) REFERENCES `NotificationPreference`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `_NoteTags` ADD CONSTRAINT `_NoteTags_A_fkey` FOREIGN KEY (`A`) REFERENCES `Note`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
