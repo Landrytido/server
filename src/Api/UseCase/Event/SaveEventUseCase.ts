@@ -50,7 +50,11 @@ export default class SaveEventUseCase
         prismaData.token = token;
       }
 
+      console.log("prismaData : ", prismaData);
+
       const event = await this.eventRepository.saveEvent(prismaData);
+
+      console.log("event : ", event);
 
       return event;
     } catch (error) {

@@ -24,7 +24,7 @@
     "organizerData": "Organisateur",
     "guestData": "Invités",
     "showDetails": {
-      "meeting": "Afficher tous les détails de l'événement",
+      "meeting": "Afficher tous les détails de la réunion",
       "task": "Afficher tous les détails de la tâche",
       "event": "Afficher tous les détails de l'événement"
     },

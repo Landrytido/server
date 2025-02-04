@@ -36,6 +36,17 @@ export default class EventRepository {
       });
     }
 
+    console.log(
+      "event Repo : ",
+      this.prisma.event.update({
+        where: { id: data.id as number },
+        data: data as Prisma.XOR<
+          Prisma.EventUpdateInput,
+          Prisma.EventUncheckedUpdateInput
+        >,
+      })
+    );
+
     return this.prisma.event.update({
       where: { id: data.id as number },
       data: data as Prisma.XOR<
