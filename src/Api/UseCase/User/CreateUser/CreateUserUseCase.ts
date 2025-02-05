@@ -24,6 +24,14 @@ export default class CreateUserUseCase
           "This email is already used by another account"
         );
       }
+      //fin ajout
+      const userCreated = await this.userRepository.create({
+          email: dto.email,
+          password: dto.password,
+          firstName: dto.firstName,
+          lastName: dto.lastName,
+          lastLoginDate: dto.lastLoginDate,
+      });
       const userCreated = await this.userRepository.create(dto);
 
       if (dto.invitationToken) {

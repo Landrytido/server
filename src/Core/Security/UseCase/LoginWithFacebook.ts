@@ -50,6 +50,7 @@ export default class LoginWithFacebook implements UseCase<Promise<string>, [acce
           password: null,
           firstName,
           lastName,
+          lastLoginDate:null
         });
       }
 

@@ -28,7 +28,9 @@ import GetExternalEmailByTokenUseCase from "./UseCase/Invitation/GetExternalEmai
 import { ScheduleModule } from "@nestjs/schedule";
 import { Jobs } from "./Jobs/Jobs";
 import { S3UploadService } from "./UseCase/Link/Service/s3-upload.service";
-
+import { BullModule } from '@nestjs/bull';
+import { ReminderProcessor } from "./Services/ReminderProcessor";
+import { AutoInstructionGateway } from "./WebSocket/InstructionCardGateway";
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -78,6 +80,9 @@ import { S3UploadService } from "./UseCase/Link/Service/s3-upload.service";
     GetExternalEmailByTokenUseCase,
     ...Repositories,
     ...Resolvers,
+    EmailService,
+    ReminderProcessor,
+    AutoInstructionGateway,
     ...Jobs,
   ],
 })

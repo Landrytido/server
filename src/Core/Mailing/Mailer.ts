@@ -18,6 +18,7 @@ export default class Mailer {
       this.config.get("POSTMARK_SERVER_TOKEN")
     );
 
+
     this.sender = `MyWebCompanion <${this.config.get("MAIL_SENDER")}>`;
   }
 
@@ -52,7 +53,6 @@ export default class Mailer {
     senderInfo: { firstName: string; lastName: string },
     invitationLink: string
   ) {
-    //Data pour le template
     const data = {
       senderFirstName: senderInfo.firstName,
       senderLastName: senderInfo.lastName,
@@ -63,6 +63,7 @@ export default class Mailer {
         .invitation,
     };
 
+    const htmlContent = await this.mustache.render("fr/invitation.html", data);
     const subject = `${data.senderFirstName} ${data.senderLastName} ${data.t.emailSubject}`;
     await this.sendEmailToUser(
       recipientEmail,

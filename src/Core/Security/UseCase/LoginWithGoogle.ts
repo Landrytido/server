@@ -42,6 +42,7 @@ export default class LoginWithGoogle implements UseCase<Promise<string>, [access
           password: null,
           firstName,
           lastName,
+          lastLoginDate:null
         });
       }
 

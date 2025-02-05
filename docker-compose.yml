@@ -1,0 +1,34 @@
+services:
+  backend:
+    image: node:16
+    container_name: myproject-backend
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3030:3030"
+    environment:
+      - DATABASE_URL=mysql://root:root@127.0.0.1:3306/mywebcompanion
+      - JWT_SECRET=$2y$10$4zxKLip851WEYeVDDpsckeCRw6.f8wT7bXuOkCkWs6dAhTC9988
+      - API_PORT=3030
+      - WORKERS_PORT=3032
+    command: yarn start:dev
+    depends_on:
+      - db
+    networks:
+      - myproject-network
+
+  db:
+    image: mysql:5.7
+    container_name: myproject-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mywebcompanion
+    ports:
+      - "3306:3306"
+    networks:
+      - myproject-network
+
+networks:
+  myproject-network:
+    driver: bridge

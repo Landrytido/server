@@ -2,9 +2,26 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AdditionalDataInput {
+  link: String
+}
+
 input AuthenticationDto {
   email: String!
   password: String!
+}
+
+type AutoInstruction {
+  createdAt: DateTime!
+  description: String!
+  id: Int!
+  order: Float!
+  updatedAt: DateTime!
+}
+
+input AutoInstructionInput {
+  id: Float!
+  order: Float!
 }
 
 type Comment {
@@ -23,6 +40,12 @@ input CommentDto {
   userId: Int!
 }
 
+input CreateAutoInstructionInput {
+  description: String!
+  order: Float!
+  userId: Float!
+}
+
 input CreateLinkGroupDto {
   description: String
   name: String!
@@ -32,6 +55,12 @@ input CreateLinkGroupDto {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type DeviceDto {
+  platform: String!
+  token: String!
+  userId: Float!
+}
 
 type Event {
   createdAt: DateTime!
@@ -165,6 +194,7 @@ type Mutation {
   RemoveById(id: Int!): Task!
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptInvitation(invitationId: Int!): Invitation!
+  addAutoInstruction(createAutoInstructionInput: CreateAutoInstructionInput!): AutoInstruction!
   addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
   completeProfile(firstName: String!, lastName: String!): User!
   convertExternalInvitation(dto: SaveUserDto!): Invitation!
@@ -192,7 +222,10 @@ type Mutation {
   loginWithGithub(dto: LoginWithGithubDto!): String!
   loginWithGoogle(accessToken: String!): String!
   register(dto: SaveUserDto!): User!
+  registerDevice(platform: String!, token: String!, userId: Float!): DeviceDto!
+  removeAutoInstruction(id: Float!): AutoInstruction!
   removeNoteTaskById(id: Int!): NoteTask!
+  reorderInstructions(instructions: [AutoInstructionInput!]!, userId: Float!): [AutoInstruction!]!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: saveEventDto!): Event!
   saveFile(dto: FileDto!): File!
@@ -201,6 +234,8 @@ type Mutation {
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveTask(dto: SaveTaskDto!): Task!
   saveUser(dto: SaveUserDto!): User!
+  sendNotification(additionalData: AdditionalDataInput, message: String!, userId: Float!): Boolean!
+  updateAutoInstruction(updateAutoInstructionInput: UpdateAutoInstructionInput!): AutoInstruction!
   updateComment(commentId: Float!, data: CommentDto!): Comment!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
@@ -314,6 +349,7 @@ type Query {
   getAllLinkGroups: [LinkGroup!]!
   getAllMeeting: [Meeting!]!
   getAllTask: [Task!]!
+  getAutoInstructions(userId: Float!): [AutoInstruction!]!
   getEvent(id: Int!): Event!
   getLoggedUser: User!
   getMeeting(id: Int!): Meeting!
@@ -434,6 +470,7 @@ input SaveUserDto {
   firstName: String!
   id: Int
   invitationToken: String
+  lastLoginDate: DateTime
   lastName: String
   password: String!
 }
@@ -502,6 +539,12 @@ input TokenValidationDto {
   token: String!
 }
 
+input UpdateAutoInstructionInput {
+  description: String!
+  id: Float!
+  order: Float!
+}
+
 input UpdateLinkDto {
   description: String
   imageId: Int
@@ -526,6 +569,7 @@ type User {
   id: Int!
   invitationsReceived: [Invitation!]!
   invitationsSent: [Invitation!]!
+  lastLoginDate: DateTime
   lastName: String
   linkGroups: [LinkGroup!]!
   links: [Link!]!

@@ -106,6 +106,7 @@ export default class LoginWithGithub implements UseCase<Promise<string>, [code: 
           password: null,
           firstName,
           lastName,
+          lastLoginDate:null
         });
       }
 

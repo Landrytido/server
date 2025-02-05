@@ -31,6 +31,9 @@ export default class User {
   @Field({ nullable: true })
   lastName?: string; // Permettre le nullable
 
+  @Field({ nullable: true }) 
+  lastLoginDate?: Date;
+
   @Field(() => [Session])
   sessions?: Session[];
 

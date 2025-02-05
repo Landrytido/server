@@ -32,7 +32,8 @@ export default class UserRepository {
         email: dto.email,
         password: hashedPassword,
         firstName: dto.firstName,
-        lastName: dto.lastName
+        lastName: dto.lastName,
+        lastLoginDate: new Date()
       }
     });
   }

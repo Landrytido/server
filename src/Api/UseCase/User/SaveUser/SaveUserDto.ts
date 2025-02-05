@@ -17,6 +17,9 @@ export default class SaveUserDto {
   @Field({ nullable: true })
   lastName?: string | null;
 
+  @Field({ nullable: true }) 
+  lastLoginDate?: Date;
+
   @Field({ nullable: true })
   invitationToken?: string;
 }

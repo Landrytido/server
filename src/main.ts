@@ -57,7 +57,11 @@ async function bootstrapApi() {
 
   app.useLogger(app.get(ConsoleLogger));
 
-  app.enableCors({ origin: "*" });
+  //app.enableCors({ origin: "*" });
+  app.enableCors({
+    origin: '*', 
+    methods: ['GET', 'POST'],
+  });
   app.use(graphqlUploadExpress({ maxFileSize: 15000000, maxFiles: 1 }));
   app.use(json({ limit: "1mb" }));
 
