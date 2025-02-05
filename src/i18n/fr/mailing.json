@@ -8,5 +8,26 @@
     "otherDescription": "Pour accepter l'invitation, veuillez vous inscrire en cliquant sur le bouton ci-dessous.",
     "acceptInvitation": "Accepter l'invitation",
     "contactUs": "Si vous avez des questions, n'hésitez pas à nous contacter."
+  },
+
+  "calendarNotification": {
+    "emailSubject": "Rappel",
+    "subject": {
+      "meeting": "Un meeting à venir",
+      "task": "Une tâche à venir",
+      "event": "Un événement à venir"
+    },
+    "location": "Mode de participation",
+    "place": "Lieu",
+    "url": "Lien",
+    "descriptionData": "Description",
+    "organizerData": "Organisateur",
+    "guestData": "Invités",
+    "showDetails": {
+      "meeting": "Afficher tous les détails de la réunion",
+      "task": "Afficher tous les détails de la tâche",
+      "event": "Afficher tous les détails de l'événement"
+    },
+    "contactUs": "Si vous avez des questions, n'hésitez pas à nous contacter."
   }
 }

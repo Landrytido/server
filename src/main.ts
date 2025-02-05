@@ -7,8 +7,7 @@ import { ExceptionCatcher } from "./Core/ExceptionCatcher";
 import ConsoleLogger from "./Core/Logging/ConsoleLogger";
 import InitializationLogger from "./Core/Logging/InitializationLogger";
 import { registerEnumType } from "@nestjs/graphql";
-import { Level } from '@prisma/client';
-
+import { Level } from "@prisma/client";
 
 export enum Recurrence {
   NONE = "NONE",
@@ -24,10 +23,25 @@ export enum PermissionLevel {
   ADMIN = "ADMIN",
 }
 
+export enum NotificationType {
+  EMAIL = "EMAIL",
+  PUSH = "PUSH",
+}
+
+export enum TimeUnit {
+  MINUTES = "MINUTES",
+  HOURS = "HOURS",
+  DAYS = "DAYS",
+}
+
 registerEnumType(Level, {
-  name: 'Level',
-  description: 'Level of difficulty for the score (easy, medium, hard)',
+  name: "Level",
+  description: "Level of difficulty for the score (easy, medium, hard)",
 });
+
+registerEnumType(NotificationType, { name: "NotificationType" });
+
+registerEnumType(TimeUnit, { name: "TimeUnit" });
 
 require("events").EventEmitter.defaultMaxListeners = 0;
 

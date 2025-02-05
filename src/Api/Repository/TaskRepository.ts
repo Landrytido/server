@@ -14,6 +14,16 @@ export default class TaskRepository {
   async findById(taskId: number) {
     return await this.prisma.task.findUnique({
       where: { id: taskId },
+      include: {
+        notificationPreference: {
+          select: {
+            id: true,
+            timeBefore: true,
+            timeUnit: true,
+            types: true,
+          },
+        },
+      },
     });
   }
 
@@ -23,8 +33,32 @@ export default class TaskRepository {
     });
   }
 
-  async findAllTask(){
-    return await this.prisma.task.findMany()
+  //asupp si le findmany du bas ok
+  // async findAllTask(){
+  //   return await this.prisma.task.findMany()
+  // }
+  //asupp
+
+  async findAllTask() {
+    return await this.prisma.task.findMany({
+      include: {
+        user: {
+          select: {
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        notificationPreference: {
+          select: {
+            id: true,
+            types: true,
+            timeBefore: true,
+            timeUnit: true,
+          },
+        },
+      },
+    });
   }
 
   async save(
@@ -51,4 +85,29 @@ export default class TaskRepository {
       >,
     });
   }
+
+  //a supp si marche pas
+  async markNotificationAsSent(meetingId: number) {
+    await this.prisma.task.update({
+      where: { id: meetingId },
+      data: { notificationSent: true },
+    });
+  }
+
+  async findByToken(token: string) {
+    return this.prisma.task.findUnique({
+      where: { token },
+      include: {
+        notificationPreference: {
+          select: {
+            id: true,
+            timeBefore: true,
+            timeUnit: true,
+            types: true,
+          },
+        },
+      },
+    });
+  }
+  //asupp
 }

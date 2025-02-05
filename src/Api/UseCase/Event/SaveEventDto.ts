@@ -19,6 +19,15 @@ export default class saveEventDto {
   @Field()
   location: string;
 
+  @Field({ nullable: true })
+  place?: string;
+
+  @Field({ nullable: true })
+  link?: string;
+
   @Field(() => Int)
   userId: number;
+
+  @Field(() => Int, { nullable: true })
+  notificationPreferenceId?: number;
 }

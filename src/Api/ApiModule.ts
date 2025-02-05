@@ -12,6 +12,8 @@ import UncontextualUseCaseFactory from "./UseCase/UncontextualUseCaseFactory";
 import EventResolver from "./Resolver/EventResolver";
 import EventRepository from "./Repository/EventRepository";
 import SaveEventUseCase from "./UseCase/Event/SaveEventUseCase";
+import { JwtModule } from "@nestjs/jwt";
+import GetLoggedUserUseCase from "./UseCase/User/GetLoggedUser/GetLoggedUserUseCase";
 import GetEventUseCase from "./UseCase/Event/GetEventUseCase";
 import GetAllEventUseCase from "./UseCase/Event/GetAllEventUseCase";
 import DeleteEventUseCase from "./UseCase/Event/DeleteEventUseCase";
@@ -19,13 +21,12 @@ import CommentRepository from "./Repository/CommentRepository";
 import FileRepository from "./Repository/FileRepository";
 import SaveFileUseCase from "./UseCase/File/SaveFile/SaveFileUseCase";
 import { PuppeteerService } from "./UseCase/Link/Service/puppeteer.service";
-import { JwtModule } from "@nestjs/jwt";
-import GetLoggedUserUseCase from "./UseCase/User/GetLoggedUser/GetLoggedUserUseCase";
-import { EmailService } from "./Services/emailService";
 import ConvertExternalInvitationUseCase from "./UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
 import { AcceptLanguageResolver, I18nModule } from "nestjs-i18n";
 import * as path from "path";
 import GetExternalEmailByTokenUseCase from "./UseCase/Invitation/GetExternalEmailByToken/GetExternalEmailByTokenUseCase";
+import { ScheduleModule } from "@nestjs/schedule";
+import { Jobs } from "./Jobs/Jobs";
 import { S3UploadService } from "./UseCase/Link/Service/s3-upload.service";
 
 @Module({
@@ -55,6 +56,7 @@ import { S3UploadService } from "./UseCase/Link/Service/s3-upload.service";
       },
     }),
     JwtModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [],
   providers: [
@@ -76,7 +78,7 @@ import { S3UploadService } from "./UseCase/Link/Service/s3-upload.service";
     GetExternalEmailByTokenUseCase,
     ...Repositories,
     ...Resolvers,
-    EmailService,
+    ...Jobs,
   ],
 })
 export class ApiModule {}

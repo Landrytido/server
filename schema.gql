@@ -39,11 +39,17 @@ type Event {
   endDate: DateTime!
   id: Int!
   isRecurring: Boolean!
+  link: String
   location: String!
+  notificationPreference: NotificationPreference!
+  notificationPreferenceId: Int
+  notificationSent: Boolean
+  place: String
   recurrence: Recurrence!
   sharedWith: [MeetSharedWithMember!]!
   startDate: DateTime!
   title: String!
+  token: String
   updatedAt: DateTime!
   user: User!
   userId: Int!
@@ -140,10 +146,16 @@ type Meeting {
   endDate: DateTime!
   id: Int!
   isRecurring: Boolean!
+  link: String
   location: String!
+  notificationPreference: NotificationPreference!
+  notificationPreferenceId: Int
+  notificationSent: Boolean
+  place: String
   recurrence: Recurrence
   startDate: DateTime!
   title: String!
+  token: String
   updatedAt: DateTime!
   user: User!
   userId: Int!
@@ -162,6 +174,7 @@ type Mutation {
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
   createNote(dto: SaveNoteDto!): Note!
   createNotebook(dto: SaveNotebookDto!): Notebook!
+  createNotificationPreference(dto: SaveNotificationPreferenceDto!): NotificationPreference!
   createTag(dto: SaveTagDto!): Tag!
   deleteAllLinkClicks: Boolean!
   deleteComment(commentId: Float!): Boolean!
@@ -173,6 +186,7 @@ type Mutation {
   deleteMeeting(id: Int!): Meeting!
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
+  deleteNotificationPreference(notificationPreferenceId: Int!): NotificationPreference!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
   loginWithFacebook(accessToken: String!): String!
   loginWithGithub(dto: LoginWithGithubDto!): String!
@@ -239,6 +253,31 @@ type Notebook {
   userId: Int!
 }
 
+type NotificationPreference {
+  createdAt: DateTime!
+  id: Int!
+  timeBefore: Int!
+  timeUnit: TimeUnit!
+  types: [NotificationPreferenceType!]!
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
+type NotificationPreferenceType {
+  createdAt: DateTime!
+  id: Int!
+  notificationPreference: NotificationPreference!
+  notificationPreferenceId: Int!
+  type: NotificationType!
+  updatedAt: DateTime!
+}
+
+enum NotificationType {
+  EMAIL
+  PUSH
+}
+
 enum PermissionLevel {
   ADMIN
   READ
@@ -278,6 +317,7 @@ type Query {
   getEvent(id: Int!): Event!
   getLoggedUser: User!
   getMeeting(id: Int!): Meeting!
+  getNotificationPreference: NotificationPreference!
   getSearchHistoryByUserId: [SearchHistory!]!
   login(dto: AuthenticationDto!): String!
   meetingByUserId(userId: Int!): [Meeting!]!
@@ -287,6 +327,7 @@ type Query {
   topScores(level: Level = EASY, limit: Int = 10): [Score!]!
   topThreeScores: [Score!]!
   userScores(userId: Int!): [Score!]!
+  validateEventToken(dto: TokenValidationDto!): ValidateEventTokenResponse!
   validateToken(dto: TokenValidationDto!): Boolean!
 }
 
@@ -339,7 +380,10 @@ input SaveMeetingDto {
   endDate: DateTime!
   id: Int
   isRecurring: Boolean!
+  link: String
   location: String!
+  notificationPreferenceId: Int
+  place: String
   recurrence: String
   startDate: DateTime!
   title: String!
@@ -365,6 +409,12 @@ input SaveNotebookDto {
   title: String!
 }
 
+input SaveNotificationPreferenceDto {
+  timeBefore: Int!
+  timeUnit: TimeUnit!
+  types: [NotificationType!]!
+}
+
 input SaveTagDto {
   name: String!
 }
@@ -374,6 +424,7 @@ input SaveTaskDto {
   description: String!
   dueDate: DateTime
   id: Int
+  notificationPreferenceId: Int
   title: String!
   userId: Int!
 }
@@ -432,9 +483,19 @@ type Task {
   description: String!
   dueDate: DateTime!
   id: Int!
+  notificationPreference: NotificationPreference!
+  notificationPreferenceId: Int
+  notificationSent: Boolean
   title: String!
+  token: String
   user: User!
   userId: Int!
+}
+
+enum TimeUnit {
+  DAYS
+  HOURS
+  MINUTES
 }
 
 input TokenValidationDto {
@@ -471,6 +532,7 @@ type User {
   meetsShared: [MeetSharedWithMember!]!
   notebooks: [Notebook!]!
   notes: [Note!]!
+  notificationPreferences: [NotificationPreference!]!
   resetTokens: [ResetToken!]!
   searchHistory: [SearchHistory!]!
   sessions: [Session!]!
@@ -478,11 +540,21 @@ type User {
   updatedAt: DateTime!
 }
 
+type ValidateEventTokenResponse {
+  entityId: Int
+  entityType: String
+  isValid: Boolean!
+  userId: Int
+}
+
 input saveEventDto {
   description: String!
   endDate: DateTime!
   id: Int
+  link: String
   location: String!
+  notificationPreferenceId: Int
+  place: String
   startDate: DateTime!
   title: String!
   userId: Int!

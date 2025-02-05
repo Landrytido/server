@@ -3,6 +3,8 @@ import User from "./User";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import { ContextualGraphqlRequest } from "src";
 import { Recurrence } from "src/main";
+import { NotificationCustom } from "./NotificationCustom";
+import { NotificationPreference } from "./NotificationPreference";
 
 @ObjectType()
 export class Event {
@@ -30,6 +32,12 @@ export class Event {
   @Field()
   location: string;
 
+  @Field({ nullable: true })
+  place?: string;
+
+  @Field({ nullable: true })
+  link?: string;
+
   @Field(() => GraphQLISODateTime)
   createdAt: Date;
 
@@ -44,6 +52,18 @@ export class Event {
 
   @Field(() => [MeetSharedWithMember])
   sharedWith: MeetSharedWithMember[];
+
+  @Field(() => Int, { nullable: true })
+  notificationPreferenceId?: number;
+
+  @Field(() => NotificationPreference)
+  notificationPreference?: NotificationPreference;
+
+  @Field(() => String, { nullable: true })
+  token?: string;
+
+  @Field(() => Boolean, { nullable: true })
+  notificationSent?: boolean;
 
   context?: ContextualGraphqlRequest;
 }

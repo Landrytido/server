@@ -2,6 +2,8 @@ import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import { ContextualGraphqlRequest } from "src";
 import { Recurrence } from "src/main";
+import { NotificationCustom } from "./NotificationCustom";
+import { NotificationPreference } from "./NotificationPreference";
 
 @ObjectType()
 export class Meeting {
@@ -25,10 +27,15 @@ export class Meeting {
 
   @Field(() => Recurrence, { nullable: true })
   recurrence?: Recurrence;
-  
 
   @Field()
   location: string;
+
+  @Field({ nullable: true })
+  place?: string;
+
+  @Field({ nullable: true })
+  link?: string;
 
   @Field(() => GraphQLISODateTime)
   createdAt: Date;
@@ -41,6 +48,18 @@ export class Meeting {
 
   @Field(() => User)
   user: User;
+
+  @Field(() => Int, { nullable: true })
+  notificationPreferenceId?: number;
+
+  @Field(() => NotificationPreference)
+  notificationPreference?: NotificationPreference;
+
+  @Field(() => String, { nullable: true })
+  token?: string;
+
+  @Field(() => Boolean, { nullable: true })
+  notificationSent?: boolean;
 
   context?: ContextualGraphqlRequest;
 }

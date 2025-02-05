@@ -1,6 +1,8 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import { ContextualGraphqlRequest } from "src";
+import { NotificationCustom } from "./NotificationCustom";
+import { NotificationPreference } from "./NotificationPreference";
 
 @ObjectType()
 export default class Task {
@@ -24,6 +26,18 @@ export default class Task {
 
   @Field(() => User)
   user: User;
+
+  @Field(() => Int, { nullable: true })
+  notificationPreferenceId?: number;
+
+  @Field(() => NotificationPreference)
+  notificationPreference?: NotificationPreference;
+
+  @Field(() => String, { nullable: true })
+  token?: string;
+
+  @Field(() => Boolean, { nullable: true })
+  notificationSent?: boolean;
 
   context?: ContextualGraphqlRequest;
 }

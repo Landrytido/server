@@ -9,8 +9,9 @@ import NoteRepository from "./NoteRepository";
 import InvitationRepository from "./InvitationRepository";
 import SearchHistoryRepository from "./SearchHistoryRepository";
 import { ScoreRepository } from "./ScoreRepository";
-import NoteTasksRepository  from "./NoteTasksRepository";
+import NoteTasksRepository from "./NoteTasksRepository";
 import MeetingRepository from "./MeetingRepository";
+import NotificationPreferenceRepository from "./NotificationPreferenceRepository";
 
 export const Repositories = [
   UserRepository,
@@ -27,5 +28,5 @@ export const Repositories = [
   LinkClickRepository,
   ScoreRepository,
   MeetingRepository,
+  NotificationPreferenceRepository,
 ];
-

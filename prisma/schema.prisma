@@ -19,32 +19,32 @@ model File {
 }
 
 model User {
-  id                  Int                     @id @default(autoincrement())
-  email               String                  @unique @db.VarChar(255)
-  password            String?                 @db.VarChar(255)
-  firstName           String?                  @db.VarChar(255)
-  lastName            String?                 @db.VarChar(255)
-  createdAt           DateTime                @default(now())
-  updatedAt           DateTime                @default(now()) @updatedAt
-  sessions            Session[]
-  notes               Note[]
-  notebooks           Notebook[]
-  linkGroups          LinkGroup[]
-  links               Link[]
-  tasks               Task[]
-  comments            Comment[]
-  collaborations      NoteCollaboration[]
-  invitationsSent     Invitation[]            @relation("InvitationsSent")
-  invitationsReceived Invitation[]            @relation("InvitationsReceived")
-  
-  events              Event[]
-  eventsShared        EventSharedWithMember[]
-  resetTokens         ResetToken[]
-  linkClicks          LinkClick[]
-  searchHistory       SearchHistory[]
-  scores              Score[]
-  noteTasks           NoteTask[]
-  meeting             Meeting[]
+  id                         Int                     @id @default(autoincrement())
+  email                      String                  @unique @db.VarChar(255)
+  password                   String?                 @db.VarChar(255)
+  firstName                  String                  @db.VarChar(255)
+  lastName                   String?                 @db.VarChar(255)
+  createdAt                  DateTime                @default(now())
+  updatedAt                  DateTime                @default(now()) @updatedAt
+  sessions                   Session[]
+  notes                      Note[]
+  notebooks                  Notebook[]
+  linkGroups                 LinkGroup[]
+  links                      Link[]
+  tasks                      Task[]
+  comments                   Comment[]
+  collaborations             NoteCollaboration[]
+  invitationsSent            Invitation[]              @relation("InvitationsSent")
+  invitationsReceived        Invitation[]              @relation("InvitationsReceived")
+  events                     Event[]
+  eventsShared               EventSharedWithMember[]
+  resetTokens                ResetToken[]
+  linkClicks                 LinkClick[]
+  searchHistory              SearchHistory[]
+  scores                     Score[]
+  noteTasks                  NoteTask[]
+  meeting                    Meeting[]                
+  notificationPreference     NotificationPreference?   
 }
 
 model SearchHistory {
@@ -133,43 +133,54 @@ model LinkGroup {
 }
 
 model Task {
-  id          Int       @id @default(autoincrement())
-  title       String
-  description String
-  dueDate     DateTime?
-  completed   Boolean   @default(false)
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
-}
+  id                        Int                      @id @default(autoincrement())
+  title                     String
+  description               String
+  dueDate                   DateTime?
+  completed                 Boolean                  @default(false)
+  userId                    Int
+  user                      User                     @relation(fields: [userId], references: [id])
+  notificationPreferenceId  Int?
+  notificationPreference    NotificationPreference?  @relation(fields: [notificationPreferenceId], references: [id])
+  notificationSent          Boolean?                 @default(false)
+  token                     String?                  @unique     
+  }
 
 model Invitation {
-  id         Int     @id @default(autoincrement())
-  receiverId Int?
-  senderId   Int
-  receiver   User?    @relation("InvitationsReceived", fields: [receiverId], references: [id])
-  sender     User    @relation("InvitationsSent", fields: [senderId], references: [id])
-  externalEmailInvitation   String?
+  id                         Int                         @id @default(autoincrement())
+  receiverId                 Int?
+  senderId                   Int
+  receiver                   User?                       @relation("InvitationsReceived", fields: [receiverId], references: [id])
+  sender                     User                        @relation("InvitationsSent", fields: [senderId], references: [id])
+  externalEmailInvitation    String?
   tokenForExternalInvitation String?
-  isExternal                Boolean  @default(false)
-  isRelation Boolean @default(false)
+  isExternal                 Boolean  @default(false)
+  isRelation                 Boolean @default(false)
 }
 
 
 
 model Event {
-  id          Int                     @id @default(autoincrement())
-  title       String
-  description String
-  startDate   DateTime
-  endDate     DateTime
-  isRecurring Boolean?                @default(false)
-  recurrence  Recurrence?             @default(NONE)
-  location    String
-  createdAt   DateTime                @default(now())
-  updatedAt   DateTime                @default(now()) @updatedAt
-  userId      Int
-  user        User                    @relation(fields: [userId], references: [id])
-  sharedWith  EventSharedWithMember[]
+  id                        Int                     @id @default(autoincrement())
+  title                     String
+  description               String
+  startDate                 DateTime
+  endDate                   DateTime
+  isRecurring               Boolean?                @default(false)
+  recurrence                Recurrence?             @default(NONE)
+  location                  String
+  place                     String?
+  link                      String?
+  createdAt                 DateTime                @default(now())
+  updatedAt                 DateTime                @default(now()) @updatedAt
+  userId                    Int
+  user                      User                    @relation(fields: [userId], references: [id])
+  sharedWith                EventSharedWithMember[]
+  notificationPreferenceId  Int?
+  notificationPreference    NotificationPreference?  @relation(fields: [notificationPreferenceId], references: [id])
+  notificationSent          Boolean?                 @default(false)
+  token                     String?                  @unique     
+
 }
 
 enum Recurrence {
@@ -246,17 +257,60 @@ model NoteTask {
   parent    NoteTask?  @relation("NoteTaskRelation", fields: [parentId], references: [id], onDelete: Cascade)
   subtasks  NoteTask[] @relation("NoteTaskRelation")
 }
+
+
 model Meeting {
-  id          Int                     @id @default(autoincrement())
-  title       String
-  description String
-  startDate   DateTime
-  endDate     DateTime
-  isRecurring Boolean?                @default(false)
-  recurrence  Recurrence?             @default(NONE)
-  location    String
-  createdAt   DateTime                @default(now())
-  updatedAt   DateTime                @default(now()) @updatedAt
-  userId      Int
-  user        User                    @relation(fields: [userId], references: [id])
+  id                        Int                      @id @default(autoincrement())
+  title                     String
+  description               String
+  startDate                 DateTime
+  endDate                   DateTime
+  isRecurring               Boolean?                 @default(false)
+  recurrence                Recurrence?              @default(NONE)
+  location                  String
+  place                     String?
+  link                      String?
+  createdAt                 DateTime                 @default(now())
+  updatedAt                 DateTime                 @default(now()) @updatedAt
+  userId                    Int
+  user                      User                     @relation(fields: [userId], references: [id])
+  notificationPreferenceId  Int?
+  notificationPreference    NotificationPreference?  @relation(fields: [notificationPreferenceId], references: [id])
+  notificationSent          Boolean?                 @default(false)
+  token                     String?                  @unique                           
+}
+
+model NotificationPreference {
+  id                        Int                          @id @default(autoincrement())
+  userId                    Int                          @unique                     
+  user                      User                         @relation(fields: [userId], references: [id])
+  types                     NotificationPreferenceType[]        
+  timeBefore                Int                     
+  timeUnit                  TimeUnit
+  createdAt                 DateTime                     @default(now())
+  updatedAt                 DateTime                     @default(now()) @updatedAt
+  tasks                     Task[]
+  events                    Event[]
+  meetings                  Meeting[]
+}
+
+model NotificationPreferenceType {
+  id                       Int                    @id @default(autoincrement())
+  type                     NotificationType
+  notificationPreference   NotificationPreference @relation(fields: [notificationPreferenceId], references: [id], onDelete: Cascade)
+  notificationPreferenceId Int
+  createdAt                 DateTime                     @default(now())
+  updatedAt                 DateTime                     @default(now()) @updatedAt
+}
+
+
+enum NotificationType {
+  EMAIL
+  PUSH
+}
+
+enum TimeUnit {
+  MINUTES
+  HOURS
+  DAYS
 }

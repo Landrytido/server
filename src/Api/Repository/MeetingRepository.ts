@@ -9,13 +9,29 @@ export default class MeetingRepository {
   async findById(id: number) {
     return this.prisma.meeting.findUnique({
       where: { id },
+      include: {
+        notificationPreference: {
+          select: {
+            id: true,
+            timeBefore: true,
+            timeUnit: true,
+            types: true,
+          },
+        },
+      },
     });
   }
 
   async saveMeeting(
     data:
-      | Prisma.XOR<Prisma.MeetingCreateInput, Prisma.MeetingUncheckedCreateInput>
-      | Prisma.XOR<Prisma.MeetingUpdateInput, Prisma.MeetingUncheckedUpdateInput>
+      | Prisma.XOR<
+          Prisma.MeetingCreateInput,
+          Prisma.MeetingUncheckedCreateInput
+        >
+      | Prisma.XOR<
+          Prisma.MeetingUpdateInput,
+          Prisma.MeetingUncheckedUpdateInput
+        >
   ) {
     if (!data.id) {
       return this.prisma.meeting.create({
@@ -42,7 +58,48 @@ export default class MeetingRepository {
   }
 
   async findAll() {
-    return this.prisma.meeting.findMany();
+    return this.prisma.meeting.findMany({
+      include: {
+        user: {
+          select: {
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        notificationPreference: {
+          select: {
+            id: true,
+            types: true,
+            timeBefore: true,
+            timeUnit: true,
+          },
+        },
+      },
+    });
+  }
+
+  async markNotificationAsSent(meetingId: number) {
+    await this.prisma.meeting.update({
+      where: { id: meetingId },
+      data: { notificationSent: true },
+    });
+  }
+
+  async findByToken(token: string) {
+    return this.prisma.meeting.findUnique({
+      where: { token },
+      include: {
+        notificationPreference: {
+          select: {
+            id: true,
+            timeBefore: true,
+            timeUnit: true,
+            types: true,
+          },
+        },
+      },
+    });
   }
 
   async findByUserId(userId: number) {
