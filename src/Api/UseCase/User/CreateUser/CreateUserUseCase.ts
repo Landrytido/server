@@ -32,7 +32,7 @@ export default class CreateUserUseCase
           lastName: dto.lastName,
           lastLoginDate: dto.lastLoginDate,
       });
-      const userCreated = await this.userRepository.create(dto);
+   
 
       if (dto.invitationToken) {
         dto.id = userCreated.id;

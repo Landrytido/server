@@ -80,7 +80,6 @@ import { AutoInstructionGateway } from "./WebSocket/InstructionCardGateway";
     GetExternalEmailByTokenUseCase,
     ...Repositories,
     ...Resolvers,
-    EmailService,
     ReminderProcessor,
     AutoInstructionGateway,
     ...Jobs,
