@@ -13,12 +13,13 @@ import { ScoreResolver } from "./ScoreResolver";
 import NoteTaskResolver from "./NoteTasksResolver";
 import FileResolver from "./FileResolver";
 import MeetingResolver from "./MeetingResolver";
-import {NotificationResolver} from "./NotificationResolver";
+import { NotificationResolver } from "./NotificationResolver";
 import { DeviceResolver } from "./DeviceResolver";
 import { AutoInstructionResolver } from "./AutoInstructionResolver";
 import NotificationPreferenceResolver from "./NotificationPreferenceResolver";
 import DailyTaskResolver from "./DailyTask/DailyTaskResolver";
 import HistoryResolver from "./DailyTask/HistoryResolver";
+import MeetingInvitationResolver from "./MeetingInvitationResolver";
 
 export const Resolvers = [
   UserResolver,
@@ -41,6 +42,6 @@ export const Resolvers = [
   AutoInstructionResolver,
   NotificationPreferenceResolver,
   DailyTaskResolver,
-  HistoryResolver
+  HistoryResolver,
+  MeetingInvitationResolver,
 ];
-

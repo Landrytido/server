@@ -259,10 +259,23 @@ type MonthlyReport {
   totalTasks: Int!
 }
 
+type MeetingInvitation {
+  id: Int
+  meeting: Meeting!
+  meetingId: Int!
+  receiver: User!
+  receiverId: Int!
+  sender: User!
+  senderId: Int!
+  status: String!
+  updatedAt: DateTime!
+}
+
 type Mutation {
   RemoveById(id: Int!): Task!
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptInvitation(invitationId: Int!): Invitation!
+  acceptMeetingInvitation(id: Int!): MeetingInvitation!
   addAutoInstruction(createAutoInstructionInput: CreateAutoInstructionInput!): AutoInstruction!
   addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
   completeProfile(firstName: String!, lastName: String!): User!
@@ -273,6 +286,7 @@ type Mutation {
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
+  createMeetingInvitation(dto: SaveMeetingInvitationDto!): [MeetingInvitation!]!
   createNote(dto: SaveNoteDto!): Note!
   createNotebook(dto: SaveNotebookDto!): Notebook!
   createNotificationPreference(dto: SaveNotificationPreferenceDto!): NotificationPreference!
@@ -286,10 +300,12 @@ type Mutation {
   deleteLinkClick(idLinkClick: Int!): LinkClick!
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
   deleteMeeting(id: Int!): Meeting!
+  deleteMeetingInvitation(id: Int!): MeetingInvitation!
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
   deleteNotificationPreference(notificationPreferenceId: Int!): NotificationPreference!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
+  denyMeetingInvitation(id: Int!): MeetingInvitation!
   loginWithFacebook(accessToken: String!): String!
   loginWithGithub(dto: LoginWithGithubDto!): String!
   loginWithGoogle(accessToken: String!): String!
@@ -313,6 +329,7 @@ type Mutation {
   updateDailyTask(dto: UpdateDailyTaskDto!, id: Int!): DailyTask!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
+  updateMeetingInvitation(dto: SaveMeetingInvitationDto!): MeetingInvitation!
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
   updateNoteTask(dto: UpdateNoteTaskDto!): NoteTask!
   updateNotebook(dto: SaveNotebookDto!, notebookId: Int!): Notebook!
@@ -431,6 +448,10 @@ type Query {
   getLoggedUser: User!
   getMeeting(id: Int!): Meeting!
   getMonthlyReport(month: Int!, year: Int!): MonthlyReport!
+  getMeetingInvitationById(id: Int!): MeetingInvitation!
+  getMeetingInvitationsByMeetingId(id: Int!): [MeetingInvitation!]!
+  getMeetingInvitationsByReceiverId(id: Int!): [MeetingInvitation!]!
+  getMeetingInvitationsBySenderId(id: Int!): [MeetingInvitation!]!
   getNotificationPreference: NotificationPreference!
   getSearchHistoryByUserId: [SearchHistory!]!
   getTasksCreatedOn(date: String!): [CombinedTask!]!
@@ -507,6 +528,16 @@ input SaveMeetingDto {
   startDate: DateTime!
   title: String!
   userId: Int!
+}
+
+input SaveMeetingInvitationDto {
+  id: Int
+  invitedEmails: [String!]
+  meetingId: Int!
+  receiverId: Int!
+  senderId: Int!
+  status: String
+  updatedAt: DateTime
 }
 
 input SaveNoteDto {
