@@ -5,19 +5,18 @@ import SaveTaskDto from "src/Api/Dto/SaveTaskDto";
 import TaskRepository from "src/Api/Repository/TaskRepository";
 import Authenticator from "src/Core/Security/Service/authentication/Authenticator";
 
-// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @Injectable()
 export default class SaveTaskUseCase
   implements UseCase<Promise<Task>, [dto: SaveTaskDto]>
 {
   constructor(
     private readonly taskRepository: TaskRepository,
-    @Inject("Authenticator") private authenticator: Authenticator,
+    @Inject("Authenticator") private authenticator: Authenticator
   ) {}
 
   async handle(
     context: ContextualGraphqlRequest,
-    dto: SaveTaskDto,
+    dto: SaveTaskDto
   ): Promise<Task> {
     try {
       const userId = context.userId;

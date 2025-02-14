@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "src/Core/Datasource/Prisma";
 
-// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @Injectable()
 export default class TaskRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -65,7 +64,7 @@ export default class TaskRepository {
   async save(
     data:
       | Prisma.XOR<Prisma.TaskCreateInput, Prisma.TaskUncheckedCreateInput>
-      | Prisma.XOR<Prisma.TaskUpdateInput, Prisma.TaskUncheckedUpdateInput>,
+      | Prisma.XOR<Prisma.TaskUpdateInput, Prisma.TaskUncheckedUpdateInput>
   ) {
     if (!data.id) {
       return await this.prisma.task.create({

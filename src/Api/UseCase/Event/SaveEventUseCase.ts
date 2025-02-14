@@ -6,7 +6,6 @@ import EventRepository from "src/Api/Repository/EventRepository";
 import UserRepository from "src/Api/Repository/UserRepository";
 import Authenticator from "src/Core/Security/Service/authentication/Authenticator";
 
-// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @Injectable()
 export default class SaveEventUseCase
   implements UseCase<Promise<Event>, [dto: SaveEventDto]>
@@ -14,12 +13,12 @@ export default class SaveEventUseCase
   constructor(
     private readonly eventRepository: EventRepository,
     // private readonly userRepository: UserRepository,
-    @Inject("Authenticator") private authenticator: Authenticator,
+    @Inject("Authenticator") private authenticator: Authenticator
   ) {}
 
   async handle(
     context: ContextualGraphqlRequest,
-    dto: SaveEventDto,
+    dto: SaveEventDto
   ): Promise<Event> {
     try {
       const userId = context.userId;

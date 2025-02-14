@@ -3,13 +3,13 @@ import { Task } from "@prisma/client";
 import { ContextualGraphqlRequest } from "src";
 import TaskRepository from "src/Api/Repository/TaskRepository";
 
-// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
+
 @Injectable()
 export default class GetAllTaskUseCase {
-  constructor(private readonly taskRepository: TaskRepository) {}
+    constructor(private readonly taskRepository: TaskRepository) {}
 
-  async handle(context: ContextualGraphqlRequest): Promise<Task[]> {
-    const tasks = await this.taskRepository.findAllTask();
-    return tasks;
-  }
+    async handle(context: ContextualGraphqlRequest): Promise<Task[]> {
+        const tasks = await this.taskRepository.findAllTask();
+        return tasks;
+    }
 }

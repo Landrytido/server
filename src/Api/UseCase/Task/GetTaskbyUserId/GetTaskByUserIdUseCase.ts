@@ -1,9 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import Task from "../../../Entity/Task";
@@ -13,26 +9,24 @@ import TaskRepository from "src/Api/Repository/TaskRepository";
 import UseCaseFactory from "../../UseCaseFactory";
 import GetLoggedUserUseCase from "../../User/GetLoggedUser/GetLoggedUserUseCase";
 
-// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @Injectable()
 export default class GetTaskByUserIdUseCase
   implements UseCase<Promise<Task[]>, null>
 {
-  constructor(
-    private readonly taskRepository: TaskRepository,
+  constructor(private readonly taskRepository: TaskRepository,
     private readonly httpService: HttpService,
     private readonly jwtService: JwtService,
     readonly configService: ConfigService,
     readonly serviceFactory: UseCaseFactory,
   ) {}
 
-  async handle(context: ContextualGraphqlRequest): Promise<Task[]> {
+  async handle(context: ContextualGraphqlRequest) : Promise<Task[]>{
     try {
       const localTasks = await this.taskRepository.findByUserId(context.userId);
 
-      const userContext = await (
-        await this.serviceFactory.create(GetLoggedUserUseCase)
-      ).handle(context);
+      const userContext= await (await this.serviceFactory.create(GetLoggedUserUseCase)).handle(
+        context
+      );
 
       const user = {
         id: userContext.id,
@@ -41,44 +35,41 @@ export default class GetTaskByUserIdUseCase
         firstName: userContext.firstName,
         lastName: userContext.lastName,
         createdAt: userContext.createdAt,
-        updatedAt: userContext.updatedAt,
-      };
+        updatedAt: userContext.updatedAt
+      }
 
       // TIO OR TASKS
-      let externalTasks: Task[] = [];
-      try {
-        const externalTasksResult = (await this.fetchExternalTasks(
-          context.email,
-        )) as any;
-        externalTasks = (externalTasksResult || []).map((task) => ({
-          id: task.id,
-          title: task.name,
-          description: task.description || "",
-          dueDate: new Date(task.updatedAt),
-          completed: task.status === "DONE",
-          userId: context.userId,
-          noteId: -1,
-          user,
-        }));
-      } catch (error) {}
+      let externalTasks : Task[]  =[];
+      try{
+        const externalTasksResult =(await this.fetchExternalTasks(context.email) as any);
+       externalTasks = (externalTasksResult || []).map(task=>({
+        id: task.id,
+        title: task.name,
+        description: task.description || '',
+        dueDate: new Date(task.updatedAt) ,
+        completed: task.status === 'DONE',
+        userId: context.userId,
+        noteId: -1,
+        user
+      }));
+    } catch (error) {
 
-      return [
-        ...localTasks.map((localTask) => ({ ...localTask, user })),
-        ...externalTasks,
-      ];
+    }
+
+      return  [...localTasks.map(localTask=>({...localTask , user})), ...externalTasks] ;
     } catch (error) {
       throw new BadRequestException(
         "GetTaskByUserIdUseCaseFailed",
-        error.message,
+        error.message
       );
     }
   }
 
   private async fetchExternalTasks(email: string): Promise<Task[]> {
-    const urlTIO = this.configService.get("TIO_URL_GRAPHQL");
-    const secret = this.configService.get("JWT_SECRET_TIO");
+    const urlTIO =  this.configService.get('TIO_URL_GRAPHQL');
+    const secret = this.configService.get('JWT_SECRET_TIO');
 
-    if (!urlTIO || !secret) {
+    if(!urlTIO || !secret){
       return [];
     }
 
@@ -98,42 +89,44 @@ export default class GetTaskByUserIdUseCase
     const variables = {};
 
     try {
-      const response = await lastValueFrom(
-        this.httpService.post(
-          urlTIO,
-          {
-            // operationName,
-            query,
-            variables,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${this.getAuthToken(email, secret)}`,
-              "Content-Type": "application/json",
-            },
-          },
-        ),
-      );
+        const response = await lastValueFrom(
+            this.httpService.post(
+              urlTIO,
+                {
+                    // operationName,
+                    query,
+                    variables,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${this.getAuthToken(email, secret)}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            ),
+        );
 
-      // Handling the response
-      if (response.data && response.data.data) {
-        return response.data.data.worksByOwnerMail; // Return the works from the response
-      }
+        // Handling the response
+        if (response.data && response.data.data) {
+            return response.data.data.worksByOwnerMail; // Return the works from the response
+        }
+
     } catch (error) {
-      console.error("Error retrieving external tasks:", error.message);
-      if (error.response) {
-        console.error("Error details:", error.response.data);
-      }
+        console.error("Error retrieving external tasks:", error.message);
+        if (error.response) {
+            console.error("Error details:", error.response.data);
+        }
     }
-  }
+}
 
-  private getAuthToken(email: string, secret: string): string {
-    const payload = {
-      email,
-      permissions: ["READ:TASKS"],
-      exp: Math.floor(Date.now() / 1000) + 60, // Expiration dans 1 minute
-    };
+private getAuthToken(email: string, secret: string): string {
+      const payload = {
+          email,
+          permissions: ['READ:TASKS'],
+          exp: Math.floor(Date.now() / 1000) + 60 , // Expiration dans 1 minute
+        };
 
-    return this.jwtService.sign(payload, { secret });
-  }
+        return this.jwtService.sign(payload, { secret });
+    }
+
 }

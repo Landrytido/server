@@ -17,7 +17,6 @@ import { NotificationResolver } from "./NotificationResolver";
 import { DeviceResolver } from "./DeviceResolver";
 import { AutoInstructionResolver } from "./AutoInstructionResolver";
 import NotificationPreferenceResolver from "./NotificationPreferenceResolver";
-import CalendarEventResolver from "./CalendarEvent/CalendarEventResolver";
 import DailyTaskResolver from "./DailyTask/DailyTaskResolver";
 import HistoryResolver from "./DailyTask/HistoryResolver";
 import MeetingInvitationResolver from "./MeetingInvitationResolver";
@@ -42,7 +41,6 @@ export const Resolvers = [
   DeviceResolver,
   AutoInstructionResolver,
   NotificationPreferenceResolver,
-  CalendarEventResolver,
   DailyTaskResolver,
   HistoryResolver,
   MeetingInvitationResolver,

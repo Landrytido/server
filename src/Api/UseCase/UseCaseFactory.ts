@@ -16,7 +16,6 @@ import { AvailableNoteTaskUseCases } from "./NoteTasks/AvailableNoteTaskskUseCas
 import { AvailableFileUseCases } from "./File/AvailableFileUseCases";
 import { AvailableMeetingUseCases } from "./Meeting/AvailableMeetingUseCase";
 import { AvailableNotificationPreferenceUseCases } from "./Notifications/NotificationPreference/AvailableNotificationPreferenceUseCases";
-import { AvailableCalendarEventUseCases } from "./CalendarEvent/AvailableCalendarEventUseCases";
 import {AvailableDailyTaskUseCases} from "./DailyTask/AvailableDailyTaskUseCases";
 
 export type UseCases =
@@ -35,9 +34,6 @@ export type UseCases =
   | AvailableMeetingUseCases
   | AvailableNoteTaskUseCases
   | AvailableNotificationPreferenceUseCases
-  | AvailableNoteTaskUseCases
-  | AvailableFileUseCases
-  | AvailableCalendarEventUseCases
   | AvailableDailyTaskUseCases
   | AvailableFileUseCases;
 

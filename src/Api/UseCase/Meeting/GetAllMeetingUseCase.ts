@@ -3,7 +3,6 @@ import { Meeting } from "@prisma/client";
 import { ContextualGraphqlRequest } from "src";
 import MeetingRepository from "src/Api/Repository/MeetingRepository";
 
-// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @Injectable()
 export default class GetAllMeetingUseCase {
   constructor(private readonly meetingRepository: MeetingRepository) {}

@@ -2,9 +2,9 @@ import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import { ContextualGraphqlRequest } from "src";
 import { Recurrence } from "src/main";
+import { NotificationCustom } from "./NotificationCustom";
 import { NotificationPreference } from "./NotificationPreference";
 
-// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @ObjectType()
 export class Meeting {
   @Field(() => Int)

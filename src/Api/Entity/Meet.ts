@@ -4,7 +4,6 @@ import MeetSharedWithMember from "./MeetSharedWithMember";
 import { ContextualGraphqlRequest } from "../../index";
 import { Recurrence } from "src/main";
 
-// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @ObjectType()
 export default class Meet {
   @Field(() => Int)

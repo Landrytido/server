@@ -3,7 +3,6 @@ import { ContextualGraphqlRequest, UseCase } from "src";
 import EventRepository from "src/Api/Repository/EventRepository";
 import { Event } from "@prisma/client";
 
-// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @Injectable()
 export default class GetEventByUserIdUseCase
   implements UseCase<Promise<Event[]>, []>
@@ -16,7 +15,7 @@ export default class GetEventByUserIdUseCase
     } catch (error) {
       throw new BadRequestException(
         "GetEventByUserIdUseCaseFailed",
-        error.message,
+        error.message
       );
     }
   }

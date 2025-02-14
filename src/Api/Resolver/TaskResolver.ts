@@ -12,7 +12,6 @@ import Task from "../Entity/Task";
 import GetAllTaskUseCase from "../UseCase/Task/GetAllTask/GetAllTaskUseCase";
 import SaveTaskUseCase from "../UseCase/Task/SaveTask/SaveTaskUseCase";
 
-// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @Resolver(Task)
 @UseGuards(GraphqlAuthGuard)
 export default class TaskResolver {
@@ -21,49 +20,51 @@ export default class TaskResolver {
   @Mutation(() => Task)
   async saveTask(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("dto") dto: SaveTaskDto,
+    @Args("dto") dto: SaveTaskDto
   ) {
     return (await this.serviceFactory.create(SaveTaskUseCase)).handle(
       context,
-      dto,
+      dto
     );
   }
   @Query(() => [Task])
   async tasksByUserId(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("userId", { type: () => Int }) userId: number,
+    @Args("userId",{type:()=>Int}) userId: number
   ): Promise<Task[]> {
     return (await this.serviceFactory.create(GetTaskByUserIdUseCase)).handle(
-      context,
+      context
     );
   }
 
   @Query(() => Task)
   async findTaskById(
-    @Args("id", { type: () => Int }) id: number,
-    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("id",{type:()=>Int}) id: number,
+    @ContextualRequest() context: ContextualGraphqlRequest
   ) {
     return (await this.serviceFactory.create(GetTaskUseCase)).handle(
       context,
-      id,
+      id
     );
   }
 
   @Query(() => [Task])
   async getAllTask(@ContextualRequest() context: ContextualGraphqlRequest) {
     return (await this.serviceFactory.create(GetAllTaskUseCase)).handle(
-      context,
+      context
     );
   }
 
   @Mutation(() => Task)
   async RemoveById(
-    @Args("id", { type: () => Int }) id: number,
-    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("id",{type:()=>Int}) id: number,
+    @ContextualRequest() context: ContextualGraphqlRequest
   ) {
     return (await this.serviceFactory.create(RemoveTaskUseCase)).handle(
       context,
-      id,
+      id
     );
   }
+
+  
 }

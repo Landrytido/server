@@ -62,7 +62,7 @@ export default class NotificationPreferenceRepository {
       | Prisma.XOR<
           Prisma.NotificationPreferenceUpdateInput,
           Prisma.NotificationPreferenceUncheckedUpdateInput
-        >,
+        >
   ) {
     const existingPreference = await this.findUserById(data.userId as number);
     console.log("Existing Preference:", existingPreference);
@@ -132,7 +132,7 @@ export default class NotificationPreferenceRepository {
             },
           },
           include: { types: true }, // Récupérer les types après la mise à jour
-        },
+        }
       );
       console.log("Notification preference updated", updatedPreference);
       return updatedPreference;
@@ -188,7 +188,6 @@ export default class NotificationPreferenceRepository {
     // return createdPreference;
   }
 
-  // WARN: TO REFACTOR / TO DELETE ???????? 💩💩💩💩💩💩💩💩💩💩💩💩
   async findById(preferenceNotificationId: number) {
     const idFound = await this.prisma.notificationPreference.findUnique({
       where: { id: preferenceNotificationId },

@@ -3,7 +3,6 @@ import { Task } from "@prisma/client";
 import { ContextualGraphqlRequest, UseCase } from "src";
 import TaskRepository from "src/Api/Repository/TaskRepository";
 
-// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @Injectable()
 export default class RemoveTaskUseCase
   implements UseCase<Promise<Task>, [taskId: number]>
@@ -16,7 +15,7 @@ export default class RemoveTaskUseCase
     } catch (error) {
       throw new BadRequestException(
         "no task has been created please create a new one ",
-        error.message,
+        error.message
       );
     }
   }
