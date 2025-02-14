@@ -12,6 +12,7 @@ import { UseGuards } from "@nestjs/common";
 import { Event } from "../Entity/Event";
 import GetEventByUserIdUseCase from "../UseCase/Event/GetEventByUserIdUseCase";
 
+// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @Resolver(Event)
 @UseGuards(GraphqlAuthGuard)
 export default class EventResolver {
@@ -20,50 +21,50 @@ export default class EventResolver {
   @Mutation(() => Event)
   async saveEvent(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("dto") dto: SaveEventDto
+    @Args("dto") dto: SaveEventDto,
   ) {
     return (await this.serviceFactory.create(SaveEventUseCase)).handle(
       context,
-      dto
+      dto,
     );
   }
 
   @Query(() => Event)
   async getEvent(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("id",{type:()=>Int})id: number
+    @Args("id", { type: () => Int }) id: number,
   ) {
     return (await this.serviceFactory.create(GetEventUseCase)).handle(
       context,
-      id
+      id,
     );
   }
 
   @Query(() => [Event])
   async getAllEvent(@ContextualRequest() context: ContextualGraphqlRequest) {
     return (await this.serviceFactory.create(GetAllEventUseCase)).handle(
-      context
+      context,
     );
   }
 
   @Query(() => [Event])
   async eventByUserId(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("userId",{type:()=>Int}) userId: number
-  ){
+    @Args("userId", { type: () => Int }) userId: number,
+  ) {
     return (await this.serviceFactory.create(GetEventByUserIdUseCase)).handle(
-      context
+      context,
     );
   }
 
   @Mutation(() => Event)
   async deleteEvent(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("id",{type:()=>Int}) id: number
+    @Args("id", { type: () => Int }) id: number,
   ) {
     return (await this.serviceFactory.create(DeleteEventUseCase)).handle(
       context,
-      id
+      id,
     );
   }
 }

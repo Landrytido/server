@@ -3,12 +3,20 @@ import ServiceFactoryUncontextualUseCase from "../../Core/Factory/ServiceFactory
 import CreateUserUseCase from "./User/CreateUser/CreateUserUseCase";
 import ConvertExternalInvitationUseCase from "./Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
 import GetExternalEmailByTokenUseCase from "./Invitation/GetExternalEmailByToken/GetExternalEmailByTokenUseCase";
+import GetCalendarEventByIdUseCase from "./CalendarEvent/GetCalendarEventById/GetCalendarEventByIdUseCase";
+import GetCalendarEventsByUserIdUseCase from "./CalendarEvent/GetCalendarEventsByUserId/GetCalendarEventsByUserIdUseCase";
+import GetCalendarEventByTokenUseCase from "./CalendarEvent/GetCalendarEventByToken/GetCalendarEventByTokenUseCase";
+import UpdateCalendarEventUseCase from "./CalendarEvent/UpdateCalendarEvent/UpdateCalendarEventUseCase";
 import { AvailableMeetingInvitationUseCases } from "./MeetingInvitation/AvailableMeetingInvitationUseCase";
 
 type UncontextualUseCases =
   | CreateUserUseCase
   | ConvertExternalInvitationUseCase
   | GetExternalEmailByTokenUseCase
+  | GetCalendarEventByIdUseCase
+  | GetCalendarEventsByUserIdUseCase
+  | GetCalendarEventByTokenUseCase
+  | UpdateCalendarEventUseCase
   | AvailableMeetingInvitationUseCases;
 
 @Injectable()

@@ -1,5 +1,6 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
 
+// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @InputType()
 export default class SaveTaskDto {
   @Field(() => Int, { nullable: true })

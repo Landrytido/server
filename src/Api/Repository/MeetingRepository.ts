@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../Core/Datasource/Prisma";
 import { Prisma } from "@prisma/client";
 
+// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @Injectable()
 export default class MeetingRepository {
   constructor(private readonly prisma: PrismaService) {}

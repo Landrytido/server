@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../Core/Datasource/Prisma";
 import { Prisma } from "@prisma/client";
 
+// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
 @Injectable()
 export default class EventRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -25,7 +26,7 @@ export default class EventRepository {
   async saveEvent(
     data:
       | Prisma.XOR<Prisma.EventCreateInput, Prisma.EventUncheckedCreateInput>
-      | Prisma.XOR<Prisma.EventUpdateInput, Prisma.EventUncheckedUpdateInput>
+      | Prisma.XOR<Prisma.EventUpdateInput, Prisma.EventUncheckedUpdateInput>,
   ) {
     if (!data.id) {
       return this.prisma.event.create({
@@ -44,7 +45,7 @@ export default class EventRepository {
           Prisma.EventUpdateInput,
           Prisma.EventUncheckedUpdateInput
         >,
-      })
+      }),
     );
 
     return this.prisma.event.update({

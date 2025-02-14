@@ -14,6 +14,7 @@ import MeetingRepository from "./MeetingRepository";
 import { AutoInstructionRepository } from "./AutoInstructionRepositorty";
 import { NotificationRepository } from "./NotificationRepository";
 import NotificationPreferenceRepository from "./NotificationPreferenceRepository";
+import CalendarEventRepository from "./CalendarEvent/CalendarEventRepository";
 import DailyTaskRepository from "./DailyTask/DailyTaskRepository";
 import DailyPlanRepository from "./DailyTask/DailyPlanRepository";
 import DailyTaskHistoryRepository from "./DailyTask/DailyTaskHistoryRepository";
@@ -37,6 +38,7 @@ export const Repositories = [
   NotificationRepository,
   AutoInstructionRepository,
   NotificationPreferenceRepository,
+  CalendarEventRepository,
   DailyTaskRepository,
   DailyPlanRepository,
   DailyTaskHistoryRepository,

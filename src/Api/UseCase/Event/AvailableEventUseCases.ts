@@ -4,4 +4,10 @@ import GetEventByUserIdUseCase from "./GetEventByUserIdUseCase";
 import GetEventUseCase from "./GetEventUseCase";
 import SaveEventUseCase from "./SaveEventUseCase";
 
-export type AvailableEventUseCases = SaveEventUseCase | GetEventUseCase | GetAllEventUseCase | DeleteEventUseCase | GetEventByUserIdUseCase ;
+// TODO: Remove this model after refactoring tasks, events, meetings into CalendarEvent ❌
+export type AvailableEventUseCases =
+  | SaveEventUseCase
+  | GetEventUseCase
+  | GetAllEventUseCase
+  | DeleteEventUseCase
+  | GetEventByUserIdUseCase;
