@@ -3,13 +3,11 @@ import ServiceFactoryUncontextualUseCase from "../../Core/Factory/ServiceFactory
 import CreateUserUseCase from "./User/CreateUser/CreateUserUseCase";
 import ConvertExternalInvitationUseCase from "./Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
 import GetExternalEmailByTokenUseCase from "./Invitation/GetExternalEmailByToken/GetExternalEmailByTokenUseCase";
-import { AvailableMeetingInvitationUseCases } from "./MeetingInvitation/AvailableMeetingInvitationUseCase";
 
 type UncontextualUseCases =
   | CreateUserUseCase
   | ConvertExternalInvitationUseCase
-  | GetExternalEmailByTokenUseCase
-  | AvailableMeetingInvitationUseCases;
+  | GetExternalEmailByTokenUseCase;
 
 @Injectable()
 export default class UncontextualUseCaseFactory extends ServiceFactoryUncontextualUseCase<UncontextualUseCases> {}

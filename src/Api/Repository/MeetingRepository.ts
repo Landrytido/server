@@ -31,7 +31,7 @@ export default class MeetingRepository {
       | Prisma.XOR<
           Prisma.MeetingUpdateInput,
           Prisma.MeetingUncheckedUpdateInput
-        >,
+        >
   ) {
     if (!data.id) {
       return this.prisma.meeting.create({

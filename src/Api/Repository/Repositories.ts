@@ -8,37 +8,35 @@ import NotebookRepository from "./NotebookRepository";
 import NoteRepository from "./NoteRepository";
 import InvitationRepository from "./InvitationRepository";
 import SearchHistoryRepository from "./SearchHistoryRepository";
-import { ScoreRepository } from "./ScoreRepository";
+import {ScoreRepository} from "./ScoreRepository";
 import NoteTasksRepository from "./NoteTasksRepository";
 import MeetingRepository from "./MeetingRepository";
-import { AutoInstructionRepository } from "./AutoInstructionRepositorty";
-import { NotificationRepository } from "./NotificationRepository";
+import {AutoInstructionRepository} from "./AutoInstructionRepositorty";
+import {NotificationRepository} from "./NotificationRepository";
 import NotificationPreferenceRepository from "./NotificationPreferenceRepository";
 import DailyTaskRepository from "./DailyTask/DailyTaskRepository";
 import DailyPlanRepository from "./DailyTask/DailyPlanRepository";
 import DailyTaskHistoryRepository from "./DailyTask/DailyTaskHistoryRepository";
-import MeetingInvitationRepository from "./MeetingInvitationRepository";
 
 export const Repositories = [
-  UserRepository,
-  SearchHistoryRepository,
-  SearchHistoryRepository,
-  TagRepository,
-  TaskRepository,
-  NotebookRepository,
-  NoteRepository,
-  InvitationRepository,
-  LinkGroupRepository,
-  LinkRepository,
-  NoteTasksRepository,
-  LinkClickRepository,
-  ScoreRepository,
-  MeetingRepository,
-  NotificationRepository,
-  AutoInstructionRepository,
-  NotificationPreferenceRepository,
-  DailyTaskRepository,
-  DailyPlanRepository,
-  DailyTaskHistoryRepository,
-  MeetingInvitationRepository,
+    UserRepository,
+    SearchHistoryRepository,
+    SearchHistoryRepository,
+    TagRepository,
+    TaskRepository,
+    NotebookRepository,
+    NoteRepository,
+    InvitationRepository,
+    LinkGroupRepository,
+    LinkRepository,
+    NoteTasksRepository,
+    LinkClickRepository,
+    ScoreRepository,
+    MeetingRepository,
+    NotificationRepository,
+    AutoInstructionRepository,
+    NotificationPreferenceRepository,
+    DailyTaskRepository,
+    DailyPlanRepository,
+    DailyTaskHistoryRepository
 ];

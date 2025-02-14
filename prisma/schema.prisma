@@ -49,12 +49,10 @@ model User {
   devices                DeviceToken[]
   notificationPreference NotificationPreference?
 
-  AutoInstruction            AutoInstruction[]
-  DailyTask                  DailyTask[]
-  DailyPlan                  DailyPlan[]
-  DailyTaskHistory           DailyTaskHistory[]
-  meetingInvitationsSent     MeetingInvitation[] @relation("MeetingInvitationsSent")
-  meetingInvitationsReceived MeetingInvitation[] @relation("MeetingInvitationsReceived")
+  AutoInstruction  AutoInstruction[]
+  DailyTask        DailyTask[]
+  DailyPlan        DailyPlan[]
+  DailyTaskHistory DailyTaskHistory[]
 }
 
 model AutoInstruction {
@@ -304,25 +302,6 @@ model Meeting {
   notificationPreference   NotificationPreference? @relation(fields: [notificationPreferenceId], references: [id])
   notificationSent         Boolean?                @default(false)
   token                    String?                 @unique
-  MeetingInvitation        MeetingInvitation[]
-}
-
-enum InvitationStatus {
-  PENDING
-  ACCEPTED
-  REFUSED
-}
-
-model MeetingInvitation {
-  id         Int              @id @default(autoincrement())
-  senderId   Int
-  receiverId Int
-  meetingId  Int
-  meeting    Meeting          @relation(fields: [meetingId], references: [id])
-  receiver   User             @relation("MeetingInvitationsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
-  sender     User             @relation("MeetingInvitationsSent", fields: [senderId], references: [id], onDelete: Cascade)
-  status     InvitationStatus @default(PENDING)
-  updatedAt  DateTime         @default(now())
 }
 
 model NotificationPreference {
