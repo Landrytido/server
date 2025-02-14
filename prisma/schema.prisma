@@ -13,7 +13,7 @@ model File {
   initialFilename String   @db.VarChar(255)
   path            String   @db.VarChar(255)
   uri             String   @db.VarChar(255)
-  linkImage       Link[]    @relation("link_image")
+  linkImage       Link[]   @relation("link_image")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now())
 }
@@ -38,18 +38,21 @@ model User {
   invitationsSent     Invitation[]        @relation("InvitationsSent")
   invitationsReceived Invitation[]        @relation("InvitationsReceived")
 
-  events        Event[]
-  eventsShared  EventSharedWithMember[]
-  resetTokens   ResetToken[]
-  linkClicks    LinkClick[]
-  searchHistory SearchHistory[]
-  scores        Score[]
-  noteTasks     NoteTask[]
-  meeting       Meeting[]
-  devices       DeviceToken[]
-  notificationPreference     NotificationPreference?   
+  events                 Event[]
+  eventsShared           EventSharedWithMember[]
+  resetTokens            ResetToken[]
+  linkClicks             LinkClick[]
+  searchHistory          SearchHistory[]
+  scores                 Score[]
+  noteTasks              NoteTask[]
+  meeting                Meeting[]
+  devices                DeviceToken[]
+  notificationPreference NotificationPreference?
 
-  AutoInstruction AutoInstruction[]
+  AutoInstruction  AutoInstruction[]
+  DailyTask        DailyTask[]
+  DailyPlan        DailyPlan[]
+  DailyTaskHistory DailyTaskHistory[]
 }
 
 model AutoInstruction {
@@ -146,7 +149,7 @@ model Link {
   user        User        @relation(fields: [userId], references: [id])
   clicks      LinkClick[]
   imageId     Int?
-  image       File? @relation("link_image", fields: [imageId], references: [id])
+  image       File?       @relation("link_image", fields: [imageId], references: [id])
 }
 
 model LinkGroup {
@@ -159,18 +162,18 @@ model LinkGroup {
 }
 
 model Task {
-  id                        Int                      @id @default(autoincrement())
-  title                     String
-  description               String
-  dueDate                   DateTime?
-  completed                 Boolean                  @default(false)
-  userId                    Int
-  user                      User                     @relation(fields: [userId], references: [id])
-  notificationPreferenceId  Int?
-  notificationPreference    NotificationPreference?  @relation(fields: [notificationPreferenceId], references: [id])
-  notificationSent          Boolean?                 @default(false)
-  token                     String?                  @unique     
-  }
+  id                       Int                     @id @default(autoincrement())
+  title                    String
+  description              String
+  dueDate                  DateTime?
+  completed                Boolean                 @default(false)
+  userId                   Int
+  user                     User                    @relation(fields: [userId], references: [id])
+  notificationPreferenceId Int?
+  notificationPreference   NotificationPreference? @relation(fields: [notificationPreferenceId], references: [id])
+  notificationSent         Boolean?                @default(false)
+  token                    String?                 @unique
+}
 
 model Invitation {
   id                         Int     @id @default(autoincrement())
@@ -185,26 +188,25 @@ model Invitation {
 }
 
 model Event {
-  id                        Int                     @id @default(autoincrement())
-  title                     String
-  description               String
-  startDate                 DateTime
-  endDate                   DateTime
-  isRecurring               Boolean?                @default(false)
-  recurrence                Recurrence?             @default(NONE)
-  location                  String
-  place                     String?
-  link                      String?
-  createdAt                 DateTime                @default(now())
-  updatedAt                 DateTime                @default(now()) @updatedAt
-  userId                    Int
-  user                      User                    @relation(fields: [userId], references: [id])
-  sharedWith                EventSharedWithMember[]
-  notificationPreferenceId  Int?
-  notificationPreference    NotificationPreference?  @relation(fields: [notificationPreferenceId], references: [id])
-  notificationSent          Boolean?                 @default(false)
-  token                     String?                  @unique     
-
+  id                       Int                     @id @default(autoincrement())
+  title                    String
+  description              String
+  startDate                DateTime
+  endDate                  DateTime
+  isRecurring              Boolean?                @default(false)
+  recurrence               Recurrence?             @default(NONE)
+  location                 String
+  place                    String?
+  link                     String?
+  createdAt                DateTime                @default(now())
+  updatedAt                DateTime                @default(now()) @updatedAt
+  userId                   Int
+  user                     User                    @relation(fields: [userId], references: [id])
+  sharedWith               EventSharedWithMember[]
+  notificationPreferenceId Int?
+  notificationPreference   NotificationPreference? @relation(fields: [notificationPreferenceId], references: [id])
+  notificationSent         Boolean?                @default(false)
+  token                    String?                 @unique
 }
 
 enum Recurrence {
@@ -282,38 +284,38 @@ model NoteTask {
 }
 
 model Meeting {
-  id                        Int                      @id @default(autoincrement())
-  title                     String
-  description               String
-  startDate                 DateTime
-  endDate                   DateTime
-  isRecurring               Boolean?                 @default(false)
-  recurrence                Recurrence?              @default(NONE)
-  location                  String
-  place                     String?
-  link                      String?
-  createdAt                 DateTime                 @default(now())
-  updatedAt                 DateTime                 @default(now()) @updatedAt
-  userId                    Int
-  user                      User                     @relation(fields: [userId], references: [id])
-  notificationPreferenceId  Int?
-  notificationPreference    NotificationPreference?  @relation(fields: [notificationPreferenceId], references: [id])
-  notificationSent          Boolean?                 @default(false)
-  token                     String?                  @unique                           
+  id                       Int                     @id @default(autoincrement())
+  title                    String
+  description              String
+  startDate                DateTime
+  endDate                  DateTime
+  isRecurring              Boolean?                @default(false)
+  recurrence               Recurrence?             @default(NONE)
+  location                 String
+  place                    String?
+  link                     String?
+  createdAt                DateTime                @default(now())
+  updatedAt                DateTime                @default(now()) @updatedAt
+  userId                   Int
+  user                     User                    @relation(fields: [userId], references: [id])
+  notificationPreferenceId Int?
+  notificationPreference   NotificationPreference? @relation(fields: [notificationPreferenceId], references: [id])
+  notificationSent         Boolean?                @default(false)
+  token                    String?                 @unique
 }
 
 model NotificationPreference {
-  id                        Int                          @id @default(autoincrement())
-  userId                    Int                          @unique                     
-  user                      User                         @relation(fields: [userId], references: [id])
-  types                     NotificationPreferenceType[]        
-  timeBefore                Int                     
-  timeUnit                  TimeUnit
-  createdAt                 DateTime                     @default(now())
-  updatedAt                 DateTime                     @default(now()) @updatedAt
-  tasks                     Task[]
-  events                    Event[]
-  meetings                  Meeting[]
+  id         Int                          @id @default(autoincrement())
+  userId     Int                          @unique
+  user       User                         @relation(fields: [userId], references: [id])
+  types      NotificationPreferenceType[]
+  timeBefore Int
+  timeUnit   TimeUnit
+  createdAt  DateTime                     @default(now())
+  updatedAt  DateTime                     @default(now()) @updatedAt
+  tasks      Task[]
+  events     Event[]
+  meetings   Meeting[]
 }
 
 model NotificationPreferenceType {
@@ -321,10 +323,9 @@ model NotificationPreferenceType {
   type                     NotificationType
   notificationPreference   NotificationPreference @relation(fields: [notificationPreferenceId], references: [id], onDelete: Cascade)
   notificationPreferenceId Int
-  createdAt                 DateTime                     @default(now())
-  updatedAt                 DateTime                     @default(now()) @updatedAt
+  createdAt                DateTime               @default(now())
+  updatedAt                DateTime               @default(now()) @updatedAt
 }
-
 
 enum NotificationType {
   EMAIL
@@ -336,3 +337,54 @@ enum TimeUnit {
   HOURS
   DAYS
 }
+
+// feat (daily-tasks) >>>
+model DailyPlan {
+  id        Int      @id @default(autoincrement())
+  /// La date correspondant à la journée qui vient d’être clôturée
+  date      DateTime @unique
+  /// Flag indiquant que l’utilisateur a validé la fin de journée et réalisé sa planification
+  confirmed Boolean  @default(false)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model DailyTask {
+  id            Int       @id @default(autoincrement())
+  uniqueTaskId  String    @unique @default(uuid()) // <-- New field for unique task ID
+  title         String
+  description   String?
+  scheduledDate DateTime
+  originalDate  DateTime?
+  carriedOver   Boolean   @default(false)
+  order         Int
+  priority      Int
+  completed     Boolean   @default(false)
+  completedAt   DateTime?
+  userId        Int
+  user          User      @relation(fields: [userId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+}
+
+model DailyTaskHistory {
+  id            Int       @id @default(autoincrement())
+  uniqueTaskId  String    @unique // <-- We'll copy the uniqueTaskId from DailyTask when archiving
+  title         String
+  description   String?
+  scheduledDate DateTime
+  originalDate  DateTime?
+  carriedOver   Boolean   @default(false)
+  order         Int
+  priority      Int
+  completed     Boolean   @default(false)
+  completedAt   DateTime?
+  userId        Int
+  archivedAt    DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+  user          User      @relation(fields: [userId], references: [id])
+}
+
+// <<< feat (daily-tasks)

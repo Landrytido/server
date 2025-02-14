@@ -10,6 +10,10 @@ export default class UserRepository {
     private readonly bcrypt: Bcrypt
   ) {}
 
+  async getAll() {
+      return this.prisma.user.findMany();
+  }
+
   async findById(id: number) {
     return this.prisma.user.findUnique({
       where: { id },

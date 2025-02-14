@@ -24,6 +24,19 @@ input AutoInstructionInput {
   order: Float!
 }
 
+type CombinedTask {
+  carriedOver: Boolean!
+  completed: Boolean!
+  completedAt: DateTime
+  createdAt: DateTime!
+  description: String
+  id: Int!
+  priority: Float
+  scheduledDate: DateTime!
+  source: String!
+  title: String!
+}
+
 type Comment {
   content: String!
   createdAt: DateTime!
@@ -46,9 +59,58 @@ input CreateAutoInstructionInput {
   userId: Float!
 }
 
+input CreateDailyTaskDto {
+  description: String
+  order: Float
+  priority: Int!
+  scheduledDate: DateTime
+  title: String!
+  uniqueTaskId: String
+}
+
 input CreateLinkGroupDto {
   description: String
   name: String!
+}
+
+type DailyPlan {
+  confirmed: Boolean!
+  createdAt: DateTime!
+  date: DateTime!
+  id: Int!
+  updatedAt: DateTime!
+  userId: Int!
+}
+
+type DailyTask {
+  carriedOver: Boolean!
+  completed: Boolean!
+  completedAt: DateTime
+  createdAt: DateTime!
+  description: String
+  id: Int!
+  order: Int!
+  priority: Int!
+  scheduledDate: DateTime!
+  title: String!
+  updatedAt: DateTime!
+  userId: Int!
+}
+
+type DailyTaskHistory {
+  archivedAt: DateTime!
+  carriedOver: Boolean!
+  completed: Boolean!
+  completedAt: DateTime
+  createdAt: DateTime!
+  description: String
+  id: Int!
+  order: Int!
+  originalDate: DateTime
+  priority: Int!
+  scheduledDate: DateTime!
+  title: String!
+  userId: Int!
 }
 
 """
@@ -190,6 +252,13 @@ type Meeting {
   userId: Int!
 }
 
+type MonthlyReport {
+  completedTasks: Int!
+  completionPercentage: Float!
+  notCompletedTasks: Int!
+  totalTasks: Int!
+}
+
 type Mutation {
   RemoveById(id: Int!): Task!
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
@@ -197,8 +266,10 @@ type Mutation {
   addAutoInstruction(createAutoInstructionInput: CreateAutoInstructionInput!): AutoInstruction!
   addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
   completeProfile(firstName: String!, lastName: String!): User!
+  confirmEndOfDay: Boolean!
   convertExternalInvitation(dto: SaveUserDto!): Invitation!
   createComment(data: CommentDto!): Comment!
+  createDailyTask(dto: CreateDailyTaskDto!): DailyTask!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
   createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
@@ -208,6 +279,7 @@ type Mutation {
   createTag(dto: SaveTagDto!): Tag!
   deleteAllLinkClicks: Boolean!
   deleteComment(commentId: Float!): Boolean!
+  deleteDailyTask(id: Int!): DailyTask!
   deleteEvent(id: Int!): Event!
   deleteInvitation(invitationId: Int!): Invitation!
   deleteLink(id: Int!): Boolean!
@@ -225,6 +297,7 @@ type Mutation {
   registerDevice(platform: String!, token: String!, userId: Float!): DeviceDto!
   removeAutoInstruction(id: Float!): AutoInstruction!
   removeNoteTaskById(id: Int!): NoteTask!
+  reorderDailyTasks(dto: ReorderDailyTasksDto!): [DailyTask!]!
   reorderInstructions(instructions: [AutoInstructionInput!]!, userId: Float!): [AutoInstruction!]!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: saveEventDto!): Event!
@@ -237,6 +310,7 @@ type Mutation {
   sendNotification(additionalData: AdditionalDataInput, message: String!, userId: Float!): Boolean!
   updateAutoInstruction(updateAutoInstructionInput: UpdateAutoInstructionInput!): AutoInstruction!
   updateComment(commentId: Float!, data: CommentDto!): Comment!
+  updateDailyTask(dto: UpdateDailyTaskDto!, id: Int!): DailyTask!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
   updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
@@ -350,11 +424,16 @@ type Query {
   getAllMeeting: [Meeting!]!
   getAllTask: [Task!]!
   getAutoInstructions(userId: Float!): [AutoInstruction!]!
+  getDailyPlan(date: String!): DailyPlan
+  getDailyTaskHistory(date: String!): [DailyTaskHistory!]!
+  getDailyTasks(date: String): [DailyTask!]!
   getEvent(id: Int!): Event!
   getLoggedUser: User!
   getMeeting(id: Int!): Meeting!
+  getMonthlyReport(month: Int!, year: Int!): MonthlyReport!
   getNotificationPreference: NotificationPreference!
   getSearchHistoryByUserId: [SearchHistory!]!
+  getTasksCreatedOn(date: String!): [CombinedTask!]!
   login(dto: AuthenticationDto!): String!
   meetingByUserId(userId: Int!): [Meeting!]!
   noteTasksByUserId(dto: GetNoteTasksByUserIdDto!): [NoteTask!]!
@@ -382,6 +461,10 @@ type Relation {
   invitationId: Int!
   receiver: User!
   sender: User!
+}
+
+input ReorderDailyTasksDto {
+  orderedIds: [Int!]!
 }
 
 type ResetToken {
@@ -543,6 +626,15 @@ input UpdateAutoInstructionInput {
   description: String!
   id: Float!
   order: Float!
+}
+
+input UpdateDailyTaskDto {
+  completed: Boolean
+  description: String
+  order: Float
+  priority: Int
+  scheduledDate: DateTime
+  title: String
 }
 
 input UpdateLinkDto {

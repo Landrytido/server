@@ -17,6 +17,8 @@ import {NotificationResolver} from "./NotificationResolver";
 import { DeviceResolver } from "./DeviceResolver";
 import { AutoInstructionResolver } from "./AutoInstructionResolver";
 import NotificationPreferenceResolver from "./NotificationPreferenceResolver";
+import DailyTaskResolver from "./DailyTask/DailyTaskResolver";
+import HistoryResolver from "./DailyTask/HistoryResolver";
 
 export const Resolvers = [
   UserResolver,
@@ -38,5 +40,7 @@ export const Resolvers = [
   DeviceResolver,
   AutoInstructionResolver,
   NotificationPreferenceResolver,
+  DailyTaskResolver,
+  HistoryResolver
 ];
 

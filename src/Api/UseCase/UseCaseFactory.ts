@@ -16,6 +16,7 @@ import { AvailableNoteTaskUseCases } from "./NoteTasks/AvailableNoteTaskskUseCas
 import { AvailableFileUseCases } from "./File/AvailableFileUseCases";
 import { AvailableMeetingUseCases } from "./Meeting/AvailableMeetingUseCase";
 import { AvailableNotificationPreferenceUseCases } from "./Notifications/NotificationPreference/AvailableNotificationPreferenceUseCases";
+import {AvailableDailyTaskUseCases} from "./DailyTask/AvailableDailyTaskUseCases";
 
 export type UseCases =
   | AvailableUserUseCases
@@ -33,7 +34,7 @@ export type UseCases =
   | AvailableMeetingUseCases
   | AvailableNoteTaskUseCases
   | AvailableNotificationPreferenceUseCases
-  | AvailableNoteTaskUseCases
+  | AvailableDailyTaskUseCases
   | AvailableFileUseCases;
 
 @Injectable()
