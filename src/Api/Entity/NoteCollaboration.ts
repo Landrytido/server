@@ -1,8 +1,8 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import Note from "./Note";
-import { PermissionLevel } from "src/main";
 import { ContextualGraphqlRequest } from "../../index";
+import {PermissionLevel} from "@prisma/client";
 
 @ObjectType()
 export class NoteCollaboration {

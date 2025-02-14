@@ -1,7 +1,7 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
-import { NotificationType } from "src/main";
 import { ContextualGraphqlRequest } from "src";
 import { NotificationPreference } from "./NotificationPreference";
+import {NotificationType} from "@prisma/client";
 
 @ObjectType()
 export class NotificationPreferenceType {

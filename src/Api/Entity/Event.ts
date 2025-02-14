@@ -2,9 +2,9 @@ import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import { ContextualGraphqlRequest } from "src";
-import { Recurrence } from "src/main";
 import { NotificationCustom } from "./NotificationCustom";
 import { NotificationPreference } from "./NotificationPreference";
+import {Recurrence} from "@prisma/client";
 
 @ObjectType()
 export class Event {

@@ -1,5 +1,5 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
-import { NotificationType, TimeUnit } from "src/main";
+import {NotificationType, TimeUnit} from "@prisma/client";
 
 @InputType()
 export class SaveNotificationPreferenceDto {

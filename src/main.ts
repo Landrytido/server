@@ -7,46 +7,36 @@ import { ExceptionCatcher } from "./Core/ExceptionCatcher";
 import ConsoleLogger from "./Core/Logging/ConsoleLogger";
 import InitializationLogger from "./Core/Logging/InitializationLogger";
 import { registerEnumType } from "@nestjs/graphql";
-import { Level } from "@prisma/client";
-
-export enum Recurrence {
-  NONE = "NONE",
-  DAILY = "DAILY",
-  WEEKLY = "WEEKLY",
-  MONTHLY = "MONTHLY",
-  ANNUAL = "ANNUAL",
-}
-
-export enum PermissionLevel {
-  READ = "READ",
-  WRITE = "WRITE",
-  ADMIN = "ADMIN",
-}
-
-export enum NotificationType {
-  EMAIL = "EMAIL",
-  PUSH = "PUSH",
-}
-
-export enum TimeUnit {
-  MINUTES = "MINUTES",
-  HOURS = "HOURS",
-  DAYS = "DAYS",
-}
+import {Level, Recurrence, CalendarEventType, PermissionLevel, TimeUnit, NotificationType} from '@prisma/client';
 
 registerEnumType(Level, {
   name: "Level",
-  description: "Level of difficulty for the score (easy, medium, hard)",
+  description: "Possible Level options: EASY, MEDIUM, HARD",
 });
 
-registerEnumType(NotificationType, { name: "NotificationType" });
+registerEnumType(NotificationType, {
+  name: "NotificationType",
+  description: "Possible NotificationType options: EMAIL, PUSH"
+});
 
-registerEnumType(TimeUnit, { name: "TimeUnit" });
+registerEnumType(TimeUnit, {
+  name: "TimeUnit",
+  description: "Possible TimeUnit options : MINUTES, HOURS, DAYS"
+});
+registerEnumType(Recurrence, {
+    name: 'Recurrence',
+    description: 'Possible recurrence options: NONE, DAILY, WEEKLY, MONTHLY, ANNUAL',
+});
+registerEnumType(CalendarEventType, {
+    name: 'CalendarEventType',
+    description: 'Possible CalendarEventType options: TASK, EVENT',
+});
+registerEnumType(PermissionLevel, {
+  name: "PermissionLevel",
+  description: "Possible PermissionLevel options : READ, WRITE, ADMIN"
+});
 
 require("events").EventEmitter.defaultMaxListeners = 0;
-
-registerEnumType(Recurrence, { name: "Recurrence" });
-registerEnumType(PermissionLevel, { name: "PermissionLevel" });
 
 export let app;
 

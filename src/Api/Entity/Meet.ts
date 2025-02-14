@@ -2,7 +2,7 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import { ContextualGraphqlRequest } from "../../index";
-import { Recurrence } from "src/main";
+import {Recurrence} from "@prisma/client";
 
 @ObjectType()
 export default class Meet {

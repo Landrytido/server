@@ -24,6 +24,29 @@ input AutoInstructionInput {
   order: Float!
 }
 
+type CalendarEvent {
+  createdAt: DateTime!
+  description: String
+  endDate: DateTime!
+  eventType: String!
+  googleEventId: String
+  id: Int!
+  isRecurring: Boolean!
+  link: String
+  location: String!
+  notificationPreference: NotificationPreference!
+  notificationPreferenceId: Int!
+  notificationSent: Boolean
+  place: String
+  recurrence: Recurrence
+  startDate: DateTime!
+  title: String!
+  token: String
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
 type CombinedTask {
   carriedOver: Boolean!
   completed: Boolean!
@@ -57,6 +80,22 @@ input CreateAutoInstructionInput {
   description: String!
   order: Float!
   userId: Float!
+}
+
+input CreateCalendarEventDto {
+  description: String
+  endDate: DateTime!
+  eventType: String! = "EVENT"
+  googleEventId: String
+  isRecurring: Boolean!
+  link: String
+  location: String!
+  notificationPreferenceId: Int
+  place: String
+  recurrence: String
+  startDate: DateTime!
+  title: String!
+  token: String
 }
 
 input CreateDailyTaskDto {
@@ -182,7 +221,7 @@ type Invitation {
   tokenForExternalInvitation: String
 }
 
-"""Level of difficulty for the score (easy, medium, hard)"""
+"""Possible Level options: EASY, MEDIUM, HARD"""
 enum Level {
   EASY
   HARD
@@ -268,6 +307,7 @@ type Mutation {
   completeProfile(firstName: String!, lastName: String!): User!
   confirmEndOfDay: Boolean!
   convertExternalInvitation(dto: SaveUserDto!): Invitation!
+  createCalendarEvent(dto: CreateCalendarEventDto!): CalendarEvent!
   createComment(data: CommentDto!): Comment!
   createDailyTask(dto: CreateDailyTaskDto!): DailyTask!
   createInvitation(dto: SaveInvitationDto!): Invitation!
@@ -278,6 +318,7 @@ type Mutation {
   createNotificationPreference(dto: SaveNotificationPreferenceDto!): NotificationPreference!
   createTag(dto: SaveTagDto!): Tag!
   deleteAllLinkClicks: Boolean!
+  deleteCalendarEvent(id: Int!): CalendarEvent!
   deleteComment(commentId: Float!): Boolean!
   deleteDailyTask(id: Int!): DailyTask!
   deleteEvent(id: Int!): Event!
@@ -293,6 +334,7 @@ type Mutation {
   loginWithFacebook(accessToken: String!): String!
   loginWithGithub(dto: LoginWithGithubDto!): String!
   loginWithGoogle(accessToken: String!): String!
+  markNotificationAsSent(id: Int!): CalendarEvent!
   register(dto: SaveUserDto!): User!
   registerDevice(platform: String!, token: String!, userId: Float!): DeviceDto!
   removeAutoInstruction(id: Float!): AutoInstruction!
@@ -309,6 +351,7 @@ type Mutation {
   saveUser(dto: SaveUserDto!): User!
   sendNotification(additionalData: AdditionalDataInput, message: String!, userId: Float!): Boolean!
   updateAutoInstruction(updateAutoInstructionInput: UpdateAutoInstructionInput!): AutoInstruction!
+  updateCalendarEvent(dto: UpdateCalendarEventDto!, id: Int!): CalendarEvent!
   updateComment(commentId: Float!, data: CommentDto!): Comment!
   updateDailyTask(dto: UpdateDailyTaskDto!, id: Int!): DailyTask!
   updateLink(dto: UpdateLinkDto!, id: Int!): Link!
@@ -382,11 +425,13 @@ type NotificationPreferenceType {
   updatedAt: DateTime!
 }
 
+"""Possible NotificationType options: EMAIL, PUSH"""
 enum NotificationType {
   EMAIL
   PUSH
 }
 
+"""Possible PermissionLevel options : READ, WRITE, ADMIN"""
 enum PermissionLevel {
   ADMIN
   READ
@@ -419,11 +464,14 @@ type Query {
   findSentInvitations: [Invitation!]!
   findTagById(id: Float!): Tag!
   findTaskById(id: Int!): Task!
+  getAllCalendarEvents: [CalendarEvent!]!
   getAllEvent: [Event!]!
   getAllLinkGroups: [LinkGroup!]!
   getAllMeeting: [Meeting!]!
   getAllTask: [Task!]!
   getAutoInstructions(userId: Float!): [AutoInstruction!]!
+  getCalendarEvent(id: Int!): CalendarEvent!
+  getCalendarEventsByUserId(userId: Int!): [CalendarEvent!]!
   getDailyPlan(date: String!): DailyPlan
   getDailyTaskHistory(date: String!): [DailyTaskHistory!]!
   getDailyTasks(date: String): [DailyTask!]!
@@ -446,6 +494,7 @@ type Query {
   validateToken(dto: TokenValidationDto!): Boolean!
 }
 
+"""Possible recurrence options: NONE, DAILY, WEEKLY, MONTHLY, ANNUAL"""
 enum Recurrence {
   ANNUAL
   DAILY
@@ -612,6 +661,7 @@ type Task {
   userId: Int!
 }
 
+"""Possible TimeUnit options : MINUTES, HOURS, DAYS"""
 enum TimeUnit {
   DAYS
   HOURS
@@ -626,6 +676,23 @@ input UpdateAutoInstructionInput {
   description: String!
   id: Float!
   order: Float!
+}
+
+input UpdateCalendarEventDto {
+  description: String
+  endDate: DateTime
+  eventType: String
+  googleEventId: String
+  isRecurring: Boolean
+  link: String
+  location: String
+  notificationPreferenceId: Int
+  notificationSent: Boolean
+  place: String
+  recurrence: String
+  startDate: DateTime
+  title: String
+  token: String
 }
 
 input UpdateDailyTaskDto {

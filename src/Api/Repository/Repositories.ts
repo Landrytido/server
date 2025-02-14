@@ -17,6 +17,7 @@ import NotificationPreferenceRepository from "./NotificationPreferenceRepository
 import DailyTaskRepository from "./DailyTask/DailyTaskRepository";
 import DailyPlanRepository from "./DailyTask/DailyPlanRepository";
 import DailyTaskHistoryRepository from "./DailyTask/DailyTaskHistoryRepository";
+import CalendarEventRepository from "./CalendarEvent/CalendarEventRepository";
 
 export const Repositories = [
     UserRepository,
@@ -38,5 +39,6 @@ export const Repositories = [
     NotificationPreferenceRepository,
     DailyTaskRepository,
     DailyPlanRepository,
-    DailyTaskHistoryRepository
+    DailyTaskHistoryRepository,
+    CalendarEventRepository
 ];

@@ -53,6 +53,7 @@ model User {
   DailyTask        DailyTask[]
   DailyPlan        DailyPlan[]
   DailyTaskHistory DailyTaskHistory[]
+  CalendarEvent    CalendarEvent[]
 }
 
 model AutoInstruction {
@@ -305,17 +306,18 @@ model Meeting {
 }
 
 model NotificationPreference {
-  id         Int                          @id @default(autoincrement())
-  userId     Int                          @unique
-  user       User                         @relation(fields: [userId], references: [id])
-  types      NotificationPreferenceType[]
-  timeBefore Int
-  timeUnit   TimeUnit
-  createdAt  DateTime                     @default(now())
-  updatedAt  DateTime                     @default(now()) @updatedAt
-  tasks      Task[]
-  events     Event[]
-  meetings   Meeting[]
+  id            Int                          @id @default(autoincrement())
+  userId        Int                          @unique
+  user          User                         @relation(fields: [userId], references: [id])
+  types         NotificationPreferenceType[]
+  timeBefore    Int
+  timeUnit      TimeUnit
+  createdAt     DateTime                     @default(now())
+  updatedAt     DateTime                     @default(now()) @updatedAt
+  tasks         Task[]
+  events        Event[]
+  meetings      Meeting[]
+  CalendarEvent CalendarEvent[]
 }
 
 model NotificationPreferenceType {
@@ -388,3 +390,34 @@ model DailyTaskHistory {
 }
 
 // <<< feat (daily-tasks)
+
+// refactor (calendar) >>>
+enum CalendarEventType {
+  TASK
+  EVENT
+}
+
+model CalendarEvent {
+  id                       Int                     @id @default(autoincrement())
+  googleEventId            String?                 @unique
+  eventType                CalendarEventType       @default(EVENT)
+  title                    String                  @db.Text
+  description              String                  @db.Text
+  startDate                DateTime
+  endDate                  DateTime
+  isRecurring              Boolean?                @default(false)
+  recurrence               Recurrence?             @default(NONE)
+  location                 String                  @db.Text
+  place                    String?                 @db.Text
+  link                     String?                 @db.Text
+  token                    String?                 @unique
+  userId                   Int
+  user                     User                    @relation(fields: [userId], references: [id])
+  notificationPreferenceId Int?
+  notificationPreference   NotificationPreference? @relation(fields: [notificationPreferenceId], references: [id])
+  notificationSent         Boolean?                @default(false)
+  createdAt                DateTime                @default(now())
+  updatedAt                DateTime                @default(now()) @updatedAt
+}
+
+// <<< refactor (calendar)

@@ -1,5 +1,5 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
-import { NotificationType, TimeUnit } from "src/main";
+import {NotificationType, TimeUnit} from "@prisma/client";
 
 @ObjectType()
 export class NotificationCustom {
