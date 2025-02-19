@@ -49,11 +49,13 @@ model User {
   devices                DeviceToken[]
   notificationPreference NotificationPreference?
 
-  AutoInstruction  AutoInstruction[]
-  DailyTask        DailyTask[]
-  DailyPlan        DailyPlan[]
-  DailyTaskHistory DailyTaskHistory[]
-  CalendarEvent    CalendarEvent[]
+  AutoInstruction    AutoInstruction[]
+  DailyTask          DailyTask[]
+  DailyPlan          DailyPlan[]
+  DailyTaskHistory   DailyTaskHistory[]
+  CalendarEvent      CalendarEvent[]
+  googleAccessToken  String?            @db.Text // Ajout du token d'accès Google
+  googleRefreshToken String?            @db.Text // (Optionnel) Pour rafraîchir le token
 }
 
 model AutoInstruction {
@@ -66,7 +68,7 @@ model AutoInstruction {
   user        User     @relation(fields: [userId], references: [id])
 }
 
-//web and mobile tokens for the notifications
+// web and mobile tokens for the notifications
 model DeviceToken {
   id        Int      @id @default(autoincrement())
   token     String   @unique
@@ -401,7 +403,7 @@ model CalendarEvent {
   id                       Int                     @id @default(autoincrement())
   googleEventId            String?                 @unique
   eventType                CalendarEventType       @default(EVENT)
-  title                    String                  @db.Text
+  title                    String?                 @db.Text
   description              String                  @db.Text
   startDate                DateTime
   endDate                  DateTime

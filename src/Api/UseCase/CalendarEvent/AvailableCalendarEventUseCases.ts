@@ -6,6 +6,7 @@ import MarkNotificationAsSentUseCase from "./MarkNotificationAsSent/MarkNotifica
 import UpdateCalendarEventUseCase from "./UpdateCalendarEvent/UpdateCalendarEventUseCase";
 import GetCalendarEventsByUserIdUseCase from "./GetCalendarEventsByUserId/GetCalendarEventsByUserIdUseCase";
 import GetCalendarEventByTokenUseCase from "./GetCalendarEventByToken/GetCalendarEventByTokenUseCase";
+import SyncCalendarEventsFromGoogleUseCase from "./SyncCalendarEventsFromGoogle/SyncCalendarEventsFromGoogleUseCase";
 
 export type AvailableCalendarEventUseCases =
 	| CreateCalendarEventUseCase
@@ -16,3 +17,4 @@ export type AvailableCalendarEventUseCases =
 	| GetCalendarEventsByUserIdUseCase
 	| MarkNotificationAsSentUseCase
 	| UpdateCalendarEventUseCase
+	| SyncCalendarEventsFromGoogleUseCase

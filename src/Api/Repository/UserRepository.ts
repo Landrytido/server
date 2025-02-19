@@ -48,4 +48,13 @@ export default class UserRepository {
       data: data as Prisma.XOR<Prisma.UserUpdateInput, Prisma.UserUncheckedUpdateInput>
     });
   }
+
+  /**
+   * Vérifie si l’utilisateur est connecté via Google.
+   * Ici, nous considérons que si `password` est null, l’utilisateur s’est inscrit via Google.
+   */
+  async hasGoogleAuth(userId: number): Promise<boolean> {
+    const user = await this.findById(userId);
+    return user && user.password === null;
+  }
 }

@@ -9,40 +9,42 @@ import UserResolver from "./UserResolver";
 import InvitationResolver from "./InvitationResolver";
 import SearchHistoryResolver from "./SearchHistoryResolver";
 import CommentResolver from "./CommentResolver";
-import { ScoreResolver } from "./ScoreResolver";
+import {ScoreResolver} from "./ScoreResolver";
 import NoteTaskResolver from "./NoteTasksResolver";
 import FileResolver from "./FileResolver";
 import MeetingResolver from "./MeetingResolver";
 import {NotificationResolver} from "./NotificationResolver";
-import { DeviceResolver } from "./DeviceResolver";
-import { AutoInstructionResolver } from "./AutoInstructionResolver";
+import {DeviceResolver} from "./DeviceResolver";
+import {AutoInstructionResolver} from "./AutoInstructionResolver";
 import NotificationPreferenceResolver from "./NotificationPreferenceResolver";
 import DailyTaskResolver from "./DailyTask/DailyTaskResolver";
 import HistoryResolver from "./DailyTask/HistoryResolver";
 import CalendarEventResolver from "./CalendarEvent/CalendarEventResolver";
+import {GoogleCalendarResolver} from "./CalendarEvent/GoogleCalendarResolver";
 
 export const Resolvers = [
-  UserResolver,
-  SearchHistoryResolver,
-  TagResolver,
-  TaskResolver,
-  NotebookResolver,
-  NoteResolver,
-  InvitationResolver,
-  LinkGroupResolver,
-  LinkResolver,
-  LinkClickResolver,
-  CommentResolver,
-  ScoreResolver,
-  NoteTaskResolver,
-  FileResolver,
-  MeetingResolver,
-  NotificationResolver,
-  DeviceResolver,
-  AutoInstructionResolver,
-  NotificationPreferenceResolver,
-  DailyTaskResolver,
-  HistoryResolver,
-  CalendarEventResolver
+    UserResolver,
+    SearchHistoryResolver,
+    TagResolver,
+    TaskResolver,
+    NotebookResolver,
+    NoteResolver,
+    InvitationResolver,
+    LinkGroupResolver,
+    LinkResolver,
+    LinkClickResolver,
+    CommentResolver,
+    ScoreResolver,
+    NoteTaskResolver,
+    FileResolver,
+    MeetingResolver,
+    NotificationResolver,
+    DeviceResolver,
+    AutoInstructionResolver,
+    NotificationPreferenceResolver,
+    DailyTaskResolver,
+    HistoryResolver,
+    CalendarEventResolver,
+    GoogleCalendarResolver
 ];
 

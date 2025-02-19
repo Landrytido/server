@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { I18nService } from "nestjs-i18n";
 import * as postmark from "postmark";
 import MailMustacheRenderer from "./MailMustacheRenderer";
+import {CalendarEventType} from "@prisma/client";
 
 @Injectable()
 export default class Mailer {
@@ -91,7 +92,7 @@ export default class Mailer {
       url: string | null;
     },
     reminderLink: string,
-    eventType: "meeting" | "task" | "event"
+    eventType: CalendarEventType
   ) {
     const translations = (this.i18n.getTranslations() as Record<string, any>).fr
       .mailing.calendarNotification;
@@ -118,7 +119,7 @@ export default class Mailer {
       ...(eventDetails.url?.trim() ? { url: eventDetails.url } : {}),
     };
 
-    const isEventOrMeeting = eventType === "event" || eventType === "meeting";
+    const isEventOrMeeting = eventType === CalendarEventType.EVENT;
 
     //Les données inclus dans le corps du mail
     const data = {

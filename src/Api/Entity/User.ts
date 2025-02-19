@@ -1,19 +1,19 @@
-import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
-import { ContextualGraphqlRequest } from "../../index";
+import {Field, GraphQLISODateTime, Int, ObjectType} from "@nestjs/graphql";
+import {ContextualGraphqlRequest} from "../../index";
 import Session from "./Session";
 import Note from "./Note";
 import Notebook from "./Notebook";
 import LinkGroup from "./LinkGroup";
 import Link from "./Link";
 import Task from "./Task";
-import { NoteCollaboration } from "./NoteCollaboration";
+import {NoteCollaboration} from "./NoteCollaboration";
 import Invitation from "./Invitation";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import ResetToken from "./ResetToken";
 import Comment from "./Comment";
 import SearchHistory from "./SearchHistory";
-import { Relation } from "./Relation";
-import { NotificationPreference } from "./NotificationPreference";
+import {Relation} from "./Relation";
+import {NotificationPreference} from "./NotificationPreference";
 
 @ObjectType()
 export default class User {
@@ -25,13 +25,13 @@ export default class User {
 
   password: string;
 
-  @Field({ nullable: true })
+  @Field({nullable: true})
   firstName?: string; // Permettre le nullable
 
-  @Field({ nullable: true })
+  @Field({nullable: true})
   lastName?: string; // Permettre le nullable
 
-  @Field({ nullable: true }) 
+  @Field({nullable: true})
   lastLoginDate?: Date;
 
   @Field(() => [Session])
@@ -84,6 +84,12 @@ export default class User {
 
   @Field(() => [SearchHistory])
   searchHistory?: SearchHistory[];
+
+  @Field({nullable: true})
+  googleAccessToken?: string;
+
+  @Field({nullable: true})
+  googleRefreshToken?: string;
 
   context?: ContextualGraphqlRequest;
 }

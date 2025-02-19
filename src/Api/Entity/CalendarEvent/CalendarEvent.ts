@@ -15,8 +15,8 @@ export default class CalendarEvent {
     @Field({defaultValue: CalendarEventType.EVENT})
     eventType: CalendarEventType
 
-    @Field()
-    title: string;
+    @Field({nullable: true})
+    title?: string;
 
     @Field({nullable: true})
     description?: string;

@@ -9,10 +9,10 @@ import axios from 'axios';
 @Injectable()
 export default class LoginWithGoogle implements UseCase<Promise<string>, [accessToken: string]> {
   constructor(
-    @Inject('Authenticator') private authenticator: Authenticator,
-    private readonly userRepository: UserRepository,
-    private readonly configService: ConfigService,
-    private readonly eventEmitter: RequestEventEmitter,
+        @Inject('Authenticator') private authenticator: Authenticator,
+        private readonly userRepository: UserRepository,
+        private readonly configService: ConfigService,
+        private readonly eventEmitter: RequestEventEmitter,
   ) {}
 
   async handle(context: ContextualGraphqlRequest, accessToken: string): Promise<string> {
@@ -35,14 +35,22 @@ export default class LoginWithGoogle implements UseCase<Promise<string>, [access
       const lastName = payload.family_name || null;
 
       let user = await this.userRepository.findByEmail(email);
-
       if (!user) {
         user = await this.userRepository.create({
           email,
           password: null,
           firstName,
           lastName,
-          lastLoginDate:null
+          googleAccessToken: accessToken,      // Stockage du token ici
+          googleRefreshToken: payload.refresh_token || null,
+          lastLoginDate: new Date(),
+        });
+      } else {
+        // Vous pouvez aussi mettre à jour les tokens si nécessaire
+        await this.userRepository.save({
+          id: user.id,
+          googleAccessToken: accessToken,
+          googleRefreshToken: payload.refresh_token || user.googleRefreshToken,
         });
       }
 

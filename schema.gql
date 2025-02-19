@@ -350,6 +350,9 @@ type Mutation {
   saveTask(dto: SaveTaskDto!): Task!
   saveUser(dto: SaveUserDto!): User!
   sendNotification(additionalData: AdditionalDataInput, message: String!, userId: Float!): Boolean!
+
+  """Synchronize Google Calendar events"""
+  syncGoogleCalendar: Boolean!
   updateAutoInstruction(updateAutoInstructionInput: UpdateAutoInstructionInput!): AutoInstruction!
   updateCalendarEvent(dto: UpdateCalendarEventDto!, id: Int!): CalendarEvent!
   updateComment(commentId: Float!, data: CommentDto!): Comment!
@@ -471,6 +474,7 @@ type Query {
   getAllTask: [Task!]!
   getAutoInstructions(userId: Float!): [AutoInstruction!]!
   getCalendarEvent(id: Int!): CalendarEvent!
+  getCalendarEventsByToken(token: String!): [CalendarEvent!]!
   getCalendarEventsByUserId(userId: Int!): [CalendarEvent!]!
   getDailyPlan(date: String!): DailyPlan
   getDailyTaskHistory(date: String!): [DailyTaskHistory!]!
@@ -725,6 +729,8 @@ type User {
   email: String!
   firstName: String
   friends: [Relation!]!
+  googleAccessToken: String
+  googleRefreshToken: String
   id: Int!
   invitationsReceived: [Invitation!]!
   invitationsSent: [Invitation!]!

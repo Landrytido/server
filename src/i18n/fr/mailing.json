@@ -13,9 +13,8 @@
   "calendarNotification": {
     "emailSubject": "Rappel",
     "subject": {
-      "meeting": "Un meeting à venir",
-      "task": "Une tâche à venir",
-      "event": "Un événement à venir"
+      "TASK": "Une tâche à venir",
+      "EVENT": "Un événement à venir"
     },
     "location": "Mode de participation",
     "place": "Lieu",
