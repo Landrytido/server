@@ -409,8 +409,7 @@ model CalendarEvent {
   endDate                  DateTime
   isRecurring              Boolean?                @default(false)
   recurrence               Recurrence?             @default(NONE)
-  location                 String                  @db.Text
-  place                    String?                 @db.Text
+  location                 String?                 @db.Text
   link                     String?                 @db.Text
   token                    String?                 @unique
   userId                   Int
