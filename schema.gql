@@ -35,12 +35,12 @@ type CalendarEvent {
   link: String
   location: String!
   notificationPreference: NotificationPreference!
-  notificationPreferenceId: Int!
+  notificationPreferenceId: Int
   notificationSent: Boolean
   place: String
   recurrence: Recurrence
   startDate: DateTime!
-  title: String!
+  title: String
   token: String
   updatedAt: DateTime!
   user: User!
@@ -94,7 +94,7 @@ input CreateCalendarEventDto {
   place: String
   recurrence: String
   startDate: DateTime!
-  title: String!
+  title: String
   token: String
 }
 
@@ -723,6 +723,7 @@ input UpdateNoteTaskDto {
 }
 
 type User {
+  calendarEvents: [CalendarEvent!]!
   collaborations: [NoteCollaboration!]!
   comments: [Comment!]!
   createdAt: DateTime!
