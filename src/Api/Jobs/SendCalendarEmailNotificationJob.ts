@@ -44,7 +44,6 @@ export class SendCalendarEmailNotificationJob {
           notificationPreference.timeUnit,
         );
         // Pour les tâches, utiliser dueDate ; pour les événements, startDate
-        // TODO: Check for dueDate
         const referenceDate =
           item.eventType === CalendarEventType.TASK
             ? item.dueDate

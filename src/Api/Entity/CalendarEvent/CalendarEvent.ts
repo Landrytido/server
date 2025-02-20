@@ -1,4 +1,3 @@
-// src/Entity/DailyTask/DailyTask.ts
 import { ObjectType, Field, Int, GraphQLISODateTime } from "@nestjs/graphql";
 import { CalendarEventType, Recurrence } from "@prisma/client";
 import User from "../User";
@@ -15,17 +14,20 @@ export default class CalendarEvent {
   @Field({ defaultValue: CalendarEventType.EVENT })
   eventType: CalendarEventType;
 
-  @Field({ nullable: true })
-  title?: string;
+  @Field()
+  title: string;
 
   @Field({ nullable: true })
   description?: string;
 
-  @Field(() => GraphQLISODateTime)
-  startDate: Date;
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  dueDate?: Date;
 
-  @Field(() => GraphQLISODateTime)
-  endDate: Date;
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  startDate?: Date;
+
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  endDate?: Date;
 
   @Field()
   isRecurring: boolean;

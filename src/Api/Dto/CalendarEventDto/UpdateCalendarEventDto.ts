@@ -16,6 +16,9 @@ export class UpdateCalendarEventDto {
   description?: string;
 
   @Field({ nullable: true })
+  dueDate?: Date;
+
+  @Field({ nullable: true })
   startDate?: Date;
 
   @Field({ nullable: true })

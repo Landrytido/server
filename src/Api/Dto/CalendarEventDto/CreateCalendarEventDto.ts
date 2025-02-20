@@ -15,11 +15,14 @@ export class CreateCalendarEventDto {
   @Field({ nullable: true })
   description?: string;
 
-  @Field()
-  startDate: Date;
+  @Field({ nullable: true })
+  dueDate?: Date;
 
-  @Field()
-  endDate: Date;
+  @Field({ nullable: true })
+  startDate?: Date;
+
+  @Field({ nullable: true })
+  endDate?: Date;
 
   @Field()
   isRecurring: boolean;

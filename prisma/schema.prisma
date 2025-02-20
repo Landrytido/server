@@ -405,8 +405,9 @@ model CalendarEvent {
   eventType                CalendarEventType       @default(EVENT)
   title                    String?                 @db.Text
   description              String                  @db.Text
-  startDate                DateTime
-  endDate                  DateTime
+  dueDate                  DateTime?
+  startDate                DateTime?
+  endDate                  DateTime?
   isRecurring              Boolean?                @default(false)
   recurrence               Recurrence?             @default(NONE)
   location                 String?                 @db.Text
