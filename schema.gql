@@ -33,11 +33,10 @@ type CalendarEvent {
   id: Int!
   isRecurring: Boolean!
   link: String
-  location: String!
+  location: String
   notificationPreference: NotificationPreference!
-  notificationPreferenceId: Int
+  notificationPreferenceId: Int!
   notificationSent: Boolean
-  place: String
   recurrence: Recurrence
   startDate: DateTime!
   title: String
@@ -89,9 +88,8 @@ input CreateCalendarEventDto {
   googleEventId: String
   isRecurring: Boolean!
   link: String
-  location: String!
+  location: String
   notificationPreferenceId: Int
-  place: String
   recurrence: String
   startDate: DateTime!
   title: String
@@ -692,7 +690,6 @@ input UpdateCalendarEventDto {
   location: String
   notificationPreferenceId: Int
   notificationSent: Boolean
-  place: String
   recurrence: String
   startDate: DateTime
   title: String
