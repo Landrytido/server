@@ -81,11 +81,10 @@ export default class CalendarEventResolver {
   @Query(() => [CalendarEvent])
   async getCalendarEventsByUserId(
     @ContextualRequest() context: CtxRequest,
-    @Args("userId", { type: () => Int }) userId: number,
   ): Promise<CalendarEvent[]> {
     return (await (
       await this.useCaseFactory.create(GetCalendarEventsByUserIdUseCase)
-    ).handle(context, userId)) as CalendarEvent[];
+    ).handle(context)) as CalendarEvent[];
   }
 
   @UseGuards(GraphqlAuthGuard)
