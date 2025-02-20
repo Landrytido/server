@@ -27,7 +27,8 @@ input AutoInstructionInput {
 type CalendarEvent {
   createdAt: DateTime!
   description: String
-  endDate: DateTime!
+  dueDate: DateTime
+  endDate: DateTime
   eventType: String!
   googleEventId: String
   id: Int!
@@ -38,8 +39,8 @@ type CalendarEvent {
   notificationPreferenceId: Int!
   notificationSent: Boolean
   recurrence: Recurrence
-  startDate: DateTime!
-  title: String
+  startDate: DateTime
+  title: String!
   token: String
   updatedAt: DateTime!
   user: User!
@@ -83,7 +84,8 @@ input CreateAutoInstructionInput {
 
 input CreateCalendarEventDto {
   description: String
-  endDate: DateTime!
+  dueDate: DateTime
+  endDate: DateTime
   eventType: String! = "EVENT"
   googleEventId: String
   isRecurring: Boolean!
@@ -91,7 +93,7 @@ input CreateCalendarEventDto {
   location: String
   notificationPreferenceId: Int
   recurrence: String
-  startDate: DateTime!
+  startDate: DateTime
   title: String
   token: String
 }
@@ -473,7 +475,7 @@ type Query {
   getAutoInstructions(userId: Float!): [AutoInstruction!]!
   getCalendarEvent(id: Int!): CalendarEvent!
   getCalendarEventsByToken(token: String!): [CalendarEvent!]!
-  getCalendarEventsByUserId(userId: Int!): [CalendarEvent!]!
+  getCalendarEventsByUserId: [CalendarEvent!]!
   getDailyPlan(date: String!): DailyPlan
   getDailyTaskHistory(date: String!): [DailyTaskHistory!]!
   getDailyTasks(date: String): [DailyTask!]!
@@ -682,6 +684,7 @@ input UpdateAutoInstructionInput {
 
 input UpdateCalendarEventDto {
   description: String
+  dueDate: DateTime
   endDate: DateTime
   eventType: String
   googleEventId: String
