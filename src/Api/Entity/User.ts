@@ -1,12 +1,12 @@
-import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
-import { ContextualGraphqlRequest } from "../../index";
+import {Field, GraphQLISODateTime, Int, ObjectType} from "@nestjs/graphql";
+import {ContextualGraphqlRequest} from "../../index";
 import Session from "./Session";
 import Note from "./Note";
 import Notebook from "./Notebook";
 import LinkGroup from "./LinkGroup";
 import Link from "./Link";
 import Task from "./Task";
-import { NoteCollaboration } from "./NoteCollaboration";
+import {NoteCollaboration} from "./NoteCollaboration";
 import Invitation from "./Invitation";
 import MeetSharedWithMember from "./MeetSharedWithMember";
 import ResetToken from "./ResetToken";
@@ -26,10 +26,10 @@ export default class User {
 
   password: string;
 
-  @Field({ nullable: true })
+  @Field({nullable: true})
   firstName?: string; // Permettre le nullable
 
-  @Field({ nullable: true })
+  @Field({nullable: true})
   lastName?: string; // Permettre le nullable
 
   @Field({ nullable: true })
@@ -97,4 +97,3 @@ export default class User {
 
   context?: ContextualGraphqlRequest;
 }
-

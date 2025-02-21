@@ -25,10 +25,10 @@ export default class LinkRepository {
   }
 
   async save(
-      userId: number,
-      data:
-          | Prisma.XOR<Prisma.LinkCreateInput, Prisma.LinkUncheckedCreateInput>
-          | Prisma.XOR<Prisma.LinkUpdateInput, Prisma.LinkUncheckedUpdateInput>,
+    userId: number,
+    data:
+      | Prisma.XOR<Prisma.LinkCreateInput, Prisma.LinkUncheckedCreateInput>
+      | Prisma.XOR<Prisma.LinkUpdateInput, Prisma.LinkUncheckedUpdateInput>
   ) {
     if (!data.id) {
       return this.prisma.link.create({
@@ -37,8 +37,8 @@ export default class LinkRepository {
           description: data.description as string | null,
           url: data.url as string,
           image: data.imageId
-              ? { connect: { id: data.imageId as number } }
-              : undefined,
+            ? { connect: { id: data.imageId as number } }
+            : undefined,
           linkGroup: {
             connect: { id: data.linkGroupId as number },
           },
@@ -57,8 +57,8 @@ export default class LinkRepository {
         description: data.description as string | null,
         url: data.url as string,
         image: data.imageId
-            ? { connect: { id: data.imageId as number } }
-            : { disconnect: true },
+          ? { connect: { id: data.imageId as number } }
+          : { disconnect: true },
       },
     });
   }
@@ -72,13 +72,39 @@ export default class LinkRepository {
       where: {
         userId: userId,
         clicks: {
-          some: {
-            clicks: {
-              gte: minClicks,
-            },
-          },
+          gte: minClicks,
         },
       },
+    });
+  }
+
+  async resetHotLinks(userId: number): Promise<Prisma.BatchPayload> {
+    return this.prisma.link.updateMany({
+      where: {
+        userId: userId,
+      },
+      data: {
+        clicks: 0,
+      },
+    });
+  }
+
+  async incrementLink(userId: number, linkId: number) {
+    return this.prisma.link.update({
+      where: { id: linkId, userId: userId },
+      data: {
+        clicks: {
+          increment: 1,
+        },
+      },
+    });
+  }
+
+  async findHotLinks(userId: number, limit: number) {
+    return await this.prisma.link.findMany({
+      where: { userId },
+      orderBy: { clicks: "desc" },
+      take: limit,
     });
   }
 }

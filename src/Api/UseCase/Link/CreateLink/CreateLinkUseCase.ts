@@ -1,6 +1,5 @@
 // src/Api/UseCase/Link/CreateLink/CreateLinkUseCase.ts
-
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import LinkRepository from "../../../Repository/LinkRepository";
 import { SaveLinkDto } from "./SaveLinkDto";
 import { Link } from "@prisma/client";
@@ -9,64 +8,85 @@ import FileRepository from "../../../Repository/FileRepository";
 import FileDto from "../../File/FileDto";
 import { PuppeteerService } from "../Service/puppeteer.service";
 import { S3UploadService } from "../Service/s3-upload.service";
-
+// IMPORTANT: import fs from Node
+import { promises as fs } from "fs";
 @Injectable()
 export default class CreateLinkUseCase
   implements UseCase<Promise<Link>, [dto: SaveLinkDto]>
 {
+  private readonly logger = new Logger(CreateLinkUseCase.name);
   constructor(
     private readonly linkRepository: LinkRepository,
     private readonly filRepository: FileRepository,
     private readonly puppeteerService: PuppeteerService,
-    private readonly s3UploadService: S3UploadService,
+    private readonly s3UploadService: S3UploadService
   ) {}
-
-  async handle(context: ContextualGraphqlRequest, dto: SaveLinkDto): Promise<Link> {
+  async handle(
+    context: ContextualGraphqlRequest,
+    dto: SaveLinkDto
+  ): Promise<Link> {
+    let screenshotPath: string | null = null;
     try {
-      // (1) Log l'URL
-      console.log("CreateLinkUseCase: About to capture screenshot for URL:", dto.url);
-
-      // 1) Prendre le screenshot local
-      const screenshotPath = await this.puppeteerService.captureScreenshot(dto.url);
-      console.log("CreateLinkUseCase: Screenshot captured =>", screenshotPath);
-
-      // 2) Uploader dans S3 (Scaleway)
+      // (1) Log the URL
+      this.logger.log(`About to capture screenshot for URL: ${dto.url}`);
+      // 1) Take a local screenshot
+      screenshotPath = await this.puppeteerService.captureScreenshot(dto.url);
+      this.logger.log(`Screenshot captured => ${screenshotPath}`);
+      // 2) Upload to S3 (Scaleway)
       const timestamp = Date.now();
       const fileName = `screenshot_${timestamp}.png`;
-      console.log("CreateLinkUseCase: Uploading to S3 =>", fileName);
-
-      const uploadedUrl = await this.s3UploadService.uploadFile(screenshotPath, fileName);
-      console.log("CreateLinkUseCase: Final URL =>", uploadedUrl);
-
-      // 3) Créer l'objet File dans votre DB
+      this.logger.log(`Uploading to S3 => ${fileName}`);
+      const uploadedUrl = await this.s3UploadService.uploadFile(
+        screenshotPath,
+        fileName
+      );
+      this.logger.log(`Final URL => ${uploadedUrl}`);
+      // (NEW) Delete local file after successful upload
+      await fs.unlink(screenshotPath);
+      this.logger.log(`Deleted local file => ${screenshotPath}`);
+      screenshotPath = null;
+      // 3) Create the File object in DB
       const fileDto: FileDto = {
         filename: fileName,
         initialFilename: fileName,
-        path: "mywebcompanion", // ou ce que vous voulez en DB
+        path: "mywebcompanion", // or whatever path you want in your DB
         uri: uploadedUrl,
       };
       const savedFile = await this.filRepository.saveFile(fileDto);
-
       if (!savedFile || !savedFile.id) {
         throw new BadRequestException("File saving failed");
       }
-
-      // 4) Associer le fichier au lien
+      // 4) Associate the file with the link
       const linkDto: SaveLinkDto = {
         ...dto,
-        imageId: savedFile.id, // associe l'image
+        imageId: savedFile.id, // associate the image
       };
-
-      // 5) Créer le lien
+      // 5) Create the link
       const link = await this.linkRepository.save(context.userId, linkDto);
-      console.log("CreateLinkUseCase: Link created =>", link);
-
+      this.logger.log(`Link created => ${JSON.stringify(link)}`);
       return link;
     } catch (error) {
-      console.error("CreateLinkUseCase error:", error); 
+      // If an error occurs, optionally delete the local file if it still exists
+      if (screenshotPath) {
+        try {
+          await fs.unlink(screenshotPath);
+          this.logger.warn(
+            `Deleted local file due to error => ${screenshotPath}`
+          );
+        } catch (unlinkError) {
+          this.logger.error(
+            `Failed to delete local file after error`,
+            unlinkError.stack
+          );
+        }
+      }
+      this.logger.error(
+        `Failed to create link with screenshot`,
+        (error as Error).stack
+      );
       throw new BadRequestException(
         "Failed to create link with screenshot",
-        error.message,
+        (error as Error).message
       );
     }
   }

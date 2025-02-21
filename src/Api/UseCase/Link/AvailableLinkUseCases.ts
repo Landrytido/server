@@ -5,8 +5,10 @@ import UpdateLinkUseCase from "./UpdateLink/UpdateLinkUseCase";
 import DeleteLinkUseCase from "./DeleteLink/DeleteLinkUseCase";
 import GetLinksByLinkGroupIdUseCase from "./GetLinksByLinkGroupId/GetLinksByLinkGroupIdUseCase";
 import GetLinksByUserIdWithMinClicksUseCase from "./GetLinksByUserIdWithMinClicks/GetLinksByUserIdWithMinClicksUseCase";
-import GetSortedLinkGroupsWithTotalClicksUseCase
-    from "../LinkGroup/GetSortedLinkGroupsWithTotalClicks/GetSortedLinkGroupsWithTotalClicksUseCase";
+import GetSortedLinkGroupsWithTotalClicksUseCase from "../LinkGroup/GetSortedLinkGroupsWithTotalClicks/GetSortedLinkGroupsWithTotalClicksUseCase";
+import ResetUserHotlinksUseCase from "./ResetUserHotlinksUseCase/ResetUserHotlinksUseCase";
+import IncrementLinkUseCase from "./IncrementLinkUseCase/IncrementLinkUseCase";
+import GetHotLinksUseCase from "./GetHotLinksUseCase/GetHotLinksUseCase";
 
 export type AvailableLinkUseCases =
   | CreateLinkUseCase
@@ -16,4 +18,7 @@ export type AvailableLinkUseCases =
   | DeleteLinkUseCase
   | GetLinksByLinkGroupIdUseCase
   | GetLinksByUserIdWithMinClicksUseCase
-    | GetSortedLinkGroupsWithTotalClicksUseCase
+  | GetSortedLinkGroupsWithTotalClicksUseCase
+  | ResetUserHotlinksUseCase
+  | IncrementLinkUseCase
+  | GetHotLinksUseCase;

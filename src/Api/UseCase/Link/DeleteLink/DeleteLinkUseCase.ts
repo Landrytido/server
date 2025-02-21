@@ -16,10 +16,13 @@ export default class DeleteLinkUseCase
   constructor(
     private readonly linkRepository: LinkRepository,
     private readonly s3UploadService: S3UploadService,
-    private readonly prisma: PrismaService,
+    private readonly prisma: PrismaService
   ) {}
 
-  async handle(context: ContextualGraphqlRequest, id: number): Promise<boolean> {
+  async handle(
+    context: ContextualGraphqlRequest,
+    id: number
+  ): Promise<boolean> {
     try {
       const link = await this.linkRepository.findById(id);
       if (!link) {
@@ -44,10 +47,6 @@ export default class DeleteLinkUseCase
           });
         }
       }
-
-      await this.prisma.linkClick.deleteMany({
-        where: { linkId: link.id },
-      });
 
       await this.linkRepository.delete(id);
 

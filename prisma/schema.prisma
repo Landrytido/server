@@ -41,7 +41,6 @@ model User {
   events                 Event[]
   eventsShared           EventSharedWithMember[]
   resetTokens            ResetToken[]
-  linkClicks             LinkClick[]
   searchHistory          SearchHistory[]
   scores                 Score[]
   noteTasks              NoteTask[]
@@ -142,17 +141,17 @@ enum PermissionLevel {
 }
 
 model Link {
-  id          Int         @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
-  url         String      @db.Text
+  url         String    @db.Text
   description String?
   linkGroupId Int
   userId      Int
-  linkGroup   LinkGroup   @relation(fields: [linkGroupId], references: [id])
-  user        User        @relation(fields: [userId], references: [id])
-  clicks      LinkClick[]
+  linkGroup   LinkGroup @relation(fields: [linkGroupId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+  clicks      Int       @default(0)
   imageId     Int?
-  image       File?       @relation("link_image", fields: [imageId], references: [id])
+  image       File?     @relation("link_image", fields: [imageId], references: [id])
 }
 
 model LinkGroup {
@@ -245,15 +244,6 @@ model ResetToken {
   validityEndDate DateTime
   userId          Int
   user            User     @relation(fields: [userId], references: [id])
-}
-
-model LinkClick {
-  id     Int   @id @default(autoincrement())
-  clicks Int   @default(0)
-  linkId Int?
-  userId Int?
-  link   Link? @relation(fields: [linkId], references: [id])
-  user   User? @relation(fields: [userId], references: [id])
 }
 
 enum Level {

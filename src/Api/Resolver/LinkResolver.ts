@@ -24,9 +24,11 @@ import GetLinksByLinkGroupIdUseCase from "../UseCase/Link/GetLinksByLinkGroupId/
 import { PrismaService } from "../../Core/Datasource/Prisma";
 import LinkGroup from "../Entity/LinkGroup";
 import User from "../Entity/User";
-import LinkClick from "../Entity/LinkClick";
 import GetLinksByUserIdWithMinClicksUseCase from "../UseCase/Link/GetLinksByUserIdWithMinClicks/GetLinksByUserIdWithMinClicksUseCase";
 import FileDto from "../UseCase/File/FileDto";
+import ResetUserHotlinksUseCase from "../UseCase/Link/ResetUserHotlinksUseCase/ResetUserHotlinksUseCase";
+import IncrementLinkUseCase from "../UseCase/Link/IncrementLinkUseCase/IncrementLinkUseCase";
+import GetHotLinksUseCase from "../UseCase/Link/GetHotLinksUseCase/GetHotLinksUseCase";
 
 @Resolver(Link)
 export default class LinkResolver {
@@ -39,11 +41,11 @@ export default class LinkResolver {
   @Mutation(() => Link)
   async createLink(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("dto") dto: SaveLinkDto,
+    @Args("dto") dto: SaveLinkDto
   ) {
     return (await this.serviceFactory.create(CreateLinkUseCase)).handle(
       context,
-      dto,
+      dto
     );
   }
 
@@ -100,7 +102,10 @@ export default class LinkResolver {
     @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("id", { type: () => Int }) id: number
   ) {
-    return (await this.serviceFactory.create(DeleteLinkUseCase)).handle(context, id);
+    return (await this.serviceFactory.create(DeleteLinkUseCase)).handle(
+      context,
+      id
+    );
   }
 
   @UseGuards(GraphqlAuthGuard)
@@ -126,10 +131,37 @@ export default class LinkResolver {
     return this.prisma.user.findUnique({ where: { id: link.userId } });
   }
 
-  @ResolveField(() => [LinkClick])
-  async clicks(@Parent() link: Link) {
-    return this.prisma.linkClick.findMany({
-      where: { linkId: link.id },
-    });
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => [Link])
+  async resetUserHotlinks(
+    @ContextualRequest() context: ContextualGraphqlRequest
+  ) {
+    return (await this.serviceFactory.create(ResetUserHotlinksUseCase)).handle(
+      context
+    );
+  }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => Link)
+  async incrementLink(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("linkId", { type: () => Int }) linkId: number
+  ) {
+    return (await this.serviceFactory.create(IncrementLinkUseCase)).handle(
+      context,
+      linkId
+    );
+  }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Query(() => [Link])
+  async findHotLinks(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("limit", { type: () => Int }) limit: number
+  ) {
+    return (await this.serviceFactory.create(GetHotLinksUseCase)).handle(
+      context,
+      limit
+    );
   }
 }

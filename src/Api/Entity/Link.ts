@@ -2,7 +2,6 @@
 import { ObjectType, Field, Int } from "@nestjs/graphql";
 import LinkGroup from "./LinkGroup";
 import User from "./User";
-import LinkClick from "./LinkClick";
 import { File } from "./File"; // <-- Import la classe File
 
 @ObjectType()
@@ -31,8 +30,8 @@ export default class Link {
   @Field(() => User)
   user: User;
 
-  @Field(() => [LinkClick], { nullable: true })
-  clicks?: LinkClick[];
+  @Field(() => Int, { defaultValue: 0 })
+  clicks: number;
 
   // si vous voulez afficher l'ID associé
   @Field(() => Int, { nullable: true })
