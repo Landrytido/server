@@ -61,14 +61,22 @@ export default class CalendarEventRepository {
     userId: number,
     dto: CreateCalendarEventDto,
   ): Promise<CalendarEventWithRelations> {
+    console.log("create due date", dto.dueDate ? new Date(dto.dueDate) : null);
+    console.log(
+      "create start date",
+      dto.startDate ? new Date(dto.startDate) : null,
+    );
+    console.log("create end date", dto.endDate ? new Date(dto.endDate) : null);
+
     return this.prisma.calendarEvent.create({
       data: {
         googleEventId: dto.googleEventId,
         eventType: dto.eventType || "EVENT",
         title: dto.title,
         description: dto.description,
-        startDate: new Date(dto.startDate),
-        endDate: new Date(dto.endDate),
+        dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
+        startDate: dto.startDate ? new Date(dto.startDate) : null,
+        endDate: dto.endDate ? new Date(dto.endDate) : null,
         isRecurring: dto.isRecurring,
         recurrence: dto.recurrence,
         location: dto.location,
@@ -96,6 +104,12 @@ export default class CalendarEventRepository {
     if (!existingEvent || existingEvent.userId !== userId) {
       throw new NotFoundException("Calendar event not found");
     }
+    console.log("update due date", dto.dueDate ? new Date(dto.dueDate) : null);
+    console.log(
+      "update start date",
+      dto.startDate ? new Date(dto.startDate) : null,
+    );
+    console.log("update end date", dto.endDate ? new Date(dto.endDate) : null);
 
     return this.prisma.calendarEvent.update({
       where: { id },
@@ -104,6 +118,7 @@ export default class CalendarEventRepository {
         eventType: dto.eventType,
         title: dto.title,
         description: dto.description,
+        dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
         startDate: dto.startDate ? new Date(dto.startDate) : null,
         endDate: dto.endDate ? new Date(dto.endDate) : null,
         isRecurring: dto.isRecurring,
