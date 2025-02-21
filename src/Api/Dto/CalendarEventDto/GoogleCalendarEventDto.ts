@@ -8,6 +8,8 @@ export default class GoogleCalendarEventDto {
     /** ISO-formatted date or dateTime string */
     start: string;
     /** ISO-formatted date or dateTime string */
+    due: string;
+    /** ISO-formatted date or dateTime string */
     end: string;
     location?: string;
     isRecurring: boolean;

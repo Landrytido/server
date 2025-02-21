@@ -38,23 +38,23 @@ model User {
   invitationsSent     Invitation[]        @relation("InvitationsSent")
   invitationsReceived Invitation[]        @relation("InvitationsReceived")
 
-  events                 Event[]
-  eventsShared           EventSharedWithMember[]
-  resetTokens            ResetToken[]
-  searchHistory          SearchHistory[]
-  scores                 Score[]
-  noteTasks              NoteTask[]
-  meeting                Meeting[]
-  devices                DeviceToken[]
-  notificationPreference NotificationPreference?
+  events        Event[]
+  eventsShared  EventSharedWithMember[]
+  resetTokens   ResetToken[]
+  searchHistory SearchHistory[]
+  scores        Score[]
+  noteTasks     NoteTask[]
+  meeting       Meeting[]
+  devices       DeviceToken[]
 
-  AutoInstruction    AutoInstruction[]
-  DailyTask          DailyTask[]
-  DailyPlan          DailyPlan[]
-  DailyTaskHistory   DailyTaskHistory[]
-  CalendarEvent      CalendarEvent[]
-  googleAccessToken  String?            @db.Text // Ajout du token d'accès Google
-  googleRefreshToken String?            @db.Text // (Optionnel) Pour rafraîchir le token
+  AutoInstruction        AutoInstruction[]
+  DailyTask              DailyTask[]
+  DailyPlan              DailyPlan[]
+  DailyTaskHistory       DailyTaskHistory[]
+  CalendarEvent          CalendarEvent[]
+  googleAccessToken      String?                 @db.Text // Ajout du token d'accès Google
+  googleRefreshToken     String?                 @db.Text // (Optionnel) Pour rafraîchir le token
+  NotificationPreference NotificationPreference?
 }
 
 model AutoInstruction {

@@ -1,9 +1,9 @@
 // src/Repository/CalendarEvent/CalendarEventRepository.ts
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { PrismaService } from "../../../Core/Datasource/Prisma";
-import { CreateCalendarEventDto } from "../../Dto/CalendarEventDto/CreateCalendarEventDto";
-import { UpdateCalendarEventDto } from "../../Dto/CalendarEventDto/UpdateCalendarEventDto";
-import { CalendarEventType, Prisma, Recurrence } from "@prisma/client";
+import {Injectable, NotFoundException} from "@nestjs/common";
+import {PrismaService} from "../../../Core/Datasource/Prisma";
+import {CreateCalendarEventDto} from "../../Dto/CalendarEventDto/CreateCalendarEventDto";
+import {UpdateCalendarEventDto} from "../../Dto/CalendarEventDto/UpdateCalendarEventDto";
+import {CalendarEventType, Prisma} from "@prisma/client";
 import GoogleCalendarService from "../../Services/GoogleCalendarService";
 
 export type CalendarEventWithRelations = Prisma.CalendarEventGetPayload<{
@@ -52,8 +52,8 @@ export default class CalendarEventRepository {
 
   async findByUserId(userId: number): Promise<CalendarEventWithRelations[]> {
     return this.prisma.calendarEvent.findMany({
-      where: { userId },
-      include: { user: true, notificationPreference: true },
+      where: {userId},
+      include: {user: true, notificationPreference: true},
     });
   }
 
@@ -188,6 +188,10 @@ export default class CalendarEventRepository {
       }
     }
 
+    const notificationPreference = await this.prisma.notificationPreference.findUnique({
+      where: {userId: userId}
+    });
+
     // Update existing events or create new ones.
     for (const event of events) {
       const existingEvent = await this.prisma.calendarEvent.findUnique({
@@ -199,6 +203,7 @@ export default class CalendarEventRepository {
           eventType: "EVENT",
           title: event.summary,
           description: event.description ?? "",
+          dueDate: new Date(event.due),
           startDate: new Date(event.start),
           endDate: new Date(event.end),
           isRecurring: event.isRecurring,
@@ -206,7 +211,7 @@ export default class CalendarEventRepository {
           location: event.location ?? "",
           link: event.link ?? "",
           token: null,
-          notificationPreferenceId: null,
+          notificationPreferenceId: notificationPreference.id,
           notificationSent: null,
         });
       } else {
@@ -215,6 +220,7 @@ export default class CalendarEventRepository {
           eventType: "EVENT",
           title: event.summary,
           description: event.description ?? "",
+          dueDate: new Date(event.due),
           startDate: new Date(event.start),
           endDate: new Date(event.end),
           isRecurring: event.isRecurring,
@@ -222,7 +228,7 @@ export default class CalendarEventRepository {
           location: event.location ?? "",
           link: event.link ?? "",
           token: null,
-          notificationPreferenceId: null,
+          notificationPreferenceId: notificationPreference.id,
         });
       }
     }
@@ -254,6 +260,10 @@ export default class CalendarEventRepository {
       }
     }
 
+    const notificationPreference = await this.prisma.notificationPreference.findUnique({
+      where: {userId: userId}
+    });
+
     // Update existing tasks or create new ones.
     for (const task of tasks) {
       const existingTask = await this.prisma.calendarEvent.findUnique({
@@ -265,6 +275,7 @@ export default class CalendarEventRepository {
           eventType: "TASK",
           title: task.summary,
           description: task.description,
+          dueDate: new Date(task.due),
           startDate: new Date(task.start),
           endDate: new Date(task.end),
           isRecurring: task.isRecurring,
@@ -272,7 +283,7 @@ export default class CalendarEventRepository {
           location: task.location,
           link: task.link,
           token: null,
-          notificationPreferenceId: null,
+          notificationPreferenceId: notificationPreference.id,
           notificationSent: null,
         });
       } else {
@@ -281,6 +292,7 @@ export default class CalendarEventRepository {
           eventType: "TASK",
           title: task.summary,
           description: task.description,
+          dueDate: new Date(task.due),
           startDate: new Date(task.start),
           endDate: new Date(task.end),
           isRecurring: task.isRecurring,
@@ -288,7 +300,7 @@ export default class CalendarEventRepository {
           location: task.location,
           link: task.link,
           token: null,
-          notificationPreferenceId: null,
+          notificationPreferenceId: notificationPreference.id,
         });
       }
     }

@@ -2,14 +2,12 @@ import UserRepository from "./UserRepository";
 import LinkGroupRepository from "./LinkGroupRepository";
 import LinkRepository from "./LinkRepository";
 import TagRepository from "./TagRepository";
-import TaskRepository from "./TaskRepository";
 import NotebookRepository from "./NotebookRepository";
 import NoteRepository from "./NoteRepository";
 import InvitationRepository from "./InvitationRepository";
 import SearchHistoryRepository from "./SearchHistoryRepository";
 import { ScoreRepository } from "./ScoreRepository";
 import NoteTasksRepository from "./NoteTasksRepository";
-import MeetingRepository from "./MeetingRepository";
 import { AutoInstructionRepository } from "./AutoInstructionRepositorty";
 import { NotificationRepository } from "./NotificationRepository";
 import NotificationPreferenceRepository from "./NotificationPreferenceRepository";
@@ -23,7 +21,6 @@ export const Repositories = [
   SearchHistoryRepository,
   SearchHistoryRepository,
   TagRepository,
-  TaskRepository,
   NotebookRepository,
   NoteRepository,
   InvitationRepository,
@@ -31,7 +28,6 @@ export const Repositories = [
   LinkRepository,
   NoteTasksRepository,
   ScoreRepository,
-  MeetingRepository,
   NotificationRepository,
   AutoInstructionRepository,
   NotificationPreferenceRepository,

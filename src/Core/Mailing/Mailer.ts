@@ -42,7 +42,6 @@ export default class Mailer {
         Subject: subject,
         HtmlBody: htmlContent,
       });
-      console.log(`Email sent successfully to ${recipientEmail}`);
     } catch (error) {
       console.error(`Error sending email to ${recipientEmail}:`, error);
       throw new Error("Failed to send email");

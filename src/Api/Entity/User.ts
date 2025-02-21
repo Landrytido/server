@@ -5,10 +5,8 @@ import Note from "./Note";
 import Notebook from "./Notebook";
 import LinkGroup from "./LinkGroup";
 import Link from "./Link";
-import Task from "./Task";
 import {NoteCollaboration} from "./NoteCollaboration";
 import Invitation from "./Invitation";
-import MeetSharedWithMember from "./MeetSharedWithMember";
 import ResetToken from "./ResetToken";
 import Comment from "./Comment";
 import SearchHistory from "./SearchHistory";
@@ -50,9 +48,6 @@ export default class User {
   @Field(() => [Link])
   links?: Link[];
 
-  @Field(() => [Task])
-  tasks?: Task[];
-
   @Field(() => [Comment])
   comments?: Comment[];
 
@@ -68,11 +63,8 @@ export default class User {
   @Field(() => [Relation])
   friends?: Relation[];
 
-  @Field(() => [NotificationPreference])
-  notificationPreferences?: NotificationPreference[];
-
-  @Field(() => [MeetSharedWithMember])
-  meetsShared?: MeetSharedWithMember[];
+  @Field(() => NotificationPreference)
+  notificationPreference?: NotificationPreference;
 
   @Field(() => [ResetToken])
   resetTokens?: ResetToken[];
