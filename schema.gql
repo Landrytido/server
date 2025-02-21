@@ -40,7 +40,7 @@ type CalendarEvent {
   notificationSent: Boolean
   recurrence: Recurrence
   startDate: DateTime
-  title: String!
+  title: String
   token: String
   updatedAt: DateTime!
   user: User!
@@ -229,7 +229,7 @@ enum Level {
 }
 
 type Link {
-  clicks: [LinkClick!]
+  clicks: Int!
   description: String
   id: Int!
   image: File
@@ -240,15 +240,6 @@ type Link {
   url: String!
   user: User!
   userId: Int!
-}
-
-type LinkClick {
-  clicks: Int!
-  id: Int!
-  link: Link
-  linkId: Int
-  user: User
-  userId: Int
 }
 
 type LinkGroup {
@@ -317,20 +308,19 @@ type Mutation {
   createNotebook(dto: SaveNotebookDto!): Notebook!
   createNotificationPreference(dto: SaveNotificationPreferenceDto!): NotificationPreference!
   createTag(dto: SaveTagDto!): Tag!
-  deleteAllLinkClicks: Boolean!
   deleteCalendarEvent(id: Int!): CalendarEvent!
   deleteComment(commentId: Float!): Boolean!
   deleteDailyTask(id: Int!): DailyTask!
   deleteEvent(id: Int!): Event!
   deleteInvitation(invitationId: Int!): Invitation!
   deleteLink(id: Int!): Boolean!
-  deleteLinkClick(idLinkClick: Int!): LinkClick!
   deleteLinkGroup(linkGroupId: Int!): LinkGroup!
   deleteMeeting(id: Int!): Meeting!
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
   deleteNotificationPreference(notificationPreferenceId: Int!): NotificationPreference!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
+  incrementLink(linkId: Int!): Link!
   loginWithFacebook(accessToken: String!): String!
   loginWithGithub(dto: LoginWithGithubDto!): String!
   loginWithGoogle(accessToken: String!): String!
@@ -341,7 +331,7 @@ type Mutation {
   removeNoteTaskById(id: Int!): NoteTask!
   reorderDailyTasks(dto: ReorderDailyTasksDto!): [DailyTask!]!
   reorderInstructions(instructions: [AutoInstructionInput!]!, userId: Float!): [AutoInstruction!]!
-  saveClicks(dto: SaveLinkClickDto!): LinkClick!
+  resetUserHotlinks: [Link!]!
   saveEvent(dto: saveEventDto!): Event!
   saveFile(dto: FileDto!): File!
   saveMeeting(dto: SaveMeetingDto!): Meeting!
@@ -443,10 +433,9 @@ enum PermissionLevel {
 
 type Query {
   eventByUserId(userId: Int!): [Event!]!
-  findByLinkId(linkId: Int!): [LinkClick!]!
-  findByUser: [LinkClick!]!
   findCommentsByNoteId(noteId: Float!): [Comment!]!
   findExternalEmailByToken(token: String!): String!
+  findHotLinks(limit: Int!): [Link!]!
   findLinkById(id: Int!): Link!
   findLinkGroupById(linkGroupId: Int!): LinkGroup!
   findLinkGroupsByUserId: [LinkGroup!]!
@@ -461,7 +450,6 @@ type Query {
   findNotebooksByUserId: [Notebook!]!
   findNotes: [Note!]!
   findNotesByUserId: [Note!]!
-  findOne(id: Int!): LinkClick!
   findReceivedInvitations: [Invitation!]!
   findRelations: [Relation!]!
   findSentInvitations: [Invitation!]!
@@ -530,12 +518,6 @@ type ResetToken {
 
 input SaveInvitationDto {
   email: String!
-}
-
-input SaveLinkClickDto {
-  id: Int
-  linkId: Int!
-  userId: Int
 }
 
 input SaveLinkDto {

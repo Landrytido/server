@@ -1,6 +1,5 @@
 import LinkGroupResolver from "./LinkGroupResolver";
 import LinkResolver from "./LinkResolver";
-import LinkClickResolver from "./LinkClickResolver";
 import TagResolver from "./TagResolver";
 import TaskResolver from "./TaskResolver";
 import NotebookResolver from "./NotebookResolver";
@@ -32,7 +31,6 @@ export const Resolvers = [
     InvitationResolver,
     LinkGroupResolver,
     LinkResolver,
-    LinkClickResolver,
     CommentResolver,
     ScoreResolver,
     NoteTaskResolver,
