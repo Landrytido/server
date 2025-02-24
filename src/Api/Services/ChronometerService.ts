@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { PrismaService } from "../../Core/Datasource/Prisma";
 import { Chronometer } from "@prisma/client";
 
@@ -9,15 +13,23 @@ export class ChronometerService {
   async start(
     userId: number,
     mode: "countdown" | "stopwatch",
-    duration?: number
+    duration?: number,
   ): Promise<Chronometer> {
+    console.log("toto", userId, mode, duration);
     const existingChrono = await this.prisma.chronometer.findFirst({
-      where: { userId, isRunning: true },
+      where: { userId },
     });
 
     if (existingChrono) {
-      return existingChrono;
+      console.log("existingChrono", existingChrono);
+      return this.prisma.chronometer.update({
+        where: { id: existingChrono.id },
+        data: {
+          isRunning: true,
+        },
+      });
     }
+    console.log("newChrono");
 
     return this.prisma.chronometer.create({
       data: {
@@ -38,7 +50,7 @@ export class ChronometerService {
 
     if (!chrono) {
       throw new NotFoundException(
-        "Aucun chronomètre en cours pour cet utilisateur."
+        "Aucun chronomètre en cours pour cet utilisateur.",
       );
     }
 
@@ -60,18 +72,20 @@ export class ChronometerService {
 
     if (!chrono) {
       throw new NotFoundException(
-        "Aucun chronomètre trouvé pour cet utilisateur."
+        "Aucun chronomètre trouvé pour cet utilisateur.",
       );
     }
 
-    return this.prisma.chronometer.update({
-      where: { id: chrono.id },
-      data: {
-        startTime: null,
-        isRunning: false,
-        elapsedTime: 0,
-      },
-    });
+    return await this.prisma.chronometer.delete({ where: { id: chrono.id } });
+
+    //   return this.prisma.chronometer.update({
+    //     where: { id: chrono.id },
+    //     data: {
+    //       startTime: null,
+    //       isRunning: false,
+    //       elapsedTime: 0,
+    //     },
+    //   });
   }
 
   async getChronometer(userId: number): Promise<Chronometer | null> {
