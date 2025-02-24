@@ -44,7 +44,6 @@ model User {
   searchHistory SearchHistory[]
   scores        Score[]
   noteTasks     NoteTask[]
-  meeting       Meeting[]
   devices       DeviceToken[]
 
   AutoInstruction        AutoInstruction[]
@@ -276,27 +275,6 @@ model NoteTask {
   subtasks  NoteTask[] @relation("NoteTaskRelation")
 }
 
-model Meeting {
-  id                       Int                     @id @default(autoincrement())
-  title                    String
-  description              String
-  startDate                DateTime
-  endDate                  DateTime
-  isRecurring              Boolean?                @default(false)
-  recurrence               Recurrence?             @default(NONE)
-  location                 String
-  place                    String?
-  link                     String?
-  createdAt                DateTime                @default(now())
-  updatedAt                DateTime                @default(now()) @updatedAt
-  userId                   Int
-  user                     User                    @relation(fields: [userId], references: [id])
-  notificationPreferenceId Int?
-  notificationPreference   NotificationPreference? @relation(fields: [notificationPreferenceId], references: [id])
-  notificationSent         Boolean?                @default(false)
-  token                    String?                 @unique
-}
-
 model NotificationPreference {
   id            Int                          @id @default(autoincrement())
   userId        Int                          @unique
@@ -308,7 +286,6 @@ model NotificationPreference {
   updatedAt     DateTime                     @default(now()) @updatedAt
   tasks         Task[]
   events        Event[]
-  meetings      Meeting[]
   CalendarEvent CalendarEvent[]
 }
 
