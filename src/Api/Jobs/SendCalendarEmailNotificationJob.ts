@@ -85,7 +85,7 @@ export class SendCalendarEmailNotificationJob {
           );
 
           this.logger.log(
-            `Notification envoyée pour ${item.eventType} : ${item.id} ${item.title}`,
+            `Notification envoyée pour (id:${item.id}) ${item.eventType} : ${item.title}`,
           );
 
           // Marquer la notification comme envoyée
