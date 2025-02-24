@@ -35,6 +35,9 @@ import {ReminderProcessor} from "./Services/ReminderProcessor";
 import {AutoInstructionGateway} from "./WebSocket/InstructionCardGateway";
 import GoogleCalendarService from "./Services/GoogleCalendarService";
 import LoggingModule from "../Core/Logging/LoggingModule";
+import { ChronometerResolver } from './Resolver/ChronometerResolver'; 
+import { ChronometerService } from './Services/ChronometerService';
+import { PrismaService } from '../Core/Datasource/Prisma';
 
 @Module({
     imports: [
@@ -89,6 +92,9 @@ import LoggingModule from "../Core/Logging/LoggingModule";
 	  GoogleCalendarService,
 	  AutoInstructionGateway,
 	  ...Jobs,
+	  ChronometerResolver,
+	  ChronometerService, 
+	  PrismaService, 
     ],
 })
 export class ApiModule {

@@ -56,6 +56,8 @@ model User {
   CalendarEvent      CalendarEvent[]
   googleAccessToken  String?            @db.Text // Ajout du token d'accès Google
   googleRefreshToken String?            @db.Text // (Optionnel) Pour rafraîchir le token
+
+  chronometers Chronometer[]
 }
 
 model AutoInstruction {
@@ -423,3 +425,14 @@ model CalendarEvent {
 }
 
 // <<< refactor (calendar)
+// Chronometer model
+model Chronometer {
+  id          String   @id @default(uuid())
+  startTime   DateTime?
+  elapsedTime Int
+  mode        String
+  duration    Float?
+  isRunning   Boolean  @default(false) 
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+}
