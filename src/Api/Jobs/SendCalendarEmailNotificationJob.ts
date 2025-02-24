@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import Mailer from "src/Core/Mailing/Mailer";
-import { CalendarEventType, TimeUnit } from "@prisma/client";
+import {CalendarEvent, CalendarEventType, TimeUnit} from "@prisma/client";
 import CalendarEventRepository from "../Repository/CalendarEvent/CalendarEventRepository";
 
 @Injectable()
@@ -95,13 +95,9 @@ export class SendCalendarEmailNotificationJob {
     }
   }
 
-  private generateLink(item: any): string {
+  private generateLink(item: CalendarEvent): string {
     const baseUrl = process.env.FRONTEND_URL;
-    if (item.eventType === CalendarEventType.TASK) {
-      return `${baseUrl}/task?taskToken=${item.token}`;
-    } else {
-      return `${baseUrl}/event?eventToken=${item.token}`;
-    }
+    return `${baseUrl}?event=${item.id}`;
   }
 
   private convertTimeToMilliseconds(time: number, unit: TimeUnit): number {
