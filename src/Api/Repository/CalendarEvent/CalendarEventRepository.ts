@@ -54,7 +54,10 @@ export default class CalendarEventRepository {
 		    },
 		    emailNotificationSent: false,
 		},
-		include: {user: true, notificationPreference: true},
+		include: {
+		    notificationPreference: { include: { types: true } },
+		    user: true,
+		},
 	  });
     }
 
@@ -233,8 +236,6 @@ export default class CalendarEventRepository {
 			  link: event.link ?? "",
 			  token: null,
 			  notificationPreferenceId: notificationPreference.id,
-			  pushNotificationSent: null,
-			  emailNotificationSent: null,
 		    });
 		} else {
 		    await this.create(userId, {

@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../Core/Datasource/Prisma';
 import { PushNotificationService } from '../../Core/Notification/Service/push-notification.service';
 import { PushNotificationPayload } from '../../Core/Notification/Interface/PushNotificationPayload';
-import { CalendarEventType } from '@prisma/client';
+import { CalendarEventType, NotificationType } from '@prisma/client';
 
 @Injectable()
 export class CalendarEventNotificationService {
@@ -16,6 +16,7 @@ export class CalendarEventNotificationService {
 
     /**
      * Checks for calendar events and tasks that need notifications and sends them.
+     * If the notification preference does not include PUSH, the event/task is skipped.
      */
     async sendNotifications(): Promise<void> {
 	  const now = new Date();
@@ -33,10 +34,22 @@ export class CalendarEventNotificationService {
 			  { dueDate: { not: null } },
 		    ],
 		},
-		include: { notificationPreference: true, user: true },
+		include: {
+		    notificationPreference: { include: { types: true } },
+		    user: true,
+		},
 	  });
 
 	  for (const event of events) {
+		// Check if the notification preference includes PUSH notifications.
+		const hasPush = event.notificationPreference?.types?.some(
+			(t) => t.type === NotificationType.PUSH
+		);
+		if (!hasPush) {
+		    // Skip events/tasks where PUSH is not enabled.
+		    continue;
+		}
+
 		// Determine which date to use: dueDate for tasks, startDate for events.
 		let baseDate: Date | null = null;
 		if (event.eventType === CalendarEventType.TASK) {
@@ -48,7 +61,9 @@ export class CalendarEventNotificationService {
 
 		// Calculate the scheduled notification time.
 		const notificationTime = new Date(baseDate);
-		notificationTime.setMinutes(notificationTime.getMinutes() - event.notificationPreference.timeBefore);
+		notificationTime.setMinutes(
+			notificationTime.getMinutes() - event.notificationPreference.timeBefore
+		);
 
 		if (notificationTime <= now) {
 		    // Retrieve all devices associated with the user.
@@ -65,7 +80,9 @@ export class CalendarEventNotificationService {
 		    for (const device of devices) {
 			  const payload: PushNotificationPayload = {
 				token: device.token,
-				title: event.title || (event.eventType === CalendarEventType.TASK ? 'Rappel Tâche' : 'Rappel Événement'),
+				title:
+					event.title ||
+					(event.eventType === CalendarEventType.TASK ? 'Rappel Tâche' : 'Rappel Événement'),
 				body: event.description,
 				data: { eventId: event.id.toString(), type: event.eventType },
 			  };
@@ -88,6 +105,8 @@ export class CalendarEventNotificationService {
 	  }
 
 	  // Log a single line with the counts.
-	  this.logger.log(`Push notifications sent: ${notifiedEvents} events, ${notifiedTasks} tasks`);
+	  this.logger.log(
+		  `Push notifications sent: ${notifiedEvents} events, ${notifiedTasks} tasks`
+	  );
     }
 }
