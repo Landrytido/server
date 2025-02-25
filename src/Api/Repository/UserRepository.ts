@@ -52,6 +52,7 @@ export default class UserRepository {
 		    firstName: dto.firstName,
 		    lastName: dto.lastName,
 		    lastLoginDate: new Date(),
+		    googleAccessToken: dto.googleAccessToken,
 		    NotificationPreference: {  // Notice the capital "N"
 			  create: {
 				types: {
