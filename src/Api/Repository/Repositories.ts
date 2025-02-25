@@ -9,7 +9,6 @@ import SearchHistoryRepository from "./SearchHistoryRepository";
 import { ScoreRepository } from "./ScoreRepository";
 import NoteTasksRepository from "./NoteTasksRepository";
 import { AutoInstructionRepository } from "./AutoInstructionRepositorty";
-import { NotificationRepository } from "./NotificationRepository";
 import NotificationPreferenceRepository from "./NotificationPreferenceRepository";
 import DailyTaskRepository from "./DailyTask/DailyTaskRepository";
 import DailyPlanRepository from "./DailyTask/DailyPlanRepository";
@@ -28,7 +27,6 @@ export const Repositories = [
   LinkRepository,
   NoteTasksRepository,
   ScoreRepository,
-  NotificationRepository,
   AutoInstructionRepository,
   NotificationPreferenceRepository,
   DailyTaskRepository,

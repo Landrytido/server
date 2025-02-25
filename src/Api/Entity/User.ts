@@ -10,82 +10,86 @@ import Invitation from "./Invitation";
 import ResetToken from "./ResetToken";
 import Comment from "./Comment";
 import SearchHistory from "./SearchHistory";
-import { Relation } from "./Relation";
-import { NotificationPreference } from "./NotificationPreference";
+import {Relation} from "./Relation";
+import {NotificationPreference} from "./NotificationPreference";
 import CalendarEvent from "./CalendarEvent/CalendarEvent";
+import Device from "./Device/Device";
 
 @ObjectType()
 export default class User {
-  @Field(() => Int)
-  id: number;
+    @Field(() => Int)
+    id: number;
 
-  @Field()
-  email: string;
+    @Field()
+    email: string;
 
-  password: string;
+    password: string;
 
-  @Field({nullable: true})
-  firstName?: string; // Permettre le nullable
+    @Field({nullable: true})
+    firstName?: string; // Permettre le nullable
 
-  @Field({nullable: true})
-  lastName?: string; // Permettre le nullable
+    @Field({nullable: true})
+    lastName?: string; // Permettre le nullable
 
-  @Field({ nullable: true })
-  lastLoginDate?: Date;
+    @Field({nullable: true})
+    lastLoginDate?: Date;
 
-  @Field(() => [Session])
-  sessions?: Session[];
+    @Field(() => [Session])
+    sessions?: Session[];
 
-  @Field(() => [Note])
-  notes?: Note[];
+    @Field(() => [Note])
+    notes?: Note[];
 
-  @Field(() => [Notebook])
-  notebooks?: Notebook[];
+    @Field(() => [Notebook])
+    notebooks?: Notebook[];
 
-  @Field(() => [LinkGroup])
-  linkGroups?: LinkGroup[];
+    @Field(() => [LinkGroup])
+    linkGroups?: LinkGroup[];
 
-  @Field(() => [Link])
-  links?: Link[];
+    @Field(() => [Link])
+    links?: Link[];
 
-  @Field(() => [Comment])
-  comments?: Comment[];
+    @Field(() => [Comment])
+    comments?: Comment[];
 
-  @Field(() => [NoteCollaboration])
-  collaborations?: NoteCollaboration[];
+    @Field(() => [NoteCollaboration])
+    collaborations?: NoteCollaboration[];
 
-  @Field(() => [Invitation])
-  invitationsSent?: Invitation[];
+    @Field(() => [Invitation])
+    invitationsSent?: Invitation[];
 
-  @Field(() => [Invitation])
-  invitationsReceived?: Invitation[];
+    @Field(() => [Invitation])
+    invitationsReceived?: Invitation[];
 
-  @Field(() => [Relation])
-  friends?: Relation[];
+    @Field(() => [Relation])
+    friends?: Relation[];
 
-  @Field(() => NotificationPreference)
-  notificationPreference?: NotificationPreference;
+    @Field(() => NotificationPreference)
+    notificationPreference?: NotificationPreference;
 
-  @Field(() => [ResetToken])
-  resetTokens?: ResetToken[];
+    @Field(() => [Device], {defaultValue: []})
+    devices?: Device[];
 
-  @Field(() => GraphQLISODateTime)
-  createdAt: Date;
+    @Field(() => [ResetToken])
+    resetTokens?: ResetToken[];
 
-  @Field(() => GraphQLISODateTime)
-  updatedAt: Date;
+    @Field(() => GraphQLISODateTime)
+    createdAt: Date;
 
-  @Field(() => [SearchHistory])
-  searchHistory?: SearchHistory[];
+    @Field(() => GraphQLISODateTime)
+    updatedAt: Date;
 
-  @Field(() => [CalendarEvent])
-  calendarEvents?: CalendarEvent[];
+    @Field(() => [SearchHistory])
+    searchHistory?: SearchHistory[];
 
-  @Field({ nullable: true })
-  googleAccessToken?: string;
+    @Field(() => [CalendarEvent])
+    calendarEvents?: CalendarEvent[];
 
-  @Field({ nullable: true })
-  googleRefreshToken?: string;
+    @Field({nullable: true})
+    googleAccessToken?: string;
 
-  context?: ContextualGraphqlRequest;
+    @Field({nullable: true})
+    googleRefreshToken?: string;
+
+    context?: ContextualGraphqlRequest;
 }

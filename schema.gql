@@ -2,10 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input AdditionalDataInput {
-  link: String
-}
-
 input AuthenticationDto {
   email: String!
   password: String!
@@ -28,6 +24,7 @@ type CalendarEvent {
   createdAt: DateTime!
   description: String
   dueDate: DateTime
+  emailNotificationSent: Boolean
   endDate: DateTime
   eventType: String!
   googleEventId: String
@@ -38,6 +35,7 @@ type CalendarEvent {
   notificationPreference: NotificationPreference!
   notificationPreferenceId: Int!
   notificationSent: Boolean
+  pushNotificationSent: Boolean
   recurrence: Recurrence
   startDate: DateTime
   title: String
@@ -157,10 +155,14 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type DeviceDto {
+type Device {
+  createdAt: DateTime!
+  id: Int!
   platform: String!
   token: String!
-  userId: Float!
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
 }
 
 type File {
@@ -198,6 +200,11 @@ type Invitation {
   senderId: Int!
   tokenForExternalInvitation: String
 }
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
 
 """Possible Level options: EASY, MEDIUM, HARD"""
 enum Level {
@@ -275,7 +282,7 @@ type Mutation {
   loginWithGoogle(accessToken: String!): String!
   markNotificationAsSent(id: Int!): CalendarEvent!
   register(dto: SaveUserDto!): User!
-  registerDevice(platform: String!, token: String!, userId: Float!): DeviceDto!
+  registerDevice(platform: Platform!, token: String!): Boolean!
   removeAutoInstruction(id: Float!): AutoInstruction!
   removeNoteTaskById(id: Int!): NoteTask!
   reorderDailyTasks(dto: ReorderDailyTasksDto!): [DailyTask!]!
@@ -285,7 +292,7 @@ type Mutation {
   saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveUser(dto: SaveUserDto!): User!
-  sendNotification(additionalData: AdditionalDataInput, message: String!, userId: Float!): Boolean!
+  sendPushNotification(body: String!, data: JSONObject, title: String!): Boolean!
 
   """Synchronize Google Calendar events"""
   syncGoogleCalendar: Boolean!
@@ -375,6 +382,12 @@ enum PermissionLevel {
   ADMIN
   READ
   WRITE
+}
+
+"""Possible Platform options: WEB, MOBILE"""
+enum Platform {
+  MOBILE
+  WEB
 }
 
 type Query {
@@ -564,6 +577,7 @@ input UpdateAutoInstructionInput {
 input UpdateCalendarEventDto {
   description: String
   dueDate: DateTime
+  emailNotificationSent: Boolean
   endDate: DateTime
   eventType: String
   googleEventId: String
@@ -571,7 +585,7 @@ input UpdateCalendarEventDto {
   link: String
   location: String
   notificationPreferenceId: Int
-  notificationSent: Boolean
+  pushNotificationSent: Boolean
   recurrence: String
   startDate: DateTime
   title: String
@@ -606,6 +620,7 @@ type User {
   collaborations: [NoteCollaboration!]!
   comments: [Comment!]!
   createdAt: DateTime!
+  devices: [Device!]!
   email: String!
   firstName: String
   friends: [Relation!]!

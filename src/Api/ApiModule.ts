@@ -27,6 +27,8 @@ import {S3UploadService} from "./UseCase/Link/Service/s3-upload.service";
 import {ReminderProcessor} from "./Services/ReminderProcessor";
 import {AutoInstructionGateway} from "./WebSocket/InstructionCardGateway";
 import GoogleCalendarService from "./Services/GoogleCalendarService";
+import {CalendarEventNotificationService} from "./Services/CalendarEventNotificationService";
+import {NotificationModule} from "../Core/Notification/notification.module";
 
 @Module({
     imports: [
@@ -35,6 +37,7 @@ import GoogleCalendarService from "./Services/GoogleCalendarService";
 	  EventEmitterModule.forRoot({wildcard: true}),
 	  GraphqlModule,
 	  HttpModule,
+	  NotificationModule,
 	  I18nModule.forRoot({
 		fallbackLanguage: "fr",
 		loaderOptions: {
@@ -73,6 +76,7 @@ import GoogleCalendarService from "./Services/GoogleCalendarService";
 	  ...Resolvers,
 	  ReminderProcessor,
 	  GoogleCalendarService,
+	  CalendarEventNotificationService,
 	  AutoInstructionGateway,
 	  ...Jobs,
     ],

@@ -7,7 +7,14 @@ import { ExceptionCatcher } from "./Core/ExceptionCatcher";
 import ConsoleLogger from "./Core/Logging/ConsoleLogger";
 import InitializationLogger from "./Core/Logging/InitializationLogger";
 import { registerEnumType } from "@nestjs/graphql";
-import {Level, Recurrence, CalendarEventType, PermissionLevel, TimeUnit, NotificationType} from '@prisma/client';
+import {
+  Level,
+  Recurrence,
+  CalendarEventType,
+  PermissionLevel,
+  TimeUnit,
+  NotificationType, Platform
+} from '@prisma/client';
 
 registerEnumType(Level, {
   name: "Level",
@@ -30,6 +37,10 @@ registerEnumType(Recurrence, {
 registerEnumType(CalendarEventType, {
     name: 'CalendarEventType',
     description: 'Possible CalendarEventType options: TASK, EVENT',
+});
+registerEnumType(Platform, {
+  name: 'Platform',
+  description: 'Possible Platform options: WEB, MOBILE',
 });
 registerEnumType(PermissionLevel, {
   name: "PermissionLevel",

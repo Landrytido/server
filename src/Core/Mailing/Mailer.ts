@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import {Injectable, Logger} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { I18nService } from "nestjs-i18n";
 import * as postmark from "postmark";
@@ -9,11 +9,13 @@ import {CalendarEventType} from "@prisma/client";
 export default class Mailer {
   private readonly client: postmark.Client;
   private readonly sender: string;
+  private readonly logger = new Logger(Mailer.name);
+
 
   constructor(
     private readonly config: ConfigService,
     private readonly i18n: I18nService,
-    private readonly mustache: MailMustacheRenderer
+    private readonly mustache: MailMustacheRenderer,
   ) {
     this.client = new postmark.ServerClient(
       this.config.get("POSTMARK_SERVER_TOKEN")
@@ -44,6 +46,7 @@ export default class Mailer {
       });
     } catch (error) {
       console.error(`Error sending email to ${recipientEmail}:`, error);
+      this.logger.error(`Error sending email to ${recipientEmail}:`, error);
       throw new Error("Failed to send email");
     }
   }

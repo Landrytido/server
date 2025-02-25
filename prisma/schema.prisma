@@ -44,7 +44,7 @@ model User {
   searchHistory SearchHistory[]
   scores        Score[]
   noteTasks     NoteTask[]
-  devices       DeviceToken[]
+  devices       Device[]
 
   AutoInstruction        AutoInstruction[]
   DailyTask              DailyTask[]
@@ -66,16 +66,23 @@ model AutoInstruction {
   user        User     @relation(fields: [userId], references: [id])
 }
 
-// web and mobile tokens for the notifications
-model DeviceToken {
+// feature (push-notifications) >>>
+model Device {
   id        Int      @id @default(autoincrement())
   token     String   @unique
-  platform  String // Either 'web' or 'mobile'
+  platform  Platform
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+enum Platform {
+  WEB
+  MOBILE
+}
+
+// <<< feature (push-notifications)
 
 model SearchHistory {
   id         Int      @id @default(autoincrement())
@@ -384,7 +391,8 @@ model CalendarEvent {
   user                     User                    @relation(fields: [userId], references: [id])
   notificationPreferenceId Int?
   notificationPreference   NotificationPreference? @relation(fields: [notificationPreferenceId], references: [id])
-  notificationSent         Boolean?                @default(false)
+  pushNotificationSent     Boolean?                @default(false)
+  emailNotificationSent    Boolean?                @default(false)
   createdAt                DateTime                @default(now())
   updatedAt                DateTime                @default(now()) @updatedAt
 }

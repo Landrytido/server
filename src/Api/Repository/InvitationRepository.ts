@@ -78,7 +78,6 @@ export default class InvitationRepository {
         tokenForExternalInvitation: token,
       },
     });
-    console.log("invitation token repo:", invitation);
     return invitation;
   }
 
