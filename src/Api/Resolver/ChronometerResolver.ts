@@ -83,4 +83,12 @@ export class ChronometerResolver {
   getCurrentTime(@Args("chronoId") chronoId: string) {
     return this.chronometerService.getCurrentTime(chronoId);
   }
+  @Mutation(() => ChronometerDto)
+  renameChronometer(
+    @Args("userId", { type: () => Int }) userId: number,
+    @Args("id") id: string,
+    @Args("newName") newName: string
+  ) {
+    return this.chronometerService.rename(userId, id, newName);
+  }
 }
