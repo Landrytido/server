@@ -427,12 +427,13 @@ model CalendarEvent {
 // <<< refactor (calendar)
 // Chronometer model
 model Chronometer {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
+  name        String?
+  mode        String
   startTime   DateTime?
   elapsedTime Int
-  mode        String
-  duration    Float?
-  isRunning   Boolean  @default(false) 
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  duration  Float?
+  isRunning Boolean  @default(false)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
 }

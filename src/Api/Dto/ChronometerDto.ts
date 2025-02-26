@@ -1,9 +1,12 @@
-import { Field, ObjectType, Int } from '@nestjs/graphql';
+import { Field, ObjectType, Int, Float } from "@nestjs/graphql";
 
 @ObjectType()
 export class ChronometerDto {
   @Field()
   id: string;
+
+  @Field({ nullable: true })
+  name?: string;
 
   @Field({ nullable: true })
   startTime?: Date;
@@ -12,11 +15,14 @@ export class ChronometerDto {
   elapsedTime: number;
 
   @Field()
-  mode: 'countdown' | 'stopwatch';
+  mode: "countdown" | "stopwatch";
 
-  @Field(() => Int, { nullable: true })
+  @Field(() => Float, { nullable: true })
   duration?: number;
 
   @Field()
   isRunning: boolean;
+
+  @Field(() => Int)
+  userId: number;
 }
