@@ -1,0 +1,7 @@
+import GetAllAutoInstructionSuggestionUseCase
+    from "./GetAllAutoInstructionSuggestion/GetAllAutoInstructionSuggestionUseCase";
+import GetAutoInstructionSuggestionUseCase from "./GetAutoInstructionSuggestion/GetAutoInstructionSuggestionUseCase";
+
+export type AvailableAutoInstructionSuggestionUseCases =
+	| GetAllAutoInstructionSuggestionUseCase
+	| GetAutoInstructionSuggestionUseCase;

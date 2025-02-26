@@ -17,6 +17,7 @@ import HistoryResolver from "./DailyTask/HistoryResolver";
 import CalendarEventResolver from "./CalendarEvent/CalendarEventResolver";
 import {GoogleCalendarResolver} from "./CalendarEvent/GoogleCalendarResolver";
 import {NotificationResolver} from "./Notification/NotificationResolver";
+import {AutoInstructionSuggestionResolver} from "./AutoInstructionSuggestion/AutoInstructionSuggestionResolver";
 
 export const Resolvers = [
     UserResolver,
@@ -37,6 +38,7 @@ export const Resolvers = [
     DailyTaskResolver,
     HistoryResolver,
     CalendarEventResolver,
-    GoogleCalendarResolver
+    GoogleCalendarResolver,
+    AutoInstructionSuggestionResolver,
 ];
 

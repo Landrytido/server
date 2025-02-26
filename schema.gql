@@ -20,6 +20,11 @@ input AutoInstructionInput {
   order: Float!
 }
 
+type AutoInstructionSuggestion {
+  description: String!
+  id: Int!
+}
+
 type CalendarEvent {
   createdAt: DateTime!
   description: String
@@ -414,6 +419,8 @@ type Query {
   findTagById(id: Float!): Tag!
   getAllCalendarEvents: [CalendarEvent!]!
   getAllLinkGroups: [LinkGroup!]!
+  getAutoInstructionSuggestionById(id: Int!): AutoInstructionSuggestion!
+  getAutoInstructionSuggestions: [AutoInstructionSuggestion!]!
   getAutoInstructions(userId: Float!): [AutoInstruction!]!
   getCalendarEvent(id: Int!): CalendarEvent!
   getCalendarEventsByToken(token: String!): [CalendarEvent!]!

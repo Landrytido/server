@@ -58,13 +58,21 @@ model User {
 
 model AutoInstruction {
   id          Int      @id @default(autoincrement())
-  description String
+  description String   @db.Text
   order       Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   userId      Int
   user        User     @relation(fields: [userId], references: [id])
 }
+
+// feature (autoinstructions-suggestions) >>>
+model AutoInstructionSuggestion {
+  id          Int    @id @default(autoincrement())
+  description String @db.Text
+}
+
+// <<< feature (autoinstructions-suggestions)
 
 // feature (push-notifications) >>>
 model Device {
