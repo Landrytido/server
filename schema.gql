@@ -352,6 +352,7 @@ type Mutation {
   registerDevice(platform: String!, token: String!, userId: Float!): DeviceDto!
   removeAutoInstruction(id: Float!): AutoInstruction!
   removeNoteTaskById(id: Int!): NoteTask!
+  renameChronometer(id: String!, newName: String!, userId: Int!): ChronometerDto!
   reorderDailyTasks(dto: ReorderDailyTasksDto!): [DailyTask!]!
   reorderInstructions(instructions: [AutoInstructionInput!]!, userId: Float!): [AutoInstruction!]!
   resetChronometer(id: String!, userId: Int!): ChronometerDto!
