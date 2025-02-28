@@ -46,14 +46,16 @@ model User {
   noteTasks     NoteTask[]
   devices       Device[]
 
-  AutoInstruction        AutoInstruction[]
-  DailyTask              DailyTask[]
-  DailyPlan              DailyPlan[]
-  DailyTaskHistory       DailyTaskHistory[]
-  CalendarEvent          CalendarEvent[]
-  googleAccessToken      String?                 @db.Text // Ajout du token d'accès Google
-  googleRefreshToken     String?                 @db.Text // (Optionnel) Pour rafraîchir le token
-  NotificationPreference NotificationPreference?
+  AutoInstruction                  AutoInstruction[]
+  DailyTask                        DailyTask[]
+  DailyPlan                        DailyPlan[]
+  DailyTaskHistory                 DailyTaskHistory[]
+  CalendarEvent                    CalendarEvent[]
+  googleAccessToken                String?                   @db.Text // Ajout du token d'accès Google
+  googleRefreshToken               String?                   @db.Text // (Optionnel) Pour rafraîchir le token
+  NotificationPreference           NotificationPreference?
+  CalendarEventInvitationsSent     CalendarEventInvitation[] @relation("CalendarEventInvitationsSent")
+  CalendarEventInvitationsReceived CalendarEventInvitation[] @relation("CalendarEventInvitationsReceived")
 }
 
 model AutoInstruction {
@@ -375,6 +377,30 @@ model DailyTaskHistory {
 
 // <<< feat (daily-tasks)
 
+// NOTE: Feature - CalendarEvent >>>>>>>>>>>
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REFUSED
+}
+
+model CalendarEventInvitation {
+  id              Int              @id @default(autoincrement())
+  senderId        Int
+  receiverId      Int?
+  receiverEmail   String
+  calendarEventId Int
+  calendarEvent   CalendarEvent    @relation(fields: [calendarEventId], references: [id])
+  receiver        User?            @relation("CalendarEventInvitationsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender          User             @relation("CalendarEventInvitationsSent", fields: [senderId], references: [id], onDelete: Cascade)
+  status          InvitationStatus @default(PENDING)
+  updatedAt       DateTime         @default(now())
+  createdAt       DateTime         @default(now()) @updatedAt
+}
+
+// NOTE: Feature - CalendarEvent <<<<<<<<<<<
+
 // refactor (calendar) >>>
 enum CalendarEventType {
   TASK
@@ -382,27 +408,28 @@ enum CalendarEventType {
 }
 
 model CalendarEvent {
-  id                       Int                     @id @default(autoincrement())
-  googleEventId            String?                 @unique
-  eventType                CalendarEventType       @default(EVENT)
-  title                    String?                 @db.Text
-  description              String                  @db.Text
+  id                       Int                       @id @default(autoincrement())
+  googleEventId            String?                   @unique
+  eventType                CalendarEventType         @default(EVENT)
+  title                    String?                   @db.Text
+  description              String                    @db.Text
   dueDate                  DateTime?
   startDate                DateTime?
   endDate                  DateTime?
-  isRecurring              Boolean?                @default(false)
-  recurrence               Recurrence?             @default(NONE)
-  location                 String?                 @db.Text
-  link                     String?                 @db.Text
-  token                    String?                 @unique
+  isRecurring              Boolean?                  @default(false)
+  recurrence               Recurrence?               @default(NONE)
+  location                 String?                   @db.Text
+  link                     String?                   @db.Text
+  token                    String?                   @unique
   userId                   Int
-  user                     User                    @relation(fields: [userId], references: [id])
+  user                     User                      @relation(fields: [userId], references: [id])
   notificationPreferenceId Int?
   notificationPreference   NotificationPreference? @relation(fields: [notificationPreferenceId], references: [id])
   pushNotificationSent     Boolean?                @default(false)
   emailNotificationSent    Boolean?                @default(false)
   createdAt                DateTime                @default(now())
   updatedAt                DateTime                @default(now()) @updatedAt
+  calendarEventInvitations CalendarEventInvitation[]
 }
 
 // <<< refactor (calendar)

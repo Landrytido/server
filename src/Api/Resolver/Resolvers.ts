@@ -7,38 +7,41 @@ import UserResolver from "./UserResolver";
 import InvitationResolver from "./InvitationResolver";
 import SearchHistoryResolver from "./SearchHistoryResolver";
 import CommentResolver from "./CommentResolver";
-import {ScoreResolver} from "./ScoreResolver";
+import { ScoreResolver } from "./ScoreResolver";
 import NoteTaskResolver from "./NoteTasksResolver";
 import FileResolver from "./FileResolver";
+import { NotificationResolver } from "./NotificationResolver";
+import { DeviceResolver } from "./DeviceResolver";
+import { AutoInstructionResolver } from "./AutoInstructionResolver";
 import {AutoInstructionResolver} from "./AutoInstructionResolver";
 import NotificationPreferenceResolver from "./NotificationPreferenceResolver";
 import DailyTaskResolver from "./DailyTask/DailyTaskResolver";
 import HistoryResolver from "./DailyTask/HistoryResolver";
 import CalendarEventResolver from "./CalendarEvent/CalendarEventResolver";
-import {GoogleCalendarResolver} from "./CalendarEvent/GoogleCalendarResolver";
-import {NotificationResolver} from "./Notification/NotificationResolver";
-import {AutoInstructionSuggestionResolver} from "./AutoInstructionSuggestion/AutoInstructionSuggestionResolver";
+import { GoogleCalendarResolver } from "./CalendarEvent/GoogleCalendarResolver";
+import CalendarEventInvitationResolver from "./CalendarEventInvitation/CalendarEventInvitationResolver";
 
 export const Resolvers = [
-    UserResolver,
-    SearchHistoryResolver,
-    TagResolver,
-    NotebookResolver,
-    NoteResolver,
-    InvitationResolver,
-    LinkGroupResolver,
-    LinkResolver,
-    CommentResolver,
-    ScoreResolver,
-    NoteTaskResolver,
-    FileResolver,
-    AutoInstructionResolver,
-    NotificationResolver,
-    NotificationPreferenceResolver,
-    DailyTaskResolver,
-    HistoryResolver,
-    CalendarEventResolver,
-    GoogleCalendarResolver,
-    AutoInstructionSuggestionResolver,
+  UserResolver,
+  SearchHistoryResolver,
+  TagResolver,
+  NotebookResolver,
+  NoteResolver,
+  InvitationResolver,
+  LinkGroupResolver,
+  LinkResolver,
+  CommentResolver,
+  ScoreResolver,
+  NoteTaskResolver,
+  FileResolver,
+  NotificationResolver,
+  DeviceResolver,
+  AutoInstructionResolver,
+  NotificationPreferenceResolver,
+  DailyTaskResolver,
+  HistoryResolver,
+  CalendarEventResolver,
+  GoogleCalendarResolver,
+  CalendarEventInvitationResolver,
+  AutoInstructionSuggestionResolver,
 ];
-

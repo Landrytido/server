@@ -14,25 +14,28 @@ import DailyTaskRepository from "./DailyTask/DailyTaskRepository";
 import DailyPlanRepository from "./DailyTask/DailyPlanRepository";
 import DailyTaskHistoryRepository from "./DailyTask/DailyTaskHistoryRepository";
 import CalendarEventRepository from "./CalendarEvent/CalendarEventRepository";
+import CalendarEventInvitationRepository from "./CalendarEventInvitation/CalendarEventInvitationRepository";
 import {AutoInstructionSuggestionRepository} from "./AutoInstructionSuggestion/AutoInstructionSuggestionRepository";
 
 export const Repositories = [
-    UserRepository,
-    SearchHistoryRepository,
-    SearchHistoryRepository,
-    TagRepository,
-    NotebookRepository,
-    NoteRepository,
-    InvitationRepository,
-    LinkGroupRepository,
-    LinkRepository,
-    NoteTasksRepository,
-    ScoreRepository,
-    AutoInstructionRepository,
-    NotificationPreferenceRepository,
-    DailyTaskRepository,
-    DailyPlanRepository,
-    DailyTaskHistoryRepository,
-    CalendarEventRepository,
-    AutoInstructionSuggestionRepository,
+  UserRepository,
+  SearchHistoryRepository,
+  SearchHistoryRepository,
+  TagRepository,
+  NotebookRepository,
+  NoteRepository,
+  InvitationRepository,
+  LinkGroupRepository,
+  LinkRepository,
+  NoteTasksRepository,
+  ScoreRepository,
+  NotificationRepository,
+  AutoInstructionRepository,
+  NotificationPreferenceRepository,
+  DailyTaskRepository,
+  DailyPlanRepository,
+  DailyTaskHistoryRepository,
+  CalendarEventRepository,
+  AutoInstructionSuggestionRepository,
+  CalendarEventInvitationRepository,
 ];

@@ -13,6 +13,7 @@ import {
   CalendarEventType,
   PermissionLevel,
   TimeUnit,
+  InvitationStatus,
   NotificationType, Platform
 } from '@prisma/client';
 
@@ -23,20 +24,21 @@ registerEnumType(Level, {
 
 registerEnumType(NotificationType, {
   name: "NotificationType",
-  description: "Possible NotificationType options: EMAIL, PUSH"
+  description: "Possible NotificationType options: EMAIL, PUSH",
 });
 
 registerEnumType(TimeUnit, {
   name: "TimeUnit",
-  description: "Possible TimeUnit options : MINUTES, HOURS, DAYS"
+  description: "Possible TimeUnit options : MINUTES, HOURS, DAYS",
 });
 registerEnumType(Recurrence, {
-    name: 'Recurrence',
-    description: 'Possible recurrence options: NONE, DAILY, WEEKLY, MONTHLY, ANNUAL',
+  name: "Recurrence",
+  description:
+    "Possible recurrence options: NONE, DAILY, WEEKLY, MONTHLY, ANNUAL",
 });
 registerEnumType(CalendarEventType, {
-    name: 'CalendarEventType',
-    description: 'Possible CalendarEventType options: TASK, EVENT',
+  name: "CalendarEventType",
+  description: "Possible CalendarEventType options: TASK, EVENT",
 });
 registerEnumType(Platform, {
   name: 'Platform',
@@ -44,7 +46,11 @@ registerEnumType(Platform, {
 });
 registerEnumType(PermissionLevel, {
   name: "PermissionLevel",
-  description: "Possible PermissionLevel options : READ, WRITE, ADMIN"
+  description: "Possible PermissionLevel options : READ, WRITE, ADMIN",
+});
+registerEnumType(InvitationStatus, {
+  name: "InvitationStatus",
+  description: "Possible InvitationStatus options: PENDING, ACCEPTED, REFUSED",
 });
 
 require("events").EventEmitter.defaultMaxListeners = 0;
@@ -60,8 +66,8 @@ async function bootstrapApi() {
 
   //app.enableCors({ origin: "*" });
   app.enableCors({
-    origin: '*', 
-    methods: ['GET', 'POST'],
+    origin: "*",
+    methods: ["GET", "POST"],
   });
   app.use(graphqlUploadExpress({ maxFileSize: 15000000, maxFiles: 1 }));
   app.use(json({ limit: "1mb" }));

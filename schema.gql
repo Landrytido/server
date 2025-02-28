@@ -50,6 +50,18 @@ type CalendarEvent {
   userId: Int!
 }
 
+type CalendarEventInvitation {
+  calendarEvent: CalendarEvent!
+  calendarEventId: Int!
+  id: Int!
+  receiver: User!
+  receiverEmail: String!
+  sender: User!
+  senderId: Int!
+  status: String!
+  updatedAt: DateTime!
+}
+
 type CombinedTask {
   carriedOver: Boolean!
   completed: Boolean!
@@ -99,6 +111,12 @@ input CreateCalendarEventDto {
   startDate: DateTime
   title: String
   token: String
+}
+
+input CreateCalendarEventInvitationDto {
+  calendarEventId: Int!
+  receiverEmail: String
+  senderId: Int!
 }
 
 input CreateDailyTaskDto {
@@ -255,6 +273,7 @@ type MonthlyReport {
 type Mutation {
   RemoveById(id: Float!): Tag!
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
+  acceptCalendarEventInvitation(id: Int!): CalendarEventInvitation!
   acceptInvitation(invitationId: Int!): Invitation!
   addAutoInstruction(createAutoInstructionInput: CreateAutoInstructionInput!): AutoInstruction!
   addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
@@ -262,6 +281,7 @@ type Mutation {
   confirmEndOfDay: Boolean!
   convertExternalInvitation(dto: SaveUserDto!): Invitation!
   createCalendarEvent(dto: CreateCalendarEventDto!): CalendarEvent!
+  createCalendarEventInvitation(dto: CreateCalendarEventInvitationDto!, invitedEmails: [String!]!): [CalendarEventInvitation!]!
   createComment(data: CommentDto!): Comment!
   createDailyTask(dto: CreateDailyTaskDto!): DailyTask!
   createInvitation(dto: SaveInvitationDto!): Invitation!
@@ -272,6 +292,7 @@ type Mutation {
   createNotificationPreference(dto: SaveNotificationPreferenceDto!): NotificationPreference!
   createTag(dto: SaveTagDto!): Tag!
   deleteCalendarEvent(id: Int!): CalendarEvent!
+  deleteCalendarEventInvitation(id: Int!): CalendarEventInvitation!
   deleteComment(commentId: Float!): Boolean!
   deleteDailyTask(id: Int!): DailyTask!
   deleteInvitation(invitationId: Int!): Invitation!
@@ -281,6 +302,7 @@ type Mutation {
   deleteNotebook(notebookId: Int!): Notebook!
   deleteNotificationPreference(notificationPreferenceId: Int!): NotificationPreference!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
+  denyCalendarEventInvitation(id: Int!): CalendarEventInvitation!
   incrementLink(linkId: Int!): Link!
   loginWithFacebook(accessToken: String!): String!
   loginWithGithub(dto: LoginWithGithubDto!): String!
@@ -423,6 +445,10 @@ type Query {
   getAutoInstructionSuggestions: [AutoInstructionSuggestion!]!
   getAutoInstructions(userId: Float!): [AutoInstruction!]!
   getCalendarEvent(id: Int!): CalendarEvent!
+  getCalendarEventInvitationById(id: Int!): CalendarEventInvitation!
+  getCalendarEventInvitationsByCalendarEventId(id: Int!): [CalendarEventInvitation!]!
+  getCalendarEventInvitationsByReceiverEmail(email: String!): [CalendarEventInvitation!]!
+  getCalendarEventInvitationsBySenderId(id: Int!): [CalendarEventInvitation!]!
   getCalendarEventsByToken(token: String!): [CalendarEvent!]!
   getCalendarEventsByUserId: [CalendarEvent!]!
   getDailyPlan(date: String!): DailyPlan
