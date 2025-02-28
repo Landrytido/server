@@ -10,16 +10,15 @@ import CommentResolver from "./CommentResolver";
 import { ScoreResolver } from "./ScoreResolver";
 import NoteTaskResolver from "./NoteTasksResolver";
 import FileResolver from "./FileResolver";
-import { NotificationResolver } from "./NotificationResolver";
-import { DeviceResolver } from "./DeviceResolver";
-import { AutoInstructionResolver } from "./AutoInstructionResolver";
-import {AutoInstructionResolver} from "./AutoInstructionResolver";
 import NotificationPreferenceResolver from "./NotificationPreferenceResolver";
 import DailyTaskResolver from "./DailyTask/DailyTaskResolver";
 import HistoryResolver from "./DailyTask/HistoryResolver";
 import CalendarEventResolver from "./CalendarEvent/CalendarEventResolver";
-import { GoogleCalendarResolver } from "./CalendarEvent/GoogleCalendarResolver";
 import CalendarEventInvitationResolver from "./CalendarEventInvitation/CalendarEventInvitationResolver";
+import { AutoInstructionSuggestionResolver } from "./AutoInstructionSuggestion/AutoInstructionSuggestionResolver";
+import {AutoInstructionResolver} from "./AutoInstructionResolver";
+import {NotificationResolver} from "./Notification/NotificationResolver";
+import {GoogleCalendarResolver} from "./CalendarEvent/GoogleCalendarResolver";
 
 export const Resolvers = [
   UserResolver,
@@ -35,7 +34,6 @@ export const Resolvers = [
   NoteTaskResolver,
   FileResolver,
   NotificationResolver,
-  DeviceResolver,
   AutoInstructionResolver,
   NotificationPreferenceResolver,
   DailyTaskResolver,

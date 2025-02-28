@@ -29,7 +29,6 @@ export const Repositories = [
   LinkRepository,
   NoteTasksRepository,
   ScoreRepository,
-  NotificationRepository,
   AutoInstructionRepository,
   NotificationPreferenceRepository,
   DailyTaskRepository,
