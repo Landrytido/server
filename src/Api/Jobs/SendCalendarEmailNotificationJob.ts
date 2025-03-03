@@ -33,6 +33,7 @@ export class SendCalendarEmailNotificationJob {
 		await this.processNotifications(events, now);
 		this.logger.log(`Email notification sent : ${this.eventNotificationSent} event(s), ${this.taskNotificationSent} task(s)`);
 	  } catch (error) {
+		console.log(error);
 		this.logger.error(
 			"Erreur lors de l'exécution des notifications :",
 			error,

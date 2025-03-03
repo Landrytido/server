@@ -3,8 +3,6 @@ import {ContextualGraphqlRequest} from "../../index";
 import Session from "./Session";
 import Note from "./Note";
 import Notebook from "./Notebook";
-import LinkGroup from "./LinkGroup";
-import Link from "./Link";
 import {NoteCollaboration} from "./NoteCollaboration";
 import Invitation from "./Invitation";
 import ResetToken from "./ResetToken";
@@ -14,6 +12,8 @@ import {Relation} from "./Relation";
 import {NotificationPreference} from "./NotificationPreference";
 import CalendarEvent from "./CalendarEvent/CalendarEvent";
 import Device from "./Device/Device";
+import Link from "./Link/Link";
+import LinkGroup from "./Link/LinkGroup";
 
 @ObjectType()
 export default class User {

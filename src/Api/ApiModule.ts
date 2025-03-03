@@ -14,7 +14,6 @@ import GetLoggedUserUseCase from "./UseCase/User/GetLoggedUser/GetLoggedUserUseC
 import CommentRepository from "./Repository/CommentRepository";
 import FileRepository from "./Repository/FileRepository";
 import SaveFileUseCase from "./UseCase/File/SaveFile/SaveFileUseCase";
-import {PuppeteerService} from "./UseCase/Link/Service/puppeteer.service";
 import ConvertExternalInvitationUseCase
     from "./UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
 import {AcceptLanguageResolver, I18nModule} from "nestjs-i18n";
@@ -23,12 +22,13 @@ import GetExternalEmailByTokenUseCase
     from "./UseCase/Invitation/GetExternalEmailByToken/GetExternalEmailByTokenUseCase";
 import {ScheduleModule} from "@nestjs/schedule";
 import {Jobs} from "./Jobs/Jobs";
-import {S3UploadService} from "./UseCase/Link/Service/s3-upload.service";
 import {ReminderProcessor} from "./Services/ReminderProcessor";
 import {AutoInstructionGateway} from "./WebSocket/InstructionCardGateway";
 import GoogleCalendarService from "./Services/GoogleCalendarService";
 import {CalendarEventNotificationService} from "./Services/CalendarEventNotificationService";
 import {NotificationModule} from "../Core/Notification/notification.module";
+import {PuppeteerService} from "./Services/PupeteerService";
+import {S3UploadService} from "./Services/S3UploadService";
 
 @Module({
     imports: [

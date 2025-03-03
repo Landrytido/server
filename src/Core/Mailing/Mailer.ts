@@ -96,8 +96,7 @@ export default class Mailer {
     reminderLink: string,
     eventType: CalendarEventType
   ) {
-    const translations = (this.i18n.getTranslations() as Record<string, any>).fr
-      .mailing.calendarNotification;
+    const translations = (this.i18n.getTranslations() as Record<string, any>).fr?.mailing.calendarNotification;
 
     // Nettoyage des données pour exclure les champs vides ou null
     const filteredEventDetails = {

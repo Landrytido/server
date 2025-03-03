@@ -1,5 +1,3 @@
-import LinkGroupResolver from "./LinkGroupResolver";
-import LinkResolver from "./LinkResolver";
 import TagResolver from "./TagResolver";
 import NotebookResolver from "./NotebookResolver";
 import NoteResolver from "./NoteResolver";
@@ -18,28 +16,30 @@ import CalendarEventInvitationResolver from "./CalendarEventInvitation/CalendarE
 import { AutoInstructionSuggestionResolver } from "./AutoInstructionSuggestion/AutoInstructionSuggestionResolver";
 import {AutoInstructionResolver} from "./AutoInstructionResolver";
 import {NotificationResolver} from "./Notification/NotificationResolver";
-import {GoogleCalendarResolver} from "./CalendarEvent/GoogleCalendarResolver";
+import LinkGroupResolver from "./Link/LinkGroupResolver";
+import LinkResolver from "./Link/LinkResolver";
+import { GoogleCalendarResolver } from "./CalendarEvent/GoogleCalendarResolver";
 
 export const Resolvers = [
-  UserResolver,
-  SearchHistoryResolver,
-  TagResolver,
-  NotebookResolver,
-  NoteResolver,
-  InvitationResolver,
-  LinkGroupResolver,
-  LinkResolver,
-  CommentResolver,
-  ScoreResolver,
-  NoteTaskResolver,
-  FileResolver,
-  NotificationResolver,
-  AutoInstructionResolver,
-  NotificationPreferenceResolver,
-  DailyTaskResolver,
-  HistoryResolver,
-  CalendarEventResolver,
-  GoogleCalendarResolver,
-  CalendarEventInvitationResolver,
-  AutoInstructionSuggestionResolver,
+    UserResolver,
+    SearchHistoryResolver,
+    TagResolver,
+    NotebookResolver,
+    NoteResolver,
+    InvitationResolver,
+    CommentResolver,
+    ScoreResolver,
+    NoteTaskResolver,
+    FileResolver,
+    AutoInstructionResolver,
+    NotificationResolver,
+    NotificationPreferenceResolver,
+    DailyTaskResolver,
+    HistoryResolver,
+    CalendarEventResolver,
+    GoogleCalendarResolver,
+    AutoInstructionSuggestionResolver,
+    LinkGroupResolver,
+    CalendarEventInvitationResolver,
+    LinkResolver
 ];

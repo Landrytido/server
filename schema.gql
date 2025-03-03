@@ -128,11 +128,6 @@ input CreateDailyTaskDto {
   uniqueTaskId: String
 }
 
-input CreateLinkGroupDto {
-  description: String
-  name: String!
-}
-
 type DailyPlan {
   confirmed: Boolean!
   createdAt: DateTime!
@@ -237,26 +232,29 @@ enum Level {
 }
 
 type Link {
-  clicks: Int!
-  description: String
-  id: Int!
+  groups: [LinkGroupLink!]!
+  id: String!
   image: File
-  imageId: Int
-  linkGroup: LinkGroup!
-  linkGroupId: Int!
-  name: String!
+  owner: User
+  screenShotAt: DateTime
   url: String!
-  user: User!
-  userId: Int!
 }
 
 type LinkGroup {
-  description: String!
-  id: Int!
-  links: [Link!]!
-  name: String!
+  description: String
+  id: String!
+  links: [LinkGroupLink!]!
+  title: String!
   user: User!
-  userId: Int!
+}
+
+type LinkGroupLink {
+  clickCounter: Int!
+  link: Link!
+  linkGroup: LinkGroup!
+  linkGroupId: String!
+  linkId: String!
+  linkName: String!
 }
 
 input LoginWithGithubDto {
@@ -286,7 +284,6 @@ type Mutation {
   createDailyTask(dto: CreateDailyTaskDto!): DailyTask!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
-  createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
   createNote(dto: SaveNoteDto!): Note!
   createNotebook(dto: SaveNotebookDto!): Notebook!
   createNotificationPreference(dto: SaveNotificationPreferenceDto!): NotificationPreference!
@@ -296,14 +293,14 @@ type Mutation {
   deleteComment(commentId: Float!): Boolean!
   deleteDailyTask(id: Int!): DailyTask!
   deleteInvitation(invitationId: Int!): Invitation!
-  deleteLink(id: Int!): Boolean!
-  deleteLinkGroup(linkGroupId: Int!): LinkGroup!
+  deleteLinkFromGroup(linkGroupId: String!, linkId: String!): Boolean!
+  deleteLinkGroup(id: String!): LinkGroup!
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
   deleteNotificationPreference(notificationPreferenceId: Int!): NotificationPreference!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
+  incrementClickCounter(linkGroupId: String!, linkId: String!): LinkGroupLink!
   denyCalendarEventInvitation(id: Int!): CalendarEventInvitation!
-  incrementLink(linkId: Int!): Link!
   loginWithFacebook(accessToken: String!): String!
   loginWithGithub(dto: LoginWithGithubDto!): String!
   loginWithGoogle(accessToken: String!): String!
@@ -314,8 +311,9 @@ type Mutation {
   removeNoteTaskById(id: Int!): NoteTask!
   reorderDailyTasks(dto: ReorderDailyTasksDto!): [DailyTask!]!
   reorderInstructions(instructions: [AutoInstructionInput!]!, userId: Float!): [AutoInstruction!]!
-  resetUserHotlinks: [Link!]!
+  resetClickCounter(linkGroupId: String!, linkId: String!): LinkGroupLink!
   saveFile(dto: FileDto!): File!
+  saveLinkGroup(dto: SaveLinkGroupDto!): LinkGroup!
   saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveUser(dto: SaveUserDto!): User!
@@ -327,8 +325,7 @@ type Mutation {
   updateCalendarEvent(dto: UpdateCalendarEventDto!, id: Int!): CalendarEvent!
   updateComment(commentId: Float!, data: CommentDto!): Comment!
   updateDailyTask(dto: UpdateDailyTaskDto!, id: Int!): DailyTask!
-  updateLink(dto: UpdateLinkDto!, id: Int!): Link!
-  updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
+  updateLinkRelation(dto: SaveLinkDto!): LinkGroupLink!
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
   updateNoteTask(dto: UpdateNoteTaskDto!): NoteTask!
   updateNotebook(dto: SaveNotebookDto!, notebookId: Int!): Notebook!
@@ -420,14 +417,7 @@ enum Platform {
 type Query {
   findCommentsByNoteId(noteId: Float!): [Comment!]!
   findExternalEmailByToken(token: String!): String!
-  findHotLinks(limit: Int!): [Link!]!
-  findLinkById(id: Int!): Link!
-  findLinkGroupById(linkGroupId: Int!): LinkGroup!
-  findLinkGroupsByUserId: [LinkGroup!]!
-  findLinkGroupsSortByUserId: [LinkGroup!]!
-  findLinksByLinkGroupId(linkGroupId: Int!): [Link!]!
-  findLinksByUserId: [Link!]!
-  findLinksByUserIdWithMinClicks(minClicks: Int!): [Link!]!
+  findHotLinks(limit: Int!): [LinkGroupLink!]!
   findNoteById(noteId: Int!): Note!
   findNoteTaskById(id: Int!): NoteTask!
   findNotebookById(notebookId: Int!): Notebook!
@@ -440,7 +430,6 @@ type Query {
   findSentInvitations: [Invitation!]!
   findTagById(id: Float!): Tag!
   getAllCalendarEvents: [CalendarEvent!]!
-  getAllLinkGroups: [LinkGroup!]!
   getAutoInstructionSuggestionById(id: Int!): AutoInstructionSuggestion!
   getAutoInstructionSuggestions: [AutoInstructionSuggestion!]!
   getAutoInstructions(userId: Float!): [AutoInstruction!]!
@@ -460,6 +449,7 @@ type Query {
   getSearchHistoryByUserId: [SearchHistory!]!
   getTasksCreatedOn(date: String!): [CombinedTask!]!
   login(dto: AuthenticationDto!): String!
+  myLinkGroups: [LinkGroup!]!
   noteTasksByUserId(dto: GetNoteTasksByUserIdDto!): [NoteTask!]!
   refreshToken: String!
   topScores(level: Level = EASY, limit: Int = 10): [Score!]!
@@ -503,12 +493,19 @@ input SaveInvitationDto {
 }
 
 input SaveLinkDto {
-  description: String
-  imageId: Int
-  linkGroupId: Int!
-  name: String!
+  id: String
+  imageId: Float
+  linkGroupId: String!
+  linkName: String!
+  ownerId: Float
+  screenShotAt: DateTime
   url: String!
-  userId: Int
+}
+
+input SaveLinkGroupDto {
+  description: String
+  id: String
+  title: String!
 }
 
 input SaveNoteDto {
@@ -632,13 +629,6 @@ input UpdateDailyTaskDto {
   priority: Int
   scheduledDate: DateTime
   title: String
-}
-
-input UpdateLinkDto {
-  description: String
-  imageId: Int
-  name: String!
-  url: String
 }
 
 input UpdateNoteTaskDto {

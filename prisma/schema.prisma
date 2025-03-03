@@ -14,9 +14,10 @@ model File {
   initialFilename String   @db.VarChar(255)
   path            String   @db.VarChar(255)
   uri             String   @db.VarChar(255)
-  linkImage       Link[]   @relation("link_image")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now())
+  // Back-relation for links using this file as an image.
+  links           Link[]   @relation("link_image")
 }
 
 model User {
@@ -31,8 +32,6 @@ model User {
   sessions            Session[]
   notes               Note[]
   notebooks           Notebook[]
-  linkGroups          LinkGroup[]
-  links               Link[]
   tasks               Task[]
   comments            Comment[]
   collaborations      NoteCollaboration[]
@@ -47,13 +46,20 @@ model User {
   noteTasks     NoteTask[]
   devices       Device[]
 
-  AutoInstruction                  AutoInstruction[]
-  DailyTask                        DailyTask[]
-  DailyPlan                        DailyPlan[]
-  DailyTaskHistory                 DailyTaskHistory[]
-  CalendarEvent                    CalendarEvent[]
-  googleAccessToken                String?                   @db.Text // Ajout du token d'accès Google
-  googleRefreshToken               String?                   @db.Text // (Optionnel) Pour rafraîchir le token
+  AutoInstruction        AutoInstruction[]
+  DailyTask              DailyTask[]
+  DailyPlan              DailyPlan[]
+  DailyTaskHistory       DailyTaskHistory[]
+  CalendarEvent          CalendarEvent[]
+  googleAccessToken      String?                 @db.Text // Ajout du token d'accès Google
+  googleRefreshToken     String?                 @db.Text // (Optionnel) Pour rafraîchir le token
+
+  // A user owns many link groups.
+  linkGroups LinkGroup[]
+
+  // Links owned by the user.
+  links Link[] @relation("UserLinks")
+
   NotificationPreference           NotificationPreference?
   CalendarEventInvitationsSent     CalendarEventInvitation[] @relation("CalendarEventInvitationsSent")
   CalendarEventInvitationsReceived CalendarEventInvitation[] @relation("CalendarEventInvitationsReceived")
@@ -155,29 +161,6 @@ enum PermissionLevel {
   READ
   WRITE
   ADMIN
-}
-
-model Link {
-  id          Int       @id @default(autoincrement())
-  name        String
-  url         String    @db.Text
-  description String?
-  linkGroupId Int
-  userId      Int
-  linkGroup   LinkGroup @relation(fields: [linkGroupId], references: [id])
-  user        User      @relation(fields: [userId], references: [id])
-  clicks      Int       @default(0)
-  imageId     Int?
-  image       File?     @relation("link_image", fields: [imageId], references: [id])
-}
-
-model LinkGroup {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  userId      Int
-  user        User    @relation(fields: [userId], references: [id])
-  links       Link[]
 }
 
 model Task {
@@ -434,3 +417,43 @@ model CalendarEvent {
 }
 
 // <<< refactor (calendar)
+
+// feature (refactor-links) >>>
+model Link {
+  id  String @id @default(cuid())
+  url String @unique
+
+  // Optional relation to the owner.
+  ownerId Int
+  owner   User @relation("UserLinks", fields: [ownerId], references: [id])
+
+  // Optional relation to an image file.
+  imageId Int?
+  image   File? @relation("link_image", fields: [imageId], references: [id])
+
+  screenShotAt DateTime?
+  groups       LinkGroupLink[]
+}
+
+model LinkGroup {
+  id          String          @id @default(cuid())
+  title       String
+  description String?
+  userId      Int
+  user        User            @relation(fields: [userId], references: [id])
+  links       LinkGroupLink[]
+}
+
+model LinkGroupLink {
+  linkGroupId  String
+  linkId       String
+  linkName     String
+  clickCounter Int    @default(0)
+
+  linkGroup LinkGroup @relation(fields: [linkGroupId], references: [id], onDelete: Cascade)
+  link      Link      @relation(fields: [linkId], references: [id])
+
+  @@id([linkGroupId, linkId])
+}
+
+// feature (refactor-links) <<<
