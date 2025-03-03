@@ -1,4 +1,5 @@
-import {PrismaClient} from '@prisma/client'
+// ./prisma/seed.ts
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient()
 
 const affirmations: string[] = [

@@ -1,9 +1,9 @@
 services:
-  nestjs-backend:
+  hdm-mwc-api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: nestjs-backend
+    container_name: hdm-mwc-api
     restart: unless-stopped
     env_file:
       - .env # Explicitly load variables from .env file
@@ -61,4 +61,5 @@ volumes:
 
 networks:
   mwc-network:
-    driver: bridge
+    external: true
+#    driver: bridge

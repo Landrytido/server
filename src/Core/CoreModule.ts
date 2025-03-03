@@ -15,6 +15,7 @@ import Mailer from "./Mailing/Mailer";
 import MailMustacheRenderer from "./Mailing/MailMustacheRenderer";
 import UserRepository from "src/Api/Repository/UserRepository";
 import {NotificationModule} from "./Notification/notification.module";
+import {PrismaSeedService} from "./Seeder/prisma-seed.service";
 
 @Module({
     imports: [
@@ -54,6 +55,7 @@ import {NotificationModule} from "./Notification/notification.module";
 	  UniqidGenerator,
 	  UserRepository, //ajout
 	  PrismaService,
+	  PrismaSeedService
     ],
 })
 export default class CoreModule {
