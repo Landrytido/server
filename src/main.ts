@@ -1,3 +1,5 @@
+import {CommandFactory} from "nest-commander";
+
 Object.assign(global, { WebSocket: require("ws") });
 import { NestFactory } from "@nestjs/core";
 import { graphqlUploadExpress } from "graphql-upload";

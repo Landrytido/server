@@ -1,9 +1,8 @@
-import {Injectable, Logger} from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { I18nService } from "nestjs-i18n";
 import * as postmark from "postmark";
 import MailMustacheRenderer from "./MailMustacheRenderer";
-import {CalendarEventType} from "@prisma/client";
+import { CalendarEventType } from "@prisma/client";
 
 @Injectable()
 export default class Mailer {
@@ -11,17 +10,13 @@ export default class Mailer {
   private readonly sender: string;
   private readonly logger = new Logger(Mailer.name);
 
-
   constructor(
-    private readonly config: ConfigService,
-    private readonly i18n: I18nService,
-    private readonly mustache: MailMustacheRenderer,
+        private readonly config: ConfigService,
+        private readonly mustache: MailMustacheRenderer,
   ) {
     this.client = new postmark.ServerClient(
-      this.config.get("POSTMARK_SERVER_TOKEN")
+          this.config.get("POSTMARK_SERVER_TOKEN")
     );
-
-
     this.sender = `MyWebCompanion <${this.config.get("MAIL_SENDER")}>`;
   }
 
@@ -30,10 +25,10 @@ export default class Mailer {
   }
 
   async sendEmailToUser(
-    recipientEmail: string,
-    subject: string,
-    templatePath: string,
-    templateData: Record<string, any>
+        recipientEmail: string,
+        subject: string,
+        templatePath: string,
+        templateData: Record<string, any>
   ) {
     const htmlContent = await this.mustache.render(templatePath, templateData);
 
@@ -52,9 +47,9 @@ export default class Mailer {
   }
 
   async sendInvitationEmail(
-    recipientEmail: string,
-    senderInfo: { firstName: string; lastName: string },
-    invitationLink: string
+        recipientEmail: string,
+        senderInfo: { firstName: string; lastName: string },
+        invitationLink: string
   ) {
     const data = {
       senderFirstName: senderInfo.firstName,
@@ -62,74 +57,100 @@ export default class Mailer {
       link: invitationLink,
       frontendUrl: process.env.FRONTEND_URL,
       currentYear: new Date().getFullYear(),
-      t: (this.i18n.getTranslations() as Record<string, any>).fr.mailing
-        .invitation,
+      // Hardcoded invitation text
+      t: {
+        emailSubject: "vous a envoyé une invitation",
+        subject: "Vous avez reçu une invitation !",
+        title: "Invitation à rejoindre MyWebCompanion",
+        greeting: "Bonjour,",
+        description: "vous a envoyé une demande d'amis.",
+        otherDescription:
+              "Pour accepter l'invitation, veuillez vous inscrire en cliquant sur le bouton ci-dessous.",
+        acceptInvitation: "Accepter l'invitation",
+        contactUs:
+              "Si vous avez des questions, n'hésitez pas à nous contacter.",
+      },
     };
 
-    const htmlContent = await this.mustache.render("fr/invitation.html", data);
     const subject = `${data.senderFirstName} ${data.senderLastName} ${data.t.emailSubject}`;
     await this.sendEmailToUser(
-      recipientEmail,
-      subject,
-      "fr/invitation.html",
-      data
+          recipientEmail,
+          subject,
+          "fr/invitation.html",
+          data
     );
   }
 
   async sendCalendarNotificationEmail(
-    recipientData: {
-      email: string;
-      firstName: string;
-      lastName: string;
-    },
-
-    eventDetails: {
-      title: string;
-      description: string;
-      startDate: Date | null;
-      endDate: Date | null;
-      dueDate: Date | null;
-      location: string | null;
-      place: string | null;
-      url: string | null;
-    },
-    reminderLink: string,
-    eventType: CalendarEventType
+        recipientData: {
+          email: string;
+          firstName: string;
+          lastName: string;
+        },
+        eventDetails: {
+          title: string;
+          description: string;
+          startDate: Date | null;
+          endDate: Date | null;
+          dueDate: Date | null;
+          location: string | null;
+          place: string | null;
+          url: string | null;
+        },
+        reminderLink: string,
+        eventType: CalendarEventType
   ) {
-    const translations = (this.i18n.getTranslations() as Record<string, any>).fr?.mailing.calendarNotification;
+    // Hardcoded calendar notification texts
+    const translations = {
+      emailSubject: "Rappel",
+      subject: {
+        TASK: "Une tâche à venir",
+        EVENT: "Un événement à venir",
+      },
+      location: "Mode de participation",
+      place: "Lieu",
+      url: "Lien",
+      descriptionData: "Description",
+      organizerData: "Organisateur",
+      guestData: "Invités",
+      showDetails: {
+        meeting: "Afficher tous les détails de la réunion",
+        task: "Afficher tous les détails de la tâche",
+        event: "Afficher tous les détails de l'événement",
+      },
+      contactUs:
+            "Si vous avez des questions, n'hésitez pas à nous contacter.",
+    };
 
-    // Nettoyage des données pour exclure les champs vides ou null
     const filteredEventDetails = {
       ...(eventDetails.startDate
-        ? { startDate: eventDetails.startDate.toLocaleString() }
-        : {}),
+            ? { startDate: eventDetails.startDate.toLocaleString() }
+            : {}),
       ...(eventDetails.endDate
-        ? { endDate: eventDetails.endDate.toLocaleString() }
-        : {}),
+            ? { endDate: eventDetails.endDate.toLocaleString() }
+            : {}),
       ...(eventDetails.dueDate
-        ? { dueDate: eventDetails.dueDate.toLocaleString() }
-        : {}),
+            ? { dueDate: eventDetails.dueDate.toLocaleString() }
+            : {}),
       ...(eventDetails.title?.trim() ? { title: eventDetails.title } : {}),
       ...(eventDetails.description?.trim()
-        ? { description: eventDetails.description }
-        : {}),
+            ? { description: eventDetails.description }
+            : {}),
       ...(eventDetails.location?.trim()
-        ? { location: eventDetails.location }
-        : {}),
+            ? { location: eventDetails.location }
+            : {}),
       ...(eventDetails.place?.trim() ? { place: eventDetails.place } : {}),
       ...(eventDetails.url?.trim() ? { url: eventDetails.url } : {}),
     };
 
     const isEventOrMeeting = eventType === CalendarEventType.EVENT;
 
-    //Les données inclus dans le corps du mail
     const data = {
       ...filteredEventDetails,
-      isEventOrMeeting: isEventOrMeeting, //asupp si besoin
+      isEventOrMeeting: isEventOrMeeting,
       organizerFirstName: recipientData.firstName,
       organizerLastName: recipientData.lastName,
       organizerEmail: recipientData.email,
-      // location: eventDetails.location, a supp si tout ok
       link: reminderLink,
       frontendUrl: process.env.FRONTEND_URL,
       currentYear: new Date().getFullYear(),
@@ -142,10 +163,10 @@ export default class Mailer {
 
     const subject = `${data.t.emailSubject} : ${data.t.subject} !`;
     await this.sendEmailToUser(
-      recipientData.email,
-      subject,
-      "fr/calendarNotification.html",
-      data
+          recipientData.email,
+          subject,
+          "fr/calendarNotification.html",
+          data
     );
   }
 }

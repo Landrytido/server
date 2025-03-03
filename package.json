@@ -23,7 +23,8 @@
     "prisma:migrate:prod": "npx prisma migrate deploy",
     "start:migrate:prod": "npx prisma migrate deploy && node dist/src/main",
     "prisma:migrate:reset": "npx prisma migrate reset --force",
-    "prisma:seed": "ts-node prisma/seed.ts"
+    "prisma:seed": "ts-node prisma/seed.ts",
+    "start:cli": "ts-node src/cli.ts"
   },
   "dependencies": {
     "@apollo/server": "^4.11.2",
@@ -62,6 +63,7 @@
     "luxon": "^3.5.0",
     "moment-timezone": "^0.5.46",
     "mustache": "^4.2.0",
+    "nest-commander": "^3.16.1",
     "nestjs-i18n": "^10.5.0",
     "nestjs-s3": "^2.0.1",
     "node-cron": "^3.0.3",

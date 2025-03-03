@@ -30,8 +30,21 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install only the runtime dependencies (if needed)
-RUN apk add --no-cache openssl zlib-dev libgcc
+# Install runtime dependencies including Chromium and its required packages for Puppeteer
+RUN apk add --no-cache \
+    openssl \
+    zlib-dev \
+    libgcc \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates
+
+# Set environment variables for Puppeteer to use the system Chromium
+ENV CHROME_BIN=/usr/bin/chromium
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # Copy the node_modules, built app, and Prisma files from the builder stage
 COPY --from=builder /app/node_modules ./node_modules

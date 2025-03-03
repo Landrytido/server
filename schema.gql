@@ -299,8 +299,8 @@ type Mutation {
   deleteNotebook(notebookId: Int!): Notebook!
   deleteNotificationPreference(notificationPreferenceId: Int!): NotificationPreference!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
-  incrementClickCounter(linkGroupId: String!, linkId: String!): LinkGroupLink!
   denyCalendarEventInvitation(id: Int!): CalendarEventInvitation!
+  incrementClickCounter(linkGroupId: String!, linkId: String!): LinkGroupLink!
   loginWithFacebook(accessToken: String!): String!
   loginWithGithub(dto: LoginWithGithubDto!): String!
   loginWithGoogle(accessToken: String!): String!
