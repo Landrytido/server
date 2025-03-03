@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
 }
 
 datasource db {
@@ -424,11 +425,11 @@ model CalendarEvent {
   userId                   Int
   user                     User                      @relation(fields: [userId], references: [id])
   notificationPreferenceId Int?
-  notificationPreference   NotificationPreference? @relation(fields: [notificationPreferenceId], references: [id])
-  pushNotificationSent     Boolean?                @default(false)
-  emailNotificationSent    Boolean?                @default(false)
-  createdAt                DateTime                @default(now())
-  updatedAt                DateTime                @default(now()) @updatedAt
+  notificationPreference   NotificationPreference?   @relation(fields: [notificationPreferenceId], references: [id])
+  pushNotificationSent     Boolean?                  @default(false)
+  emailNotificationSent    Boolean?                  @default(false)
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @default(now()) @updatedAt
   calendarEventInvitations CalendarEventInvitation[]
 }
 

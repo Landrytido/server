@@ -1,34 +1,64 @@
 services:
-  backend:
-    image: node:16
-    container_name: myproject-backend
-    working_dir: /usr/src/app
-    volumes:
-      - .:/usr/src/app
-    ports:
-      - "3030:3030"
+  nestjs-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nestjs-backend
+    restart: unless-stopped
+    env_file:
+      - .env # Explicitly load variables from .env file
     environment:
-      - DATABASE_URL=mysql://root:root@127.0.0.1:3306/mywebcompanion
-      - JWT_SECRET=$2y$10$4zxKLip851WEYeVDDpsckeCRw6.f8wT7bXuOkCkWs6dAhTC9988
-      - API_PORT=3030
-      - WORKERS_PORT=3032
-    command: yarn start:dev
+      - APP_ENV=${APP_ENV}
+      - JWT_SECRET=${JWT_SECRET}
+      - API_PORT=${API_PORT}
+      - WORKERS_PORT=${WORKERS_PORT}
+      - GRAPHQL_PLAYGROUND_ENABLED=${GRAPHQL_PLAYGROUND_ENABLED}
+      - DATABASE_URL=mysql://root:129337wwfhsldf1o8236139@mysql:3306/hdm_mwc_db
+      - CDN_ACCESS_KEY_ID=${CDN_ACCESS_KEY_ID}
+      - CDN_ACCESS_KEY=${CDN_ACCESS_KEY}
+      - CDN_PUBLIC_URL=${CDN_PUBLIC_URL}
+      - VITE_GOOGLE_CLIENT_ID=${VITE_GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - GITHUB_CALLBACK_URL=${GITHUB_CALLBACK_URL}
+      - JWT_SECRET_TIO=${JWT_SECRET_TIO}
+      - TIO_URL_GRAPHQL=${TIO_URL_GRAPHQL}
+      - POSTMARK_SERVER_TOKEN=${POSTMARK_SERVER_TOKEN}
+      - POSTMARK_SERVER_PORT=${POSTMARK_SERVER_PORT}
+      - POSTMARK_MESSAGE_STREAM=${POSTMARK_MESSAGE_STREAM}
+      - MAIL_SENDER=${MAIL_SENDER}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
+      - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
+      - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
     depends_on:
-      - db
+      - mysql
     networks:
-      - myproject-network
+      - mwc-network
+    ports:
+      - "${API_PORT}:${API_PORT}"
 
-  db:
-    image: mysql:5.7
-    container_name: myproject-db
+  mysql:
+    image: mysql:8.4
+    restart: on-failure
+    container_name: hdm-mwc-api-db
+    env_file:
+      - .env # Explicitly load variables from .env file
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mywebcompanion
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    volumes:
+      - mysql:/var/lib/mysql
     ports:
       - "3306:3306"
     networks:
-      - myproject-network
+      - mwc-network
+
+volumes:
+  mysql:
 
 networks:
-  myproject-network:
+  mwc-network:
     driver: bridge
