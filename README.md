@@ -61,12 +61,14 @@ docker-compose up -d
 
 ## Import DAVID'S data
 
-1. Go to the backend folder:
+1. Create david account on the frontend !!!!
+
+2. Go to the backend folder:
 ```bash
 cd MyWebCompanion-Server-NGQL
 ```
 
-2. Run the script to import the data:
+3. Run the script to import the data:
 ```bash
 yarn start:cli -- importLegacy -e alexandreartaudperso@gmail.com
 ```
