@@ -8,6 +8,10 @@
       {
         "include": "i18n/**/*",
         "outDir": "./dist/src/i18n"
+      },
+      {
+        "include": "src/**/*",
+        "outDir": "./dist/src/"
       }
     ],
     "watchAssets": true
