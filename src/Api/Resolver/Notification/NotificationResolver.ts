@@ -72,10 +72,13 @@ export class NotificationResolver {
 		    });
 		}
 	  } else {
-		// Create a new device record.
-		await this.prisma.device.create({
-		    data: {token, userId, platform},
-		});
+		try {
+		    // Create a new device record.
+		    await this.prisma.device.create({
+			  data: {token, userId, platform},
+		    });
+		}catch (_error) {
+		}
 	  }
 
 	  return true;
