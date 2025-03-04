@@ -1,17 +1,17 @@
-import {Module} from '@nestjs/common';
-import {HelloCommand} from './hello.command';
+import {Logger, Module} from '@nestjs/common';
 import {ImportLegacyCommand} from "./importLegacy.command";
-import UserRepository from "../Api/Repository/UserRepository";
-import {ApiModule} from "../Api/ApiModule";
+import {PrismaService} from "../Core/Datasource/Prisma";
+import {ConfigService} from "@nestjs/config";
+import UseCaseFactory from "../Api/UseCase/UseCaseFactory";
 
 @Module({
-    imports: [
-	  ApiModule
-    ],
+    imports: [],
     providers: [
-	  ApiModule,
-	  HelloCommand,
-	  ImportLegacyCommand
+	  ConfigService,
+	  PrismaService,
+	  ImportLegacyCommand,
+	  Logger,
+	  UseCaseFactory,
     ],
 })
 export class CliModule {
