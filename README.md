@@ -14,7 +14,7 @@ git clone https://github.com/hdmnetwork/MyWebCompanion-Client-React.git
 3. Install the dependencies for the backend:
 ```bash
 cd MyWebCompanion-Server-NGQL
-npm install
+yarn
 ```
 
 4. Copy the `.env.example` file to `.env`:
@@ -28,7 +28,7 @@ Complete the `.env` file with the necessary information.
 6. Install the dependencies for the frontend:
 ```bash
 cd MyWebCompanion-Client-React
-npm install
+yarn
 ```
 
 7. Copy the `.env.example` file to `.env`:
