@@ -70,7 +70,7 @@ cd MyWebCompanion-Server-NGQL
 
 3. Run the script to import the data:
 ```bash
-yarn start:cli -- importLegacy -e alexandreartaudperso@gmail.com
+yarn start:cli -- importLegacy -e <email>
 ```
 You can pass the option `-k` to keep the existing data, if not, the data (notes, links, link groups) will be deleted before importing.
 
