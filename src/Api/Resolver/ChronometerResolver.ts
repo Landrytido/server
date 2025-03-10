@@ -1,11 +1,17 @@
 import { Resolver, Query, Mutation, Args, Int, Float } from "@nestjs/graphql";
-import { UpdateChronometerDto } from "../Dto/UpdateChronometerDto";
+import { UseGuards } from "@nestjs/common";
+import { UpdateChronometerDto } from "../Dto/ChronoDto/UpdateChronometerDto";
 import { ChronometerMode } from "@prisma/client";
 import Chronometer from "../Entity/Chronometer";
+import GraphqlAuthGuard from "../../Core/Security/Guard/GraphqlAuthGuard";
+import { ContextualRequest } from "../../Core/Decorator/ContextualRequest";
+import { ContextualGraphqlRequest } from "../../index";
+import { StartChronometerDto } from "../Dto/ChronoDto/StartChronometerDto";
+import { RenameChronometerDto } from "../Dto/ChronoDto/RenameChronometerDto";
+import UseCaseFactory from "../UseCase/UseCaseFactory";
 
-// Import des cas d'utilisation
 import { StartChronometerUseCase } from "../UseCase/Chronometer/StartChronometerUseCase";
-import { StopChronometerUseCase } from "../UseCase/Chronometer//StopChronometerUseCase";
+import { StopChronometerUseCase } from "../UseCase/Chronometer/StopChronometerUseCase";
 import { PauseChronometerUseCase } from "../UseCase/Chronometer/PauseChronometerUseCase";
 import { ResumeChronometerUseCase } from "../UseCase/Chronometer/ResumeChronometerUseCase";
 import { ResetChronometerUseCase } from "../UseCase/Chronometer/ResetChronometerUseCase";
@@ -17,118 +23,161 @@ import { CheckCountdownStatusUseCase } from "../UseCase/Chronometer/CheckCountdo
 import { GetCurrentTimeUseCase } from "../UseCase/Chronometer/GetCurrentTimeUseCase";
 import { RenameChronometerUseCase } from "../UseCase/Chronometer/RenameChronometerUseCase";
 import { UpdateChronometerUseCase } from "../UseCase/Chronometer/UpdateChronometerUseCase";
+import UncontextualUseCaseFactory from "../UseCase/UncontextualUseCaseFactory";
 
 @Resolver(() => Chronometer)
 export class ChronometerResolver {
   constructor(
-    private readonly startChronometerUseCase: StartChronometerUseCase,
-    private readonly stopChronometerUseCase: StopChronometerUseCase,
-    private readonly pauseChronometerUseCase: PauseChronometerUseCase,
-    private readonly resumeChronometerUseCase: ResumeChronometerUseCase,
-    private readonly resetChronometerUseCase: ResetChronometerUseCase,
-    private readonly deleteChronometerUseCase: DeleteChronometerUseCase,
-    private readonly getChronometerUseCase: GetChronometerUseCase,
-    private readonly getAllChronometersUseCase: GetAllChronometersUseCase,
-    private readonly getCountdownUseCase: GetCountdownUseCase,
-    private readonly checkCountdownStatusUseCase: CheckCountdownStatusUseCase,
-    private readonly getCurrentTimeUseCase: GetCurrentTimeUseCase,
-    private readonly renameChronometerUseCase: RenameChronometerUseCase,
-    private readonly updateChronometerUseCase: UpdateChronometerUseCase
+    private readonly serviceFactory: UseCaseFactory,
+    private readonly uncontextualServiceFactory: UncontextualUseCaseFactory
   ) {}
 
+  @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Chronometer)
-  startChronometer(
-    @Args("userId", { type: () => Int }) userId: number,
-    @Args("name") name: string,
-    @Args("mode", { type: () => ChronometerMode }) mode: ChronometerMode,
-    @Args("duration", { nullable: true, type: () => Float }) duration?: number
+  async startChronometer(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("input") dto: StartChronometerDto
   ) {
-    return this.startChronometerUseCase.execute(userId, name, mode, duration);
+    return (await this.serviceFactory.create(StartChronometerUseCase)).handle(
+      context,
+      dto
+    );
   }
 
+  @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Chronometer)
-  stopChronometer(
-    @Args("userId", { type: () => Int }) userId: number,
+  async stopChronometer(
+    @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("id") id: string
   ) {
-    return this.stopChronometerUseCase.execute(userId, id);
+    return (await this.serviceFactory.create(StopChronometerUseCase)).handle(
+      context,
+      id
+    );
   }
 
+  @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Chronometer)
-  pauseChronometer(
-    @Args("userId", { type: () => Int }) userId: number,
+  async pauseChronometer(
+    @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("id") id: string
   ) {
-    return this.pauseChronometerUseCase.execute(userId, id);
+    return (await this.serviceFactory.create(PauseChronometerUseCase)).handle(
+      context,
+      id
+    );
   }
 
+  @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Chronometer)
-  resumeChronometer(
-    @Args("userId", { type: () => Int }) userId: number,
+  async resumeChronometer(
+    @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("id") id: string
   ) {
-    return this.resumeChronometerUseCase.execute(userId, id);
+    return (await this.serviceFactory.create(ResumeChronometerUseCase)).handle(
+      context,
+      id
+    );
   }
 
+  @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Chronometer)
-  resetChronometer(
-    @Args("userId", { type: () => Int }) userId: number,
+  async resetChronometer(
+    @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("id") id: string
   ) {
-    return this.resetChronometerUseCase.execute(userId, id);
+    return (await this.serviceFactory.create(ResetChronometerUseCase)).handle(
+      context,
+      id
+    );
   }
 
+  @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Chronometer)
-  deleteChronometer(
-    @Args("userId", { type: () => Int }) userId: number,
+  async deleteChronometer(
+    @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("id") id: string
   ) {
-    return this.deleteChronometerUseCase.execute(userId, id);
+    return (await this.serviceFactory.create(DeleteChronometerUseCase)).handle(
+      context,
+      id
+    );
   }
 
+  @UseGuards(GraphqlAuthGuard)
   @Query(() => Chronometer, { nullable: true })
-  getChronometer(
-    @Args("userId", { type: () => Int }) userId: number,
+  async getChronometer(
+    @ContextualRequest() context: ContextualGraphqlRequest,
     @Args("id") id: string
   ) {
-    return this.getChronometerUseCase.execute(userId, id);
+    return (await this.serviceFactory.create(GetChronometerUseCase)).handle(
+      context,
+      id
+    );
   }
 
+  @UseGuards(GraphqlAuthGuard)
   @Query(() => [Chronometer])
-  getAllChronometers(@Args("userId", { type: () => Int }) userId: number) {
-    return this.getAllChronometersUseCase.execute(userId);
+  async getAllChronometers(
+    @ContextualRequest() context: ContextualGraphqlRequest
+  ) {
+    return (await this.serviceFactory.create(GetAllChronometersUseCase)).handle(
+      context
+    );
   }
 
+  @UseGuards(GraphqlAuthGuard)
   @Query(() => Chronometer, { nullable: true })
-  getCountdown(@Args("userId", { type: () => Int }) userId: number) {
-    return this.getCountdownUseCase.execute(userId);
+  async getCountdown(@ContextualRequest() context: ContextualGraphqlRequest) {
+    return (await this.serviceFactory.create(GetCountdownUseCase)).handle(
+      context
+    );
   }
 
   @Query(() => Boolean)
-  isCountdownFinished(@Args("chronoId") chronoId: string) {
-    return this.checkCountdownStatusUseCase.execute(chronoId);
+  async isCountdownFinished(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("chronoId") chronoId: string
+  ) {
+    return (
+      await this.serviceFactory.create(CheckCountdownStatusUseCase)
+    ).handle(context, chronoId);
   }
 
   @Query(() => Int)
-  getCurrentTime(@Args("chronoId") chronoId: string) {
-    return this.getCurrentTimeUseCase.execute(chronoId);
-  }
-  
-  @Mutation(() => Chronometer)
-  renameChronometer(
-    @Args("userId", { type: () => Int }) userId: number,
-    @Args("id") id: string,
-    @Args("newName") newName: string
+  async getCurrentTime(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("chronoId") chronoId: string
   ) {
-    return this.renameChronometerUseCase.execute(userId, id, newName);
+    return (await this.serviceFactory.create(GetCurrentTimeUseCase)).handle(
+      context,
+      chronoId
+    );
   }
 
+  @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Chronometer)
-  updateChronometer(
-    @Args("userId", { type: () => Int }) userId: number,
-    @Args("id") id: string,
-    @Args("updateData", { type: () => UpdateChronometerDto }) updateData: UpdateChronometerDto
+  async renameChronometer(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("input") dto: RenameChronometerDto
   ) {
-    return this.updateChronometerUseCase.execute(userId, id, updateData);
+    return (await this.serviceFactory.create(RenameChronometerUseCase)).handle(
+      context,
+      dto
+    );
+  }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => Chronometer)
+  async updateChronometer(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("id") id: string,
+    @Args("updateData") updateData: UpdateChronometerDto
+  ) {
+    return (await this.serviceFactory.create(UpdateChronometerUseCase)).handle(
+      context,
+      id,
+      updateData
+    );
   }
 }

@@ -7,18 +7,21 @@ import { ChronometerRepository } from "../../Repository/ChronometerRepository";
 import Chronometer from "../../Entity/Chronometer";
 import { UpdateChronometerDto } from "../../Dto/ChronoDto/UpdateChronometerDto";
 import { ChronometerMode } from "@prisma/client";
-import { ContextualGraphqlRequest } from "src";
+import { ContextualGraphqlRequest } from "../../../index";
 
 @Injectable()
 export class UpdateChronometerUseCase {
   constructor(private chronometerRepository: ChronometerRepository) {}
 
-  async execute(
+  async handle(
     context: ContextualGraphqlRequest,
     id: string,
     updateData: UpdateChronometerDto
   ): Promise<Chronometer> {
-    const chrono = await this.chronometerRepository.findByUserAndId(context.userId, id);
+    const chrono = await this.chronometerRepository.findByUserAndId(
+      context.userId,
+      id
+    );
     if (!chrono) {
       throw new NotFoundException(
         "Aucun chronomètre trouvé pour cet utilisateur."

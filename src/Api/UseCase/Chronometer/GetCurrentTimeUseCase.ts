@@ -1,12 +1,16 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ChronometerRepository } from "../../Repository/ChronometerRepository";
 import { ChronometerMode } from "@prisma/client";
+import { ContextualGraphqlRequest } from "src";
 
 @Injectable()
 export class GetCurrentTimeUseCase {
   constructor(private chronometerRepository: ChronometerRepository) {}
 
-  async execute(chronoId: string): Promise<number> {
+  async handle(
+    context: ContextualGraphqlRequest,
+    chronoId: string
+  ): Promise<number> {
     const chrono = await this.chronometerRepository.findById(chronoId);
     if (!chrono) {
       throw new NotFoundException("Chronomètre non trouvé.");

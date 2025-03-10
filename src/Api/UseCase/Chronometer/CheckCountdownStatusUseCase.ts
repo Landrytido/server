@@ -1,12 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { ChronometerRepository } from "../../Repository/ChronometerRepository";
 import { ChronometerMode } from "@prisma/client";
+import { ContextualGraphqlRequest } from "src";
 
 @Injectable()
 export class CheckCountdownStatusUseCase {
   constructor(private chronometerRepository: ChronometerRepository) {}
-
-  async execute(chronoId: string): Promise<boolean> {
+  async handle(
+    context: ContextualGraphqlRequest,
+    chronoId: string
+  ): Promise<boolean> {
     const chrono = await this.chronometerRepository.findById(chronoId);
 
     if (

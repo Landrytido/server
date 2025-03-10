@@ -1,12 +1,17 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ChronometerRepository } from "../../Repository/ChronometerRepository";
 import Chronometer from "../../Entity/Chronometer";
+import { ContextualGraphqlRequest } from "../../../index";
 
 @Injectable()
 export class StopChronometerUseCase {
   constructor(private chronometerRepository: ChronometerRepository) {}
 
-  async execute(userId: number, id: string): Promise<Chronometer> {
+  async handle(
+    context: ContextualGraphqlRequest,
+    id: string
+  ): Promise<Chronometer> {
+    const userId = context.userId;
     const chrono = await this.chronometerRepository.findRunningByUserAndId(
       userId,
       id
