@@ -3,7 +3,7 @@ import { ChronometerRepository } from "../../Repository/ChronometerRepository";
 import Chronometer from "../../Entity/Chronometer";
 
 @Injectable()
-export class PauseChronometerUseCase {
+export class PauseChronometerUseCase  {
   constructor(private chronometerRepository: ChronometerRepository) {}
 
   async execute(userId: number, id: string): Promise<Chronometer> {

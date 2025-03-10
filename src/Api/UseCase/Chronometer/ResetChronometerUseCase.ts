@@ -13,7 +13,6 @@ export class ResetChronometerUseCase {
         "Aucun chronomètre trouvé pour cet utilisateur."
       );
     }
-
     return this.chronometerRepository.update(chrono.id, {
       startTime: null,
       isRunning: false,
