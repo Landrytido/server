@@ -1,12 +1,13 @@
 import { Field, ObjectType, Int, Float } from "@nestjs/graphql";
+import { ChronometerMode } from "@prisma/client";
 
 @ObjectType()
 export class ChronometerDto {
   @Field()
   id: string;
 
-  @Field({ nullable: true })
-  name?: string;
+  @Field()
+  name: string;
 
   @Field({ nullable: true })
   startTime?: Date;
@@ -14,8 +15,8 @@ export class ChronometerDto {
   @Field(() => Int)
   elapsedTime: number;
 
-  @Field()
-  mode: "countdown" | "stopwatch";
+  @Field(() => ChronometerMode)
+  mode: ChronometerMode;
 
   @Field(() => Float, { nullable: true })
   duration?: number;

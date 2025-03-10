@@ -1,94 +1,134 @@
 import { Resolver, Query, Mutation, Args, Int, Float } from "@nestjs/graphql";
-import { ChronometerService } from "../Services/ChronometerService";
-import { ChronometerDto } from "../Dto/ChronometerDto";
+import { UpdateChronometerDto } from "../Dto/UpdateChronometerDto";
+import { ChronometerMode } from "@prisma/client";
+import Chronometer from "../Entity/Chronometer";
 
-@Resolver(() => ChronometerDto)
+// Import des cas d'utilisation
+import { StartChronometerUseCase } from "../UseCase/Chronometer/StartChronometerUseCase";
+import { StopChronometerUseCase } from "../UseCase/Chronometer//StopChronometerUseCase";
+import { PauseChronometerUseCase } from "../UseCase/Chronometer/PauseChronometerUseCase";
+import { ResumeChronometerUseCase } from "../UseCase/Chronometer/ResumeChronometerUseCase";
+import { ResetChronometerUseCase } from "../UseCase/Chronometer/ResetChronometerUseCase";
+import { DeleteChronometerUseCase } from "../UseCase/Chronometer/DeleteChronometerUseCase";
+import { GetChronometerUseCase } from "../UseCase/Chronometer/GetChronometerUseCase";
+import { GetAllChronometersUseCase } from "../UseCase/Chronometer/GetAllChronometersUseCase";
+import { GetCountdownUseCase } from "../UseCase/Chronometer/GetCountdownUseCase";
+import { CheckCountdownStatusUseCase } from "../UseCase/Chronometer/CheckCountdownStatusUseCase";
+import { GetCurrentTimeUseCase } from "../UseCase/Chronometer/GetCurrentTimeUseCase";
+import { RenameChronometerUseCase } from "../UseCase/Chronometer/RenameChronometerUseCase";
+import { UpdateChronometerUseCase } from "../UseCase/Chronometer/UpdateChronometerUseCase";
+
+@Resolver(() => Chronometer)
 export class ChronometerResolver {
-  constructor(private readonly chronometerService: ChronometerService) {}
+  constructor(
+    private readonly startChronometerUseCase: StartChronometerUseCase,
+    private readonly stopChronometerUseCase: StopChronometerUseCase,
+    private readonly pauseChronometerUseCase: PauseChronometerUseCase,
+    private readonly resumeChronometerUseCase: ResumeChronometerUseCase,
+    private readonly resetChronometerUseCase: ResetChronometerUseCase,
+    private readonly deleteChronometerUseCase: DeleteChronometerUseCase,
+    private readonly getChronometerUseCase: GetChronometerUseCase,
+    private readonly getAllChronometersUseCase: GetAllChronometersUseCase,
+    private readonly getCountdownUseCase: GetCountdownUseCase,
+    private readonly checkCountdownStatusUseCase: CheckCountdownStatusUseCase,
+    private readonly getCurrentTimeUseCase: GetCurrentTimeUseCase,
+    private readonly renameChronometerUseCase: RenameChronometerUseCase,
+    private readonly updateChronometerUseCase: UpdateChronometerUseCase
+  ) {}
 
-  @Mutation(() => ChronometerDto)
+  @Mutation(() => Chronometer)
   startChronometer(
     @Args("userId", { type: () => Int }) userId: number,
     @Args("name") name: string,
-    @Args("mode") mode: "countdown" | "stopwatch",
+    @Args("mode", { type: () => ChronometerMode }) mode: ChronometerMode,
     @Args("duration", { nullable: true, type: () => Float }) duration?: number
   ) {
-    return this.chronometerService.start(userId, name, mode, duration);
+    return this.startChronometerUseCase.execute(userId, name, mode, duration);
   }
 
-  @Mutation(() => ChronometerDto)
+  @Mutation(() => Chronometer)
   stopChronometer(
     @Args("userId", { type: () => Int }) userId: number,
     @Args("id") id: string
   ) {
-    return this.chronometerService.stop(userId, id);
+    return this.stopChronometerUseCase.execute(userId, id);
   }
 
-  @Mutation(() => ChronometerDto)
+  @Mutation(() => Chronometer)
   pauseChronometer(
     @Args("userId", { type: () => Int }) userId: number,
     @Args("id") id: string
   ) {
-    return this.chronometerService.pause(userId, id);
+    return this.pauseChronometerUseCase.execute(userId, id);
   }
 
-  @Mutation(() => ChronometerDto)
+  @Mutation(() => Chronometer)
   resumeChronometer(
     @Args("userId", { type: () => Int }) userId: number,
     @Args("id") id: string
   ) {
-    return this.chronometerService.resume(userId, id);
+    return this.resumeChronometerUseCase.execute(userId, id);
   }
 
-  @Mutation(() => ChronometerDto)
+  @Mutation(() => Chronometer)
   resetChronometer(
     @Args("userId", { type: () => Int }) userId: number,
     @Args("id") id: string
   ) {
-    return this.chronometerService.reset(userId, id);
+    return this.resetChronometerUseCase.execute(userId, id);
   }
 
-  @Mutation(() => ChronometerDto)
+  @Mutation(() => Chronometer)
   deleteChronometer(
     @Args("userId", { type: () => Int }) userId: number,
     @Args("id") id: string
   ) {
-    return this.chronometerService.delete(userId, id);
+    return this.deleteChronometerUseCase.execute(userId, id);
   }
 
-  @Query(() => ChronometerDto, { nullable: true })
+  @Query(() => Chronometer, { nullable: true })
   getChronometer(
     @Args("userId", { type: () => Int }) userId: number,
     @Args("id") id: string
   ) {
-    return this.chronometerService.getChronometer(userId, id);
+    return this.getChronometerUseCase.execute(userId, id);
   }
 
-  @Query(() => [ChronometerDto])
+  @Query(() => [Chronometer])
   getAllChronometers(@Args("userId", { type: () => Int }) userId: number) {
-    return this.chronometerService.getAllChronometers(userId);
+    return this.getAllChronometersUseCase.execute(userId);
   }
 
-  @Query(() => ChronometerDto, { nullable: true })
+  @Query(() => Chronometer, { nullable: true })
   getCountdown(@Args("userId", { type: () => Int }) userId: number) {
-    return this.chronometerService.getCountdown(userId);
+    return this.getCountdownUseCase.execute(userId);
   }
 
   @Query(() => Boolean)
   isCountdownFinished(@Args("chronoId") chronoId: string) {
-    return this.chronometerService.isCountdownFinished(chronoId);
+    return this.checkCountdownStatusUseCase.execute(chronoId);
   }
 
   @Query(() => Int)
   getCurrentTime(@Args("chronoId") chronoId: string) {
-    return this.chronometerService.getCurrentTime(chronoId);
+    return this.getCurrentTimeUseCase.execute(chronoId);
   }
-  @Mutation(() => ChronometerDto)
+  
+  @Mutation(() => Chronometer)
   renameChronometer(
     @Args("userId", { type: () => Int }) userId: number,
     @Args("id") id: string,
     @Args("newName") newName: string
   ) {
-    return this.chronometerService.rename(userId, id, newName);
+    return this.renameChronometerUseCase.execute(userId, id, newName);
+  }
+
+  @Mutation(() => Chronometer)
+  updateChronometer(
+    @Args("userId", { type: () => Int }) userId: number,
+    @Args("id") id: string,
+    @Args("updateData", { type: () => UpdateChronometerDto }) updateData: UpdateChronometerDto
+  ) {
+    return this.updateChronometerUseCase.execute(userId, id, updateData);
   }
 }

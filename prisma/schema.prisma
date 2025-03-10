@@ -426,14 +426,19 @@ model CalendarEvent {
 
 // <<< refactor (calendar)
 // Chronometer model
+enum ChronometerMode {
+  COUNTDOWN
+  STOPWATCH
+}
+
 model Chronometer {
-  id          String    @id @default(uuid())
-  name        String?
-  mode        String
+  id          String          @id @default(uuid())
+  name        String
+  mode        ChronometerMode
   startTime   DateTime?
-  elapsedTime Int
-  duration  Float?
-  isRunning Boolean  @default(false)
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  elapsedTime Int // Temps écoulé en secondes depuis le démarrage du chronomètre
+  duration    Float? // Pour le mode COUNTDOWN: durée totale configurée en secondes
+  isRunning   Boolean         @default(false)
+  userId      Int
+  user        User            @relation(fields: [userId], references: [id])
 }
