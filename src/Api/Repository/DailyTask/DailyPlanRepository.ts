@@ -16,7 +16,6 @@ export default class DailyPlanRepository {
 	  });
 	  console.log(existingPlan)
 	  if (existingPlan) {
-		console.log("Existing plan for user: ", userId);
 		return this.prisma.dailyPlan.update({
 		    where: { id: existingPlan.id },
 		    data: { confirmed },

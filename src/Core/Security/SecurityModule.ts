@@ -20,9 +20,6 @@ import Login from "./UseCase/Login";
 import LoginWithGoogle from "./UseCase/LoginWithGoogle";
 import LoginWithFacebook from "./UseCase/LoginWithFacebook";
 import LoginWithGithub from "./UseCase/LoginWithGithub";
-import MeetingRepository from "src/Api/Repository/MeetingRepository";
-import EventRepository from "src/Api/Repository/EventRepository";
-import TaskRepository from "src/Api/Repository/TaskRepository";
 
 const authenticator = {
   provide: "Authenticator",
@@ -67,9 +64,6 @@ const authenticator = {
     Login,
     RequestTokenDecoder,
     UserRepository,
-    MeetingRepository,
-    EventRepository,
-    TaskRepository,
     LoginWithGoogle,
     LoginWithFacebook,
     LoginWithGithub,

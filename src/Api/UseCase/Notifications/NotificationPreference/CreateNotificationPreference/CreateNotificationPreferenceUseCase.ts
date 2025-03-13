@@ -21,8 +21,6 @@ export default class CreateNotificationPreferenceUseCase
     dto: SaveNotificationPreferenceDto
   ) {
     try {
-      console.log("user", context.userId);
-      console.log("DTO reçu:", dto);
 
       // Vérifie que `types` contient bien des valeurs
       if (!dto.types || dto.types.length === 0) {
@@ -33,7 +31,6 @@ export default class CreateNotificationPreferenceUseCase
 
       // Formatage des types pour Prisma
       const typesData = dto.types.map((type) => ({ type }));
-      console.log("typesData :", typesData);
 
       const savedPreferences = await this.notificationPreference.save({
         userId: context.userId,
@@ -45,7 +42,6 @@ export default class CreateNotificationPreferenceUseCase
         timeUnit: dto.timeUnit,
       });
 
-      console.log("notifPref useCase", savedPreferences); //à supp
       return savedPreferences;
     } catch (error) {
       console.log(error);

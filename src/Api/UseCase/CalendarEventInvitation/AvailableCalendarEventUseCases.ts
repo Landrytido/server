@@ -1,0 +1,20 @@
+import CreateMeetingInvitaionUseCase from "./CreateCalendarEventInvitation/CreateCalendarEventInvitationUseCase";
+import DeleteCalendarEventInvitationUseCase from "./DeleteCalendarEventInvitation/DeleteCalendarEventInvitationUseCase";
+
+import AcceptCalendarEventInvitationUseCase from "./AcceptCalendarEventInvitation/AcceptCalendarEventInvitationUseCase";
+import DenyCalendarEventInvitationUseCase from "./DenyCalendarEventInvitation/DenyCalendarEventInvitationUseCase";
+
+import GetCalendarEventInvitationByIdUseCase from "./GetCalendarEventInvitationById/GetCalendarEventInvitationUseCase";
+import GetCalendarEventInvitationsBySenderIdUseCase from "./GetCalendarEventInvitationsBySenderId/GetCalendarEventInvitationsBySenderIdUseCase";
+import GetCalendarEventInvitationsByReceiverEmailUseCase from "./GetCalendarEventInvitationsByReceiverEmail/GetCalendarEventInvitationsByReceiverEmailUseCase";
+import GetCalendarEventInvitationsByCalendarEventIdUseCase from "./GetCalendarEventInvitationsByCalendarEventId/GetCalendarEventInvitationsByCalendarEventIdUseCase";
+
+export type AvailableCalendarEventInvitationUseCases =
+  | CreateMeetingInvitaionUseCase
+  | GetCalendarEventInvitationByIdUseCase
+  | GetCalendarEventInvitationsBySenderIdUseCase
+  | GetCalendarEventInvitationsByReceiverEmailUseCase
+  | GetCalendarEventInvitationsByCalendarEventIdUseCase
+  | DeleteCalendarEventInvitationUseCase
+  | AcceptCalendarEventInvitationUseCase
+  | DenyCalendarEventInvitationUseCase;

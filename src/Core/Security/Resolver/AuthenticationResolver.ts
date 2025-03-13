@@ -18,7 +18,6 @@ import LoginWithGithub from "../UseCase/LoginWithGithub";
 import LoginWithGithubDto from "../Dto/LoginWithGithubDto";
 import User from "../../../Api/Entity/User"; // Assurez-vous d'importer le type User
 import UserRepository from "../../../Api/Repository/UserRepository";
-import ValidateEventToken from "../UseCase/ValidateEventToken";
 import { ValidateEventTokenResponse } from "../Entity/ValidateEventTokenResponseEntity";
 
 @Resolver(() => TokenEntity)
@@ -41,14 +40,6 @@ export default class AuthenticationResolver {
     return validateTokenUseCase.handle(null, dto);
   }
 
-  @Query(() => ValidateEventTokenResponse)
-  async validateEventToken(
-    @Args("dto") dto: TokenValidationDto
-  ): Promise<ValidateEventTokenResponse> {
-    const validateEventTokenUseCase =
-      await this.useCaseFactory.create(ValidateEventToken);
-    return validateEventTokenUseCase.handle(null, dto);
-  }
 
   @UseGuards(GraphqlAuthGuard)
   @Query(() => String)

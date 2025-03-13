@@ -15,13 +15,13 @@ export default class CreateInvitationUseCase
     private readonly invitationRepository: InvitationRepository,
     private readonly userRepository: UserRepository,
     private readonly mailer: Mailer,
-    @Inject("Authenticator") private authenticator: Authenticator
+    @Inject("Authenticator") private authenticator: Authenticator,
   ) {}
 
   async handle(context: ContextualGraphqlRequest, dto: SaveInvitationDto) {
     try {
       const receiver = await this.invitationRepository.findReceiverIdByEmail(
-        dto.email
+        dto.email,
       );
 
       //external invitation logic
@@ -29,12 +29,12 @@ export default class CreateInvitationUseCase
         const existingExternalInvitation =
           await this.invitationRepository.findInvitationBySenderAndexternalEmailInvitation(
             context.userId,
-            dto.email
+            dto.email,
           );
 
         if (existingExternalInvitation)
           throw new BadRequestException(
-            "You've already sent an invitation to this user"
+            "You've already sent an invitation to this user",
           );
 
         const token = await this.authenticator.createToken({
@@ -55,7 +55,7 @@ export default class CreateInvitationUseCase
         await this.mailer.sendInvitationEmail(
           dto.email,
           { firstName: senderUser.firstName, lastName: senderUser.lastName },
-          invitationLink
+          invitationLink,
         );
 
         return savedInvitation;
@@ -65,18 +65,18 @@ export default class CreateInvitationUseCase
       if (receiver) {
         if (receiver.id == context.userId)
           throw new BadRequestException(
-            "Users are prohibited from sending invitations to themselves"
+            "Users are prohibited from sending invitations to themselves",
           );
 
         const existingInvitation =
           await this.invitationRepository.findInvitationBySenderAndReceiver(
             context.userId,
-            receiver.id
+            receiver.id,
           );
 
         if (existingInvitation)
           throw new BadRequestException(
-            "You've already sent an invitation to this user"
+            "You've already sent an invitation to this user",
           );
 
         const invitationSaved = await this.invitationRepository.save({
@@ -90,7 +90,7 @@ export default class CreateInvitationUseCase
     } catch (error) {
       throw new BadRequestException(
         "CreateInvitationUseCaseFailed",
-        error.message
+        error.message,
       );
     }
   }

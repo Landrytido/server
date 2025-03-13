@@ -15,11 +15,6 @@ export default class GetExternalEmailByTokenUseCase
     if (!invitation) {
       throw new BadRequestException("Le token d'invitation est invalide");
     }
-    console.log(
-      "getexternalemailbytoken",
-      invitation,
-      invitation.externalEmailInvitation
-    );
     return invitation.externalEmailInvitation;
   }
 }

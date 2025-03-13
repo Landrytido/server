@@ -2,10 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input AdditionalDataInput {
-  link: String
-}
-
 input AuthenticationDto {
   email: String!
   password: String!
@@ -24,20 +20,27 @@ input AutoInstructionInput {
   order: Float!
 }
 
+type AutoInstructionSuggestion {
+  description: String!
+  id: Int!
+}
+
 type CalendarEvent {
   createdAt: DateTime!
   description: String
-  endDate: DateTime!
+  dueDate: DateTime
+  emailNotificationSent: Boolean
+  endDate: DateTime
   eventType: String!
   googleEventId: String
   id: Int!
   isRecurring: Boolean!
   link: String
-  location: String!
+  location: String
   notificationPreference: NotificationPreference!
   notificationPreferenceId: Int!
   notificationSent: Boolean
-  place: String
+  pushNotificationSent: Boolean
   recurrence: Recurrence
   startDate: DateTime!
   title: String
@@ -46,6 +49,7 @@ type CalendarEvent {
   user: User!
   userId: Int!
 }
+
 
 type Chronometer {
   createdAt: DateTime
@@ -65,6 +69,17 @@ type Chronometer {
 enum ChronometerMode {
   COUNTDOWN
   STOPWATCH
+type CalendarEventInvitation {
+  calendarEvent: CalendarEvent!
+  calendarEventId: Int!
+  id: Int!
+  receiver: User!
+  receiverEmail: String!
+  sender: User!
+  senderId: Int!
+  status: String!
+  updatedAt: DateTime!
+
 }
 
 type CombinedTask {
@@ -104,18 +119,24 @@ input CreateAutoInstructionInput {
 
 input CreateCalendarEventDto {
   description: String
-  endDate: DateTime!
+  dueDate: DateTime
+  endDate: DateTime
   eventType: String! = "EVENT"
   googleEventId: String
   isRecurring: Boolean!
   link: String
-  location: String!
+  location: String
   notificationPreferenceId: Int
-  place: String
   recurrence: String
   startDate: DateTime!
   title: String
   token: String
+}
+
+input CreateCalendarEventInvitationDto {
+  calendarEventId: Int!
+  receiverEmail: String
+  senderId: Int!
 }
 
 input CreateDailyTaskDto {
@@ -125,11 +146,6 @@ input CreateDailyTaskDto {
   scheduledDate: DateTime
   title: String!
   uniqueTaskId: String
-}
-
-input CreateLinkGroupDto {
-  description: String
-  name: String!
 }
 
 type DailyPlan {
@@ -177,29 +193,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type DeviceDto {
+type Device {
+  createdAt: DateTime!
+  id: Int!
   platform: String!
   token: String!
-  userId: Float!
-}
-
-type Event {
-  createdAt: DateTime!
-  description: String!
-  endDate: DateTime!
-  id: Int!
-  isRecurring: Boolean!
-  link: String
-  location: String!
-  notificationPreference: NotificationPreference!
-  notificationPreferenceId: Int
-  notificationSent: Boolean
-  place: String
-  recurrence: Recurrence!
-  sharedWith: [MeetSharedWithMember!]!
-  startDate: DateTime!
-  title: String!
-  token: String
   updatedAt: DateTime!
   user: User!
   userId: Int!
@@ -241,6 +239,11 @@ type Invitation {
   tokenForExternalInvitation: String
 }
 
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
 """Possible Level options: EASY, MEDIUM, HARD"""
 enum Level {
   EASY
@@ -249,66 +252,33 @@ enum Level {
 }
 
 type Link {
-  clicks: [LinkClick!]
-  description: String
-  id: Int!
+  groups: [LinkGroupLink!]!
+  id: String!
   image: File
-  imageId: Int
-  linkGroup: LinkGroup!
-  linkGroupId: Int!
-  name: String!
+  owner: User
+  screenShotAt: DateTime
   url: String!
-  user: User!
-  userId: Int!
-}
-
-type LinkClick {
-  clicks: Int!
-  id: Int!
-  link: Link
-  linkId: Int
-  user: User
-  userId: Int
 }
 
 type LinkGroup {
-  description: String!
-  id: Int!
-  links: [Link!]!
-  name: String!
+  description: String
+  id: String!
+  links: [LinkGroupLink!]!
+  title: String!
   user: User!
-  userId: Int!
+}
+
+type LinkGroupLink {
+  clickCounter: Int!
+  link: Link!
+  linkGroup: LinkGroup!
+  linkGroupId: String!
+  linkId: String!
+  linkName: String!
 }
 
 input LoginWithGithubDto {
   code: String!
-}
-
-type MeetSharedWithMember {
-  meetId: Int!
-  user: User!
-  userId: Int!
-}
-
-type Meeting {
-  createdAt: DateTime!
-  description: String!
-  endDate: DateTime!
-  id: Int!
-  isRecurring: Boolean!
-  link: String
-  location: String!
-  notificationPreference: NotificationPreference!
-  notificationPreferenceId: Int
-  notificationSent: Boolean
-  place: String
-  recurrence: Recurrence
-  startDate: DateTime!
-  title: String!
-  token: String
-  updatedAt: DateTime!
-  user: User!
-  userId: Int!
 }
 
 type MonthlyReport {
@@ -319,8 +289,9 @@ type MonthlyReport {
 }
 
 type Mutation {
-  RemoveById(id: Int!): Task!
+  RemoveById(id: Float!): Tag!
   UpdateById(dto: SaveTagDto!, id: Int!): Tag!
+  acceptCalendarEventInvitation(id: Int!): CalendarEventInvitation!
   acceptInvitation(invitationId: Int!): Invitation!
   addAutoInstruction(createAutoInstructionInput: CreateAutoInstructionInput!): AutoInstruction!
   addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
@@ -328,55 +299,60 @@ type Mutation {
   confirmEndOfDay: Boolean!
   convertExternalInvitation(dto: SaveUserDto!): Invitation!
   createCalendarEvent(dto: CreateCalendarEventDto!): CalendarEvent!
+  createCalendarEventInvitation(dto: CreateCalendarEventInvitationDto!, invitedEmails: [String!]!): [CalendarEventInvitation!]!
   createComment(data: CommentDto!): Comment!
   createDailyTask(dto: CreateDailyTaskDto!): DailyTask!
   createInvitation(dto: SaveInvitationDto!): Invitation!
   createLink(dto: SaveLinkDto!): Link!
-  createLinkGroup(dto: CreateLinkGroupDto!): LinkGroup!
   createNote(dto: SaveNoteDto!): Note!
   createNotebook(dto: SaveNotebookDto!): Notebook!
   createNotificationPreference(dto: SaveNotificationPreferenceDto!): NotificationPreference!
   createTag(dto: SaveTagDto!): Tag!
-  deleteAllLinkClicks: Boolean!
   deleteCalendarEvent(id: Int!): CalendarEvent!
   deleteChronometer(id: String!): Chronometer!
+  deleteCalendarEventInvitation(id: Int!): CalendarEventInvitation!
   deleteComment(commentId: Float!): Boolean!
   deleteDailyTask(id: Int!): DailyTask!
-  deleteEvent(id: Int!): Event!
   deleteInvitation(invitationId: Int!): Invitation!
-  deleteLink(id: Int!): Boolean!
-  deleteLinkClick(idLinkClick: Int!): LinkClick!
-  deleteLinkGroup(linkGroupId: Int!): LinkGroup!
-  deleteMeeting(id: Int!): Meeting!
+  deleteLinkFromGroup(linkGroupId: String!, linkId: String!): Boolean!
+  deleteLinkGroup(id: String!): LinkGroup!
   deleteNote(noteId: Int!): Note!
   deleteNotebook(notebookId: Int!): Notebook!
   deleteNotificationPreference(notificationPreferenceId: Int!): NotificationPreference!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
+  denyCalendarEventInvitation(id: Int!): CalendarEventInvitation!
+  incrementClickCounter(linkGroupId: String!, linkId: String!): LinkGroupLink!
   loginWithFacebook(accessToken: String!): String!
   loginWithGithub(dto: LoginWithGithubDto!): String!
   loginWithGoogle(accessToken: String!): String!
   markNotificationAsSent(id: Int!): CalendarEvent!
   pauseChronometer(id: String!): Chronometer!
   register(dto: SaveUserDto!): User!
-  registerDevice(platform: String!, token: String!, userId: Float!): DeviceDto!
+  registerDevice(platform: Platform!, token: String!): Boolean!
   removeAutoInstruction(id: Float!): AutoInstruction!
   removeNoteTaskById(id: Int!): NoteTask!
   renameChronometer(input: RenameChronometerDto!): Chronometer!
   reorderDailyTasks(dto: ReorderDailyTasksDto!): [DailyTask!]!
   reorderInstructions(instructions: [AutoInstructionInput!]!, userId: Float!): [AutoInstruction!]!
+
   resetChronometer(id: String!): Chronometer!
   resumeChronometer(id: String!): Chronometer!
   saveClicks(dto: SaveLinkClickDto!): LinkClick!
   saveEvent(dto: saveEventDto!): Event!
+
+  resetClickCounter(linkGroupId: String!, linkId: String!): LinkGroupLink!
+
   saveFile(dto: FileDto!): File!
-  saveMeeting(dto: SaveMeetingDto!): Meeting!
+  saveLinkGroup(dto: SaveLinkGroupDto!): LinkGroup!
   saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
-  saveTask(dto: SaveTaskDto!): Task!
   saveUser(dto: SaveUserDto!): User!
+
   sendNotification(additionalData: AdditionalDataInput, message: String!, userId: Float!): Boolean!
   startChronometer(input: StartChronometerDto!): Chronometer!
   stopChronometer(id: String!): Chronometer!
+
+  sendPushNotification(body: String!, data: JSONObject, title: String!): Boolean!
 
   """Synchronize Google Calendar events"""
   syncGoogleCalendar: Boolean!
@@ -385,8 +361,7 @@ type Mutation {
   updateChronometer(id: String!, updateData: UpdateChronometerDto!): Chronometer!
   updateComment(commentId: Float!, data: CommentDto!): Comment!
   updateDailyTask(dto: UpdateDailyTaskDto!, id: Int!): DailyTask!
-  updateLink(dto: UpdateLinkDto!, id: Int!): Link!
-  updateLinkGroup(dto: CreateLinkGroupDto!, linkGroupId: Int!): LinkGroup!
+  updateLinkRelation(dto: SaveLinkDto!): LinkGroupLink!
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
   updateNoteTask(dto: UpdateNoteTaskDto!): NoteTask!
   updateNotebook(dto: SaveNotebookDto!, notebookId: Int!): Notebook!
@@ -469,19 +444,16 @@ enum PermissionLevel {
   WRITE
 }
 
+"""Possible Platform options: WEB, MOBILE"""
+enum Platform {
+  MOBILE
+  WEB
+}
+
 type Query {
-  eventByUserId(userId: Int!): [Event!]!
-  findByLinkId(linkId: Int!): [LinkClick!]!
-  findByUser: [LinkClick!]!
   findCommentsByNoteId(noteId: Float!): [Comment!]!
   findExternalEmailByToken(token: String!): String!
-  findLinkById(id: Int!): Link!
-  findLinkGroupById(linkGroupId: Int!): LinkGroup!
-  findLinkGroupsByUserId: [LinkGroup!]!
-  findLinkGroupsSortByUserId: [LinkGroup!]!
-  findLinksByLinkGroupId(linkGroupId: Int!): [Link!]!
-  findLinksByUserId: [Link!]!
-  findLinksByUserIdWithMinClicks(minClicks: Int!): [Link!]!
+  findHotLinks(limit: Int!): [LinkGroupLink!]!
   findNoteById(noteId: Int!): Note!
   findNoteTaskById(id: Int!): NoteTask!
   findNotebookById(notebookId: Int!): Notebook!
@@ -489,45 +461,52 @@ type Query {
   findNotebooksByUserId: [Notebook!]!
   findNotes: [Note!]!
   findNotesByUserId: [Note!]!
-  findOne(id: Int!): LinkClick!
   findReceivedInvitations: [Invitation!]!
   findRelations: [Relation!]!
   findSentInvitations: [Invitation!]!
   findTagById(id: Float!): Tag!
-  findTaskById(id: Int!): Task!
   getAllCalendarEvents: [CalendarEvent!]!
+
   getAllChronometers: [Chronometer!]!
   getAllEvent: [Event!]!
   getAllLinkGroups: [LinkGroup!]!
   getAllMeeting: [Meeting!]!
   getAllTask: [Task!]!
+
+  getAutoInstructionSuggestionById(id: Int!): AutoInstructionSuggestion!
+  getAutoInstructionSuggestions: [AutoInstructionSuggestion!]!
+
   getAutoInstructions(userId: Float!): [AutoInstruction!]!
   getCalendarEvent(id: Int!): CalendarEvent!
+  getCalendarEventInvitationById(id: Int!): CalendarEventInvitation!
+  getCalendarEventInvitationsByCalendarEventId(id: Int!): [CalendarEventInvitation!]!
+  getCalendarEventInvitationsByReceiverEmail(email: String!): [CalendarEventInvitation!]!
+  getCalendarEventInvitationsBySenderId(id: Int!): [CalendarEventInvitation!]!
   getCalendarEventsByToken(token: String!): [CalendarEvent!]!
+
   getCalendarEventsByUserId(userId: Int!): [CalendarEvent!]!
   getChronometer(id: String!): Chronometer
   getCountdown: Chronometer
   getCurrentTime(chronoId: String!): Int!
+
+  getCalendarEventsByUserId: [CalendarEvent!]!
+
   getDailyPlan(date: String!): DailyPlan
   getDailyTaskHistory(date: String!): [DailyTaskHistory!]!
   getDailyTasks(date: String): [DailyTask!]!
-  getEvent(id: Int!): Event!
   getLoggedUser: User!
-  getMeeting(id: Int!): Meeting!
   getMonthlyReport(month: Int!, year: Int!): MonthlyReport!
   getNotificationPreference: NotificationPreference!
   getSearchHistoryByUserId: [SearchHistory!]!
   getTasksCreatedOn(date: String!): [CombinedTask!]!
   isCountdownFinished(chronoId: String!): Boolean!
   login(dto: AuthenticationDto!): String!
-  meetingByUserId(userId: Int!): [Meeting!]!
+  myLinkGroups: [LinkGroup!]!
   noteTasksByUserId(dto: GetNoteTasksByUserIdDto!): [NoteTask!]!
   refreshToken: String!
-  tasksByUserId(userId: Int!): [Task!]!
   topScores(level: Level = EASY, limit: Int = 10): [Score!]!
   topThreeScores: [Score!]!
   userScores(userId: Int!): [Score!]!
-  validateEventToken(dto: TokenValidationDto!): ValidateEventTokenResponse!
   validateToken(dto: TokenValidationDto!): Boolean!
 }
 
@@ -570,34 +549,20 @@ input SaveInvitationDto {
   email: String!
 }
 
-input SaveLinkClickDto {
-  id: Int
-  linkId: Int!
-  userId: Int
-}
-
 input SaveLinkDto {
-  description: String
-  imageId: Int
-  linkGroupId: Int!
-  name: String!
+  id: String
+  imageId: Float
+  linkGroupId: String!
+  linkName: String!
+  ownerId: Float
+  screenShotAt: DateTime
   url: String!
-  userId: Int
 }
 
-input SaveMeetingDto {
-  description: String!
-  endDate: DateTime!
-  id: Int
-  isRecurring: Boolean!
-  link: String
-  location: String!
-  notificationPreferenceId: Int
-  place: String
-  recurrence: String
-  startDate: DateTime!
+input SaveLinkGroupDto {
+  description: String
+  id: String
   title: String!
-  userId: Int!
 }
 
 input SaveNoteDto {
@@ -627,16 +592,6 @@ input SaveNotificationPreferenceDto {
 
 input SaveTagDto {
   name: String!
-}
-
-input SaveTaskDto {
-  completed: Boolean!
-  description: String!
-  dueDate: DateTime
-  id: Int
-  notificationPreferenceId: Int
-  title: String!
-  userId: Int!
 }
 
 input SaveUserDto {
@@ -695,20 +650,6 @@ type Tag {
   notes: [Note!]!
 }
 
-type Task {
-  completed: Boolean!
-  description: String!
-  dueDate: DateTime!
-  id: Int!
-  notificationPreference: NotificationPreference!
-  notificationPreferenceId: Int
-  notificationSent: Boolean
-  title: String!
-  token: String
-  user: User!
-  userId: Int!
-}
-
 """Possible TimeUnit options : MINUTES, HOURS, DAYS"""
 enum TimeUnit {
   DAYS
@@ -728,6 +669,8 @@ input UpdateAutoInstructionInput {
 
 input UpdateCalendarEventDto {
   description: String
+  dueDate: DateTime
+  emailNotificationSent: Boolean
   endDate: DateTime
   eventType: String
   googleEventId: String
@@ -735,8 +678,7 @@ input UpdateCalendarEventDto {
   link: String
   location: String
   notificationPreferenceId: Int
-  notificationSent: Boolean
-  place: String
+  pushNotificationSent: Boolean
   recurrence: String
   startDate: DateTime
   title: String
@@ -761,13 +703,6 @@ input UpdateDailyTaskDto {
   title: String
 }
 
-input UpdateLinkDto {
-  description: String
-  imageId: Int
-  name: String!
-  url: String
-}
-
 input UpdateNoteTaskDto {
   completed: Boolean
   id: Int!
@@ -776,9 +711,11 @@ input UpdateNoteTaskDto {
 }
 
 type User {
+  calendarEvents: [CalendarEvent!]!
   collaborations: [NoteCollaboration!]!
   comments: [Comment!]!
   createdAt: DateTime!
+  devices: [Device!]!
   email: String!
   firstName: String
   friends: [Relation!]!
@@ -791,33 +728,11 @@ type User {
   lastName: String
   linkGroups: [LinkGroup!]!
   links: [Link!]!
-  meetsShared: [MeetSharedWithMember!]!
   notebooks: [Notebook!]!
   notes: [Note!]!
-  notificationPreferences: [NotificationPreference!]!
+  notificationPreference: NotificationPreference!
   resetTokens: [ResetToken!]!
   searchHistory: [SearchHistory!]!
   sessions: [Session!]!
-  tasks: [Task!]!
   updatedAt: DateTime!
-}
-
-type ValidateEventTokenResponse {
-  entityId: Int
-  entityType: String
-  isValid: Boolean!
-  userId: Int
-}
-
-input saveEventDto {
-  description: String!
-  endDate: DateTime!
-  id: Int
-  link: String
-  location: String!
-  notificationPreferenceId: Int
-  place: String
-  startDate: DateTime!
-  title: String!
-  userId: Int!
 }

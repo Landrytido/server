@@ -1,5 +1,4 @@
-// src/Entity/DailyTask/DailyTask.ts
-import {ObjectType, Field, Int, GraphQLISODateTime} from '@nestjs/graphql';
+import {ObjectType, Field, Int, GraphQLISODateTime} from "@nestjs/graphql";
 import {CalendarEventType, Recurrence} from "@prisma/client";
 import User from "../User";
 import {NotificationPreference} from "../NotificationPreference";
@@ -13,7 +12,7 @@ export default class CalendarEvent {
     googleEventId?: string;
 
     @Field({defaultValue: CalendarEventType.EVENT})
-    eventType: CalendarEventType
+    eventType: CalendarEventType;
 
     @Field({nullable: true})
     title?: string;
@@ -21,11 +20,14 @@ export default class CalendarEvent {
     @Field({nullable: true})
     description?: string;
 
-    @Field(() => GraphQLISODateTime)
-    startDate: Date;
+    @Field(() => GraphQLISODateTime, {nullable: true})
+    dueDate?: Date;
 
-    @Field(() => GraphQLISODateTime)
-    endDate: Date;
+    @Field(() => GraphQLISODateTime, {nullable: true})
+    startDate?: Date;
+
+    @Field(() => GraphQLISODateTime, {nullable: true})
+    endDate?: Date;
 
     @Field()
     isRecurring: boolean;
@@ -33,11 +35,8 @@ export default class CalendarEvent {
     @Field(() => Recurrence, {nullable: true})
     recurrence?: Recurrence;
 
-    @Field()
-    location: string;
-
     @Field({nullable: true})
-    place?: string;
+    location?: string;
 
     @Field({nullable: true})
     link?: string;
@@ -59,6 +58,12 @@ export default class CalendarEvent {
 
     @Field(() => Boolean, {nullable: true})
     notificationSent?: boolean;
+
+    @Field(() => Boolean, {nullable: true})
+    pushNotificationSent?: boolean;
+
+    @Field(() => Boolean, {nullable: true})
+    emailNotificationSent?: boolean;
 
     @Field()
     createdAt: Date;

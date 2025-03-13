@@ -3,93 +3,93 @@ import {ContextualGraphqlRequest} from "../../index";
 import Session from "./Session";
 import Note from "./Note";
 import Notebook from "./Notebook";
-import LinkGroup from "./LinkGroup";
-import Link from "./Link";
-import Task from "./Task";
 import {NoteCollaboration} from "./NoteCollaboration";
 import Invitation from "./Invitation";
-import MeetSharedWithMember from "./MeetSharedWithMember";
 import ResetToken from "./ResetToken";
 import Comment from "./Comment";
 import SearchHistory from "./SearchHistory";
 import {Relation} from "./Relation";
 import {NotificationPreference} from "./NotificationPreference";
+import CalendarEvent from "./CalendarEvent/CalendarEvent";
+import Device from "./Device/Device";
+import Link from "./Link/Link";
+import LinkGroup from "./Link/LinkGroup";
 
 @ObjectType()
 export default class User {
-  @Field(() => Int)
-  id: number;
+    @Field(() => Int)
+    id: number;
 
-  @Field()
-  email: string;
+    @Field()
+    email: string;
 
-  password: string;
+    password: string;
 
-  @Field({nullable: true})
-  firstName?: string; // Permettre le nullable
+    @Field({nullable: true})
+    firstName?: string; // Permettre le nullable
 
-  @Field({nullable: true})
-  lastName?: string; // Permettre le nullable
+    @Field({nullable: true})
+    lastName?: string; // Permettre le nullable
 
-  @Field({nullable: true})
-  lastLoginDate?: Date;
+    @Field({nullable: true})
+    lastLoginDate?: Date;
 
-  @Field(() => [Session])
-  sessions?: Session[];
+    @Field(() => [Session])
+    sessions?: Session[];
 
-  @Field(() => [Note])
-  notes?: Note[];
+    @Field(() => [Note])
+    notes?: Note[];
 
-  @Field(() => [Notebook])
-  notebooks?: Notebook[];
+    @Field(() => [Notebook])
+    notebooks?: Notebook[];
 
-  @Field(() => [LinkGroup])
-  linkGroups?: LinkGroup[];
+    @Field(() => [LinkGroup])
+    linkGroups?: LinkGroup[];
 
-  @Field(() => [Link])
-  links?: Link[];
+    @Field(() => [Link])
+    links?: Link[];
 
-  @Field(() => [Task])
-  tasks?: Task[];
+    @Field(() => [Comment])
+    comments?: Comment[];
 
-  @Field(() => [Comment])
-  comments?: Comment[];
+    @Field(() => [NoteCollaboration])
+    collaborations?: NoteCollaboration[];
 
-  @Field(() => [NoteCollaboration])
-  collaborations?: NoteCollaboration[];
+    @Field(() => [Invitation])
+    invitationsSent?: Invitation[];
 
-  @Field(() => [Invitation])
-  invitationsSent?: Invitation[];
+    @Field(() => [Invitation])
+    invitationsReceived?: Invitation[];
 
-  @Field(() => [Invitation])
-  invitationsReceived?: Invitation[];
+    @Field(() => [Relation])
+    friends?: Relation[];
 
-  @Field(() => [Relation])
-  friends?: Relation[];
+    @Field(() => NotificationPreference)
+    notificationPreference?: NotificationPreference;
 
-  @Field(() => [NotificationPreference])
-  notificationPreferences?: NotificationPreference[];
+    @Field(() => [Device], {defaultValue: []})
+    devices?: Device[];
 
-  @Field(() => [MeetSharedWithMember])
-  meetsShared?: MeetSharedWithMember[];
+    @Field(() => [ResetToken])
+    resetTokens?: ResetToken[];
 
-  @Field(() => [ResetToken])
-  resetTokens?: ResetToken[];
+    @Field(() => GraphQLISODateTime)
+    createdAt: Date;
 
-  @Field(() => GraphQLISODateTime)
-  createdAt: Date;
+    @Field(() => GraphQLISODateTime)
+    updatedAt: Date;
 
-  @Field(() => GraphQLISODateTime)
-  updatedAt: Date;
+    @Field(() => [SearchHistory])
+    searchHistory?: SearchHistory[];
 
-  @Field(() => [SearchHistory])
-  searchHistory?: SearchHistory[];
+    @Field(() => [CalendarEvent])
+    calendarEvents?: CalendarEvent[];
 
-  @Field({nullable: true})
-  googleAccessToken?: string;
+    @Field({nullable: true})
+    googleAccessToken?: string;
 
-  @Field({nullable: true})
-  googleRefreshToken?: string;
+    @Field({nullable: true})
+    googleRefreshToken?: string;
 
-  context?: ContextualGraphqlRequest;
+    context?: ContextualGraphqlRequest;
 }

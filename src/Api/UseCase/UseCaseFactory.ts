@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import ServiceFactory from "../../Core/Factory/ServiceFactory";
+
 import { AvailableUserUseCases } from "./User/AvailableUserUseCases";
 import { AvailableLinkGroupUseCases } from "./LinkGroup/AvailableLinkGroupUseCases";
 import { AvailableLinkUseCases } from "./Link/AvailableLinkUseCases";
@@ -40,6 +41,7 @@ export type UseCases =
   | AvailableCalendarEventUseCases
   | AvailableFileUseCases
   | AvailableChronometerUseCases;
+
 
 @Injectable()
 export default class UseCaseFactory extends ServiceFactory<UseCases> {}

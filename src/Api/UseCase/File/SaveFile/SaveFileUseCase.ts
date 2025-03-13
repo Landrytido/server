@@ -19,9 +19,7 @@ export default class SaveFileUseCase
                 throw new ForbiddenException("Not authorized");
             }
 
-            console.log("Saving file with DTO:", dto); // Ajout d'un log
             const savedFile = await this.fileRepository.saveFile(dto);
-            console.log("Saved file:", savedFile); // Log du résultat
 
             return savedFile;
         } catch (error) {

@@ -6,12 +6,10 @@ import ValidateToken from "./ValidateToken";
 import LoginWithGoogle from "./LoginWithGoogle";
 import LoginWithFacebook from "./LoginWithFacebook";
 import LoginWithGithub from "./LoginWithGithub";
-import ValidateEventToken from "./ValidateEventToken";
 
 type AvailableUseCase =
   | Login
   | ValidateToken
-  | ValidateEventToken
   | RefreshToken
   | LoginWithGoogle
   | LoginWithFacebook

@@ -1,5 +1,5 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
-import Link from "./Link";
+import Link from "./Link/Link";
 
 
 @ObjectType()

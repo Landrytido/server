@@ -1,9 +1,9 @@
 // src/Repository/CalendarEvent/CalendarEventRepository.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../../Core/Datasource/Prisma';
-import { CreateCalendarEventDto } from '../../Dto/CalendarEventDto/CreateCalendarEventDto';
-import { UpdateCalendarEventDto } from '../../Dto/CalendarEventDto/UpdateCalendarEventDto';
-import {CalendarEventType, Prisma, Recurrence} from '@prisma/client';
+import {Injectable, NotFoundException} from "@nestjs/common";
+import {PrismaService} from "../../../Core/Datasource/Prisma";
+import {CreateCalendarEventDto} from "../../Dto/CalendarEventDto/CreateCalendarEventDto";
+import {UpdateCalendarEventDto} from "../../Dto/CalendarEventDto/UpdateCalendarEventDto";
+import {CalendarEventType, Prisma} from "@prisma/client";
 import GoogleCalendarService from "../../Services/GoogleCalendarService";
 
 export type CalendarEventWithRelations = Prisma.CalendarEventGetPayload<{
@@ -12,22 +12,25 @@ export type CalendarEventWithRelations = Prisma.CalendarEventGetPayload<{
 
 @Injectable()
 export default class CalendarEventRepository {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService) {
+    }
 
     async find(): Promise<CalendarEventWithRelations[]> {
 	  return this.prisma.calendarEvent.findMany({
-		include: { user: true, notificationPreference: true },
+		include: {user: true, notificationPreference: true},
 	  });
     }
 
     async findById(id: number): Promise<CalendarEventWithRelations | null> {
 	  return this.prisma.calendarEvent.findUnique({
-		where: { id },
-		include: { user: true, notificationPreference: true },
+		where: {id},
+		include: {user: true, notificationPreference: true},
 	  });
     }
 
-    async findByType(types: CalendarEventType[]): Promise<CalendarEventWithRelations[]> {
+    async findByType(
+	    types: CalendarEventType[],
+    ): Promise<CalendarEventWithRelations[]> {
 	  return this.prisma.calendarEvent.findMany({
 		where: {
 		    eventType: {
@@ -41,105 +44,164 @@ export default class CalendarEventRepository {
 	  });
     }
 
+    async findByTypeWithEmailNotSent(
+	    types: CalendarEventType[],
+    ): Promise<CalendarEventWithRelations[]> {
+	  return this.prisma.calendarEvent.findMany({
+		where: {
+		    eventType: {
+			  in: types,
+		    },
+		    emailNotificationSent: false,
+		},
+		include: {
+		    notificationPreference: { include: { types: true } },
+		    user: true,
+		},
+	  });
+    }
+
     async findByToken(token: string): Promise<CalendarEventWithRelations | null> {
 	  return this.prisma.calendarEvent.findUnique({
-		where: { token },
-		include: { user: true, notificationPreference: true },
+		where: {token},
+		include: {user: true, notificationPreference: true},
 	  });
     }
 
     async findByUserId(userId: number): Promise<CalendarEventWithRelations[]> {
 	  return this.prisma.calendarEvent.findMany({
-		where: { userId },
-		include: { user: true, notificationPreference: true },
+		where: {userId},
+		include: {user: true, notificationPreference: true},
 	  });
     }
 
-    async create(userId: number, dto: CreateCalendarEventDto): Promise<CalendarEventWithRelations> {
+    async create(
+	    userId: number,
+	    dto: CreateCalendarEventDto,
+    ): Promise<CalendarEventWithRelations> {
 	  return this.prisma.calendarEvent.create({
 		data: {
 		    googleEventId: dto.googleEventId,
-		    eventType: dto.eventType || 'EVENT',
+		    eventType: dto.eventType || "EVENT",
 		    title: dto.title,
 		    description: dto.description,
-		    startDate: new Date(dto.startDate),
-		    endDate: new Date(dto.endDate),
+		    dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
+		    startDate: dto.startDate ? new Date(dto.startDate) : null,
+		    endDate: dto.endDate ? new Date(dto.endDate) : null,
 		    isRecurring: dto.isRecurring,
 		    recurrence: dto.recurrence,
 		    location: dto.location,
-		    place: dto.place,
 		    link: dto.link,
 		    token: dto.token,
-		    user: { connect: { id: userId } },
+		    user: {connect: {id: userId}},
 		    ...(dto.notificationPreferenceId
-			    ? { notificationPreference: { connect: { id: dto.notificationPreferenceId } } }
+			    ? {
+				  notificationPreference: {
+					connect: {id: dto.notificationPreferenceId},
+				  },
+			    }
 			    : {}),
 		},
-		include: { user: true, notificationPreference: true },
+		include: {user: true, notificationPreference: true},
 	  });
     }
 
-    async update(userId: number, id: number, dto: UpdateCalendarEventDto): Promise<CalendarEventWithRelations> {
+    async update(
+	    userId: number,
+	    id: number,
+	    dto: UpdateCalendarEventDto,
+    ): Promise<CalendarEventWithRelations> {
 	  const existingEvent = await this.findById(id);
 	  if (!existingEvent || existingEvent.userId !== userId) {
-		throw new NotFoundException('Calendar event not found');
+		throw new NotFoundException("Calendar event not found");
 	  }
 
 	  return this.prisma.calendarEvent.update({
-		where: { id },
+		where: {id},
 		data: {
 		    googleEventId: dto.googleEventId,
 		    eventType: dto.eventType,
 		    title: dto.title,
 		    description: dto.description,
-		    startDate: dto.startDate ? new Date(dto.startDate) : undefined,
-		    endDate: dto.endDate ? new Date(dto.endDate) : undefined,
+		    dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
+		    startDate: dto.startDate ? new Date(dto.startDate) : null,
+		    endDate: dto.endDate ? new Date(dto.endDate) : null,
 		    isRecurring: dto.isRecurring,
 		    recurrence: dto.recurrence,
 		    location: dto.location,
-		    place: dto.place,
 		    link: dto.link,
 		    token: dto.token,
-		    notificationSent: dto.notificationSent,
+		    pushNotificationSent: dto.pushNotificationSent,
+		    emailNotificationSent: dto.emailNotificationSent,
 		    ...(dto.notificationPreferenceId
-			    ? { notificationPreference: { connect: { id: dto.notificationPreferenceId } } }
+			    ? {
+				  notificationPreference: {
+					connect: {id: dto.notificationPreferenceId},
+				  },
+			    }
 			    : {}),
 		},
-		include: { user: true, notificationPreference: true },
+		include: {user: true, notificationPreference: true},
 	  });
     }
 
-    async delete(userId: number, id: number): Promise<CalendarEventWithRelations> {
+    async delete(
+	    userId: number,
+	    id: number,
+    ): Promise<CalendarEventWithRelations> {
 	  const existingEvent = await this.findById(id);
 	  if (!existingEvent || existingEvent.userId !== userId) {
-		throw new NotFoundException('Calendar event not found');
+		throw new NotFoundException("Calendar event not found");
 	  }
 	  return this.prisma.calendarEvent.delete({
-		where: { id },
-		include: { user: true, notificationPreference: true },
+		where: {id},
+		include: {user: true, notificationPreference: true},
 	  });
     }
 
-    async markNotificationAsSent(id: number): Promise<CalendarEventWithRelations> {
+    async markNotificationAsSent(
+	    id: number,
+    ): Promise<CalendarEventWithRelations> {
+	  await this.markPushNotificationNotificationAsSent(id);
+	  await this.markEmailNotificationAsSent(id);
+	  return this.findById(id);
+    }
+
+    async markPushNotificationNotificationAsSent(
+	    id: number,
+    ): Promise<CalendarEventWithRelations> {
 	  return this.prisma.calendarEvent.update({
-		where: { id },
-		data: { notificationSent: true },
-		include: { user: true, notificationPreference: true },
+		where: {id},
+		data: {pushNotificationSent: true},
+		include: {user: true, notificationPreference: true},
+	  });
+    }
+
+    async markEmailNotificationAsSent(
+	    id: number,
+    ): Promise<CalendarEventWithRelations> {
+	  return this.prisma.calendarEvent.update({
+		where: {id},
+		data: {emailNotificationSent: true},
+		include: {user: true, notificationPreference: true},
 	  });
     }
 
     /**
      * Sync Google Calendar events (type = EVENT) for the given user.
      */
-    async syncFromGoogleCalendar(userId: number, googleCalendarService: GoogleCalendarService): Promise<number> {
+    async syncFromGoogleCalendar(
+	    userId: number,
+	    googleCalendarService: GoogleCalendarService,
+    ): Promise<number> {
 	  const events = await googleCalendarService.getEventsForUser(userId);
 	  const googleEventIds = new Set(events.map((event) => event.id));
 
 	  const existingEvents = await this.prisma.calendarEvent.findMany({
 		where: {
 		    userId,
-		    googleEventId: { not: null },
-		    eventType: 'EVENT',
+		    googleEventId: {not: null},
+		    eventType: "EVENT",
 		},
 	  });
 
@@ -150,43 +212,46 @@ export default class CalendarEventRepository {
 		}
 	  }
 
+	  const notificationPreference = await this.prisma.notificationPreference.findUnique({
+		where: {userId: userId}
+	  });
+
 	  // Update existing events or create new ones.
 	  for (const event of events) {
 		const existingEvent = await this.prisma.calendarEvent.findUnique({
-		    where: { googleEventId: event.id },
+		    where: {googleEventId: event.id},
 		});
 		if (existingEvent) {
 		    await this.update(userId, existingEvent.id, {
 			  googleEventId: event.id,
-			  eventType: 'EVENT',
+			  eventType: "EVENT",
 			  title: event.summary,
-			  description: event.description ?? '',
+			  description: event.description ?? "",
+			  dueDate: new Date(event.due),
 			  startDate: new Date(event.start),
 			  endDate: new Date(event.end),
 			  isRecurring: event.isRecurring,
 			  recurrence: event.recurringType,
-			  location: event.location ?? '',
-			  place: undefined,
-			  link: event.link ?? '',
-			  token: undefined,
-			  notificationPreferenceId: undefined,
-			  notificationSent: undefined,
+			  location: event.location ?? "",
+			  link: event.link ?? "",
+			  token: null,
+			  notificationPreferenceId: notificationPreference.id,
 		    });
 		} else {
 		    await this.create(userId, {
 			  googleEventId: event.id,
-			  eventType: 'EVENT',
+			  eventType: "EVENT",
 			  title: event.summary,
-			  description: event.description ?? '',
+			  description: event.description ?? "",
+			  dueDate: new Date(event.due),
 			  startDate: new Date(event.start),
 			  endDate: new Date(event.end),
 			  isRecurring: event.isRecurring,
 			  recurrence: event.recurringType,
-			  location: event.location ?? '',
-			  place: undefined,
-			  link: event.link ?? '',
-			  token: undefined,
-			  notificationPreferenceId: undefined,
+			  location: event.location ?? "",
+			  link: event.link ?? "",
+			  token: null,
+			  notificationPreferenceId: notificationPreference.id
 		    });
 		}
 	  }
@@ -196,15 +261,18 @@ export default class CalendarEventRepository {
     /**
      * Sync Google Tasks (mapped as type = TASK) for the given user.
      */
-    async syncFromGoogleTasks(userId: number, googleCalendarService: GoogleCalendarService): Promise<number> {
+    async syncFromGoogleTasks(
+	    userId: number,
+	    googleCalendarService: GoogleCalendarService,
+    ): Promise<number> {
 	  const tasks = await googleCalendarService.getTasksForUserAsEvents(userId);
-	  const googleTaskIds = new Set(tasks.map(task => task.id));
+	  const googleTaskIds = new Set(tasks.map((task) => task.id));
 
 	  const existingTasks = await this.prisma.calendarEvent.findMany({
 		where: {
 		    userId,
-		    googleEventId: { not: null },
-		    eventType: 'TASK',
+		    googleEventId: {not: null},
+		    eventType: "TASK",
 		},
 	  });
 
@@ -215,43 +283,48 @@ export default class CalendarEventRepository {
 		}
 	  }
 
+	  const notificationPreference = await this.prisma.notificationPreference.findUnique({
+		where: {userId: userId}
+	  });
+
 	  // Update existing tasks or create new ones.
 	  for (const task of tasks) {
 		const existingTask = await this.prisma.calendarEvent.findUnique({
-		    where: { googleEventId: task.id },
+		    where: {googleEventId: task.id},
 		});
 		if (existingTask) {
 		    await this.update(userId, existingTask.id, {
 			  googleEventId: task.id,
-			  eventType: 'TASK',
+			  eventType: "TASK",
 			  title: task.summary,
 			  description: task.description,
+			  dueDate: new Date(task.due),
 			  startDate: new Date(task.start),
 			  endDate: new Date(task.end),
 			  isRecurring: task.isRecurring,
 			  recurrence: task.recurringType,
 			  location: task.location,
-			  place: undefined,
 			  link: task.link,
-			  token: undefined,
-			  notificationPreferenceId: undefined,
-			  notificationSent: undefined,
+			  token: null,
+			  notificationPreferenceId: notificationPreference.id,
+			  pushNotificationSent: null,
+			  emailNotificationSent: null,
 		    });
 		} else {
 		    await this.create(userId, {
 			  googleEventId: task.id,
-			  eventType: 'TASK',
+			  eventType: "TASK",
 			  title: task.summary,
 			  description: task.description,
+			  dueDate: new Date(task.due),
 			  startDate: new Date(task.start),
 			  endDate: new Date(task.end),
 			  isRecurring: task.isRecurring,
 			  recurrence: task.recurringType,
 			  location: task.location,
-			  place: undefined,
 			  link: task.link,
-			  token: undefined,
-			  notificationPreferenceId: undefined,
+			  token: null,
+			  notificationPreferenceId: notificationPreference.id
 		    });
 		}
 	  }

@@ -17,7 +17,6 @@ export default class MailMustacheRenderer {
       "mails",
       fileName
     );
-    console.log("template:", templatePath);
 
     try {
       const template = await fs.readFile(templatePath, "utf-8");

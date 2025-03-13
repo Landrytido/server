@@ -9,17 +9,17 @@ import { Repositories } from "./Repository/Repositories";
 import { Resolvers } from "./Resolver/Resolvers";
 import UseCaseFactory from "./UseCase/UseCaseFactory";
 import UncontextualUseCaseFactory from "./UseCase/UncontextualUseCaseFactory";
+
 import EventResolver from "./Resolver/EventResolver";
 import EventRepository from "./Repository/EventRepository";
 import SaveEventUseCase from "./UseCase/Event/SaveEventUseCase";
 import { JwtModule } from "@nestjs/jwt";
+
 import GetLoggedUserUseCase from "./UseCase/User/GetLoggedUser/GetLoggedUserUseCase";
-import GetEventUseCase from "./UseCase/Event/GetEventUseCase";
-import GetAllEventUseCase from "./UseCase/Event/GetAllEventUseCase";
-import DeleteEventUseCase from "./UseCase/Event/DeleteEventUseCase";
 import CommentRepository from "./Repository/CommentRepository";
 import FileRepository from "./Repository/FileRepository";
 import SaveFileUseCase from "./UseCase/File/SaveFile/SaveFileUseCase";
+
 import { PuppeteerService } from "./UseCase/Link/Service/puppeteer.service";
 import ConvertExternalInvitationUseCase from "./UseCase/Invitation/ConvertExternalInvitation/ConvertExternalInvitationUseCase";
 import { AcceptLanguageResolver, I18nModule } from "nestjs-i18n";
@@ -120,5 +120,6 @@ import { UpdateChronometerUseCase } from "./UseCase/Chronometer/UpdateChronomete
     ChronometerResolver,
     PrismaService,
   ],
+
 })
 export class ApiModule {}

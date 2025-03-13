@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
 }
 
 datasource db {
@@ -13,9 +14,10 @@ model File {
   initialFilename String   @db.VarChar(255)
   path            String   @db.VarChar(255)
   uri             String   @db.VarChar(255)
-  linkImage       Link[]   @relation("link_image")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now())
+  // Back-relation for links using this file as an image.
+  links           Link[]   @relation("link_image")
 }
 
 model User {
@@ -30,39 +32,42 @@ model User {
   sessions            Session[]
   notes               Note[]
   notebooks           Notebook[]
-  linkGroups          LinkGroup[]
-  links               Link[]
   tasks               Task[]
   comments            Comment[]
   collaborations      NoteCollaboration[]
   invitationsSent     Invitation[]        @relation("InvitationsSent")
   invitationsReceived Invitation[]        @relation("InvitationsReceived")
 
-  events                 Event[]
-  eventsShared           EventSharedWithMember[]
-  resetTokens            ResetToken[]
-  linkClicks             LinkClick[]
-  searchHistory          SearchHistory[]
-  scores                 Score[]
-  noteTasks              NoteTask[]
-  meeting                Meeting[]
-  devices                DeviceToken[]
-  notificationPreference NotificationPreference?
+  events        Event[]
+  eventsShared  EventSharedWithMember[]
+  resetTokens   ResetToken[]
+  searchHistory SearchHistory[]
+  scores        Score[]
+  noteTasks     NoteTask[]
+  devices       Device[]
 
-  AutoInstruction    AutoInstruction[]
-  DailyTask          DailyTask[]
-  DailyPlan          DailyPlan[]
-  DailyTaskHistory   DailyTaskHistory[]
-  CalendarEvent      CalendarEvent[]
-  googleAccessToken  String?            @db.Text // Ajout du token d'accès Google
-  googleRefreshToken String?            @db.Text // (Optionnel) Pour rafraîchir le token
+  AutoInstruction        AutoInstruction[]
+  DailyTask              DailyTask[]
+  DailyPlan              DailyPlan[]
+  DailyTaskHistory       DailyTaskHistory[]
+  CalendarEvent          CalendarEvent[]
+  googleAccessToken      String?                 @db.Text // Ajout du token d'accès Google
+  googleRefreshToken     String?                 @db.Text // (Optionnel) Pour rafraîchir le token
 
-  chronometers Chronometer[]
+  // A user owns many link groups.
+  linkGroups LinkGroup[]
+
+  // Links owned by the user.
+  links Link[] @relation("UserLinks")
+
+  NotificationPreference           NotificationPreference?
+  CalendarEventInvitationsSent     CalendarEventInvitation[] @relation("CalendarEventInvitationsSent")
+  CalendarEventInvitationsReceived CalendarEventInvitation[] @relation("CalendarEventInvitationsReceived")
 }
 
 model AutoInstruction {
   id          Int      @id @default(autoincrement())
-  description String
+  description String   @db.Text
   order       Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -70,16 +75,31 @@ model AutoInstruction {
   user        User     @relation(fields: [userId], references: [id])
 }
 
-// web and mobile tokens for the notifications
-model DeviceToken {
+// feature (autoinstructions-suggestions) >>>
+model AutoInstructionSuggestion {
+  id          Int    @id @default(autoincrement())
+  description String @db.Text
+}
+
+// <<< feature (autoinstructions-suggestions)
+
+// feature (push-notifications) >>>
+model Device {
   id        Int      @id @default(autoincrement())
   token     String   @unique
-  platform  String // Either 'web' or 'mobile'
+  platform  Platform
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+enum Platform {
+  WEB
+  MOBILE
+}
+
+// <<< feature (push-notifications)
 
 model SearchHistory {
   id         Int      @id @default(autoincrement())
@@ -141,29 +161,6 @@ enum PermissionLevel {
   READ
   WRITE
   ADMIN
-}
-
-model Link {
-  id          Int         @id @default(autoincrement())
-  name        String
-  url         String      @db.Text
-  description String?
-  linkGroupId Int
-  userId      Int
-  linkGroup   LinkGroup   @relation(fields: [linkGroupId], references: [id])
-  user        User        @relation(fields: [userId], references: [id])
-  clicks      LinkClick[]
-  imageId     Int?
-  image       File?       @relation("link_image", fields: [imageId], references: [id])
-}
-
-model LinkGroup {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  userId      Int
-  user        User    @relation(fields: [userId], references: [id])
-  links       Link[]
 }
 
 model Task {
@@ -249,15 +246,6 @@ model ResetToken {
   user            User     @relation(fields: [userId], references: [id])
 }
 
-model LinkClick {
-  id     Int   @id @default(autoincrement())
-  clicks Int   @default(0)
-  linkId Int?
-  userId Int?
-  link   Link? @relation(fields: [linkId], references: [id])
-  user   User? @relation(fields: [userId], references: [id])
-}
-
 enum Level {
   EASY
   MEDIUM
@@ -288,27 +276,6 @@ model NoteTask {
   subtasks  NoteTask[] @relation("NoteTaskRelation")
 }
 
-model Meeting {
-  id                       Int                     @id @default(autoincrement())
-  title                    String
-  description              String
-  startDate                DateTime
-  endDate                  DateTime
-  isRecurring              Boolean?                @default(false)
-  recurrence               Recurrence?             @default(NONE)
-  location                 String
-  place                    String?
-  link                     String?
-  createdAt                DateTime                @default(now())
-  updatedAt                DateTime                @default(now()) @updatedAt
-  userId                   Int
-  user                     User                    @relation(fields: [userId], references: [id])
-  notificationPreferenceId Int?
-  notificationPreference   NotificationPreference? @relation(fields: [notificationPreferenceId], references: [id])
-  notificationSent         Boolean?                @default(false)
-  token                    String?                 @unique
-}
-
 model NotificationPreference {
   id            Int                          @id @default(autoincrement())
   userId        Int                          @unique
@@ -320,7 +287,6 @@ model NotificationPreference {
   updatedAt     DateTime                     @default(now()) @updatedAt
   tasks         Task[]
   events        Event[]
-  meetings      Meeting[]
   CalendarEvent CalendarEvent[]
 }
 
@@ -395,6 +361,30 @@ model DailyTaskHistory {
 
 // <<< feat (daily-tasks)
 
+// NOTE: Feature - CalendarEvent >>>>>>>>>>>
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REFUSED
+}
+
+model CalendarEventInvitation {
+  id              Int              @id @default(autoincrement())
+  senderId        Int
+  receiverId      Int?
+  receiverEmail   String
+  calendarEventId Int
+  calendarEvent   CalendarEvent    @relation(fields: [calendarEventId], references: [id])
+  receiver        User?            @relation("CalendarEventInvitationsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender          User             @relation("CalendarEventInvitationsSent", fields: [senderId], references: [id], onDelete: Cascade)
+  status          InvitationStatus @default(PENDING)
+  updatedAt       DateTime         @default(now())
+  createdAt       DateTime         @default(now()) @updatedAt
+}
+
+// NOTE: Feature - CalendarEvent <<<<<<<<<<<
+
 // refactor (calendar) >>>
 enum CalendarEventType {
   TASK
@@ -402,29 +392,32 @@ enum CalendarEventType {
 }
 
 model CalendarEvent {
-  id                       Int                     @id @default(autoincrement())
-  googleEventId            String?                 @unique
-  eventType                CalendarEventType       @default(EVENT)
-  title                    String?                 @db.Text
-  description              String                  @db.Text
-  startDate                DateTime
-  endDate                  DateTime
-  isRecurring              Boolean?                @default(false)
-  recurrence               Recurrence?             @default(NONE)
-  location                 String                  @db.Text
-  place                    String?                 @db.Text
-  link                     String?                 @db.Text
-  token                    String?                 @unique
+  id                       Int                       @id @default(autoincrement())
+  googleEventId            String?                   @unique
+  eventType                CalendarEventType         @default(EVENT)
+  title                    String?                   @db.Text
+  description              String                    @db.Text
+  dueDate                  DateTime?
+  startDate                DateTime?
+  endDate                  DateTime?
+  isRecurring              Boolean?                  @default(false)
+  recurrence               Recurrence?               @default(NONE)
+  location                 String?                   @db.Text
+  link                     String?                   @db.Text
+  token                    String?                   @unique
   userId                   Int
-  user                     User                    @relation(fields: [userId], references: [id])
+  user                     User                      @relation(fields: [userId], references: [id])
   notificationPreferenceId Int?
-  notificationPreference   NotificationPreference? @relation(fields: [notificationPreferenceId], references: [id])
-  notificationSent         Boolean?                @default(false)
-  createdAt                DateTime                @default(now())
-  updatedAt                DateTime                @default(now()) @updatedAt
+  notificationPreference   NotificationPreference?   @relation(fields: [notificationPreferenceId], references: [id])
+  pushNotificationSent     Boolean?                  @default(false)
+  emailNotificationSent    Boolean?                  @default(false)
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @default(now()) @updatedAt
+  calendarEventInvitations CalendarEventInvitation[]
 }
 
 // <<< refactor (calendar)
+
 // Chronometer model
 enum ChronometerMode {
   COUNTDOWN
@@ -442,3 +435,44 @@ model Chronometer {
   userId      Int
   user        User            @relation(fields: [userId], references: [id])
 }
+
+// feature (refactor-links) >>>
+model Link {
+  id  String @id @default(cuid())
+  url String @unique
+
+  // Optional relation to the owner.
+  ownerId Int
+  owner   User @relation("UserLinks", fields: [ownerId], references: [id])
+
+  // Optional relation to an image file.
+  imageId Int?
+  image   File? @relation("link_image", fields: [imageId], references: [id])
+
+  screenShotAt DateTime?
+  groups       LinkGroupLink[]
+}
+
+model LinkGroup {
+  id          String          @id @default(cuid())
+  title       String
+  description String?
+  userId      Int
+  user        User            @relation(fields: [userId], references: [id])
+  links       LinkGroupLink[]
+}
+
+model LinkGroupLink {
+  linkGroupId  String
+  linkId       String
+  linkName     String
+  clickCounter Int    @default(0)
+
+  linkGroup LinkGroup @relation(fields: [linkGroupId], references: [id], onDelete: Cascade)
+  link      Link      @relation(fields: [linkId], references: [id])
+
+  @@id([linkGroupId, linkId])
+}
+
+// feature (refactor-links) <<<
+
