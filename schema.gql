@@ -42,7 +42,7 @@ type CalendarEvent {
   notificationSent: Boolean
   pushNotificationSent: Boolean
   recurrence: Recurrence
-  startDate: DateTime
+  startDate: DateTime!
   title: String
   token: String
   updatedAt: DateTime!
@@ -50,6 +50,25 @@ type CalendarEvent {
   userId: Int!
 }
 
+
+type Chronometer {
+  createdAt: DateTime
+  duration: Float
+  elapsedTime: Int!
+  id: String!
+  isRunning: Boolean!
+  mode: ChronometerMode!
+  name: String!
+  startTime: DateTime
+  updatedAt: DateTime
+  user: User
+  userId: Int!
+}
+
+"""Les modes disponibles pour le chronomètre"""
+enum ChronometerMode {
+  COUNTDOWN
+  STOPWATCH
 type CalendarEventInvitation {
   calendarEvent: CalendarEvent!
   calendarEventId: Int!
@@ -60,6 +79,7 @@ type CalendarEventInvitation {
   senderId: Int!
   status: String!
   updatedAt: DateTime!
+
 }
 
 type CombinedTask {
@@ -108,7 +128,7 @@ input CreateCalendarEventDto {
   location: String
   notificationPreferenceId: Int
   recurrence: String
-  startDate: DateTime
+  startDate: DateTime!
   title: String
   token: String
 }
@@ -289,6 +309,7 @@ type Mutation {
   createNotificationPreference(dto: SaveNotificationPreferenceDto!): NotificationPreference!
   createTag(dto: SaveTagDto!): Tag!
   deleteCalendarEvent(id: Int!): CalendarEvent!
+  deleteChronometer(id: String!): Chronometer!
   deleteCalendarEventInvitation(id: Int!): CalendarEventInvitation!
   deleteComment(commentId: Float!): Boolean!
   deleteDailyTask(id: Int!): DailyTask!
@@ -305,24 +326,39 @@ type Mutation {
   loginWithGithub(dto: LoginWithGithubDto!): String!
   loginWithGoogle(accessToken: String!): String!
   markNotificationAsSent(id: Int!): CalendarEvent!
+  pauseChronometer(id: String!): Chronometer!
   register(dto: SaveUserDto!): User!
   registerDevice(platform: Platform!, token: String!): Boolean!
   removeAutoInstruction(id: Float!): AutoInstruction!
   removeNoteTaskById(id: Int!): NoteTask!
+  renameChronometer(input: RenameChronometerDto!): Chronometer!
   reorderDailyTasks(dto: ReorderDailyTasksDto!): [DailyTask!]!
   reorderInstructions(instructions: [AutoInstructionInput!]!, userId: Float!): [AutoInstruction!]!
+
+  resetChronometer(id: String!): Chronometer!
+  resumeChronometer(id: String!): Chronometer!
+  saveClicks(dto: SaveLinkClickDto!): LinkClick!
+  saveEvent(dto: saveEventDto!): Event!
+
   resetClickCounter(linkGroupId: String!, linkId: String!): LinkGroupLink!
+
   saveFile(dto: FileDto!): File!
   saveLinkGroup(dto: SaveLinkGroupDto!): LinkGroup!
   saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveUser(dto: SaveUserDto!): User!
+
+  sendNotification(additionalData: AdditionalDataInput, message: String!, userId: Float!): Boolean!
+  startChronometer(input: StartChronometerDto!): Chronometer!
+  stopChronometer(id: String!): Chronometer!
+
   sendPushNotification(body: String!, data: JSONObject, title: String!): Boolean!
 
   """Synchronize Google Calendar events"""
   syncGoogleCalendar: Boolean!
   updateAutoInstruction(updateAutoInstructionInput: UpdateAutoInstructionInput!): AutoInstruction!
   updateCalendarEvent(dto: UpdateCalendarEventDto!, id: Int!): CalendarEvent!
+  updateChronometer(id: String!, updateData: UpdateChronometerDto!): Chronometer!
   updateComment(commentId: Float!, data: CommentDto!): Comment!
   updateDailyTask(dto: UpdateDailyTaskDto!, id: Int!): DailyTask!
   updateLinkRelation(dto: SaveLinkDto!): LinkGroupLink!
@@ -430,8 +466,16 @@ type Query {
   findSentInvitations: [Invitation!]!
   findTagById(id: Float!): Tag!
   getAllCalendarEvents: [CalendarEvent!]!
+
+  getAllChronometers: [Chronometer!]!
+  getAllEvent: [Event!]!
+  getAllLinkGroups: [LinkGroup!]!
+  getAllMeeting: [Meeting!]!
+  getAllTask: [Task!]!
+
   getAutoInstructionSuggestionById(id: Int!): AutoInstructionSuggestion!
   getAutoInstructionSuggestions: [AutoInstructionSuggestion!]!
+
   getAutoInstructions(userId: Float!): [AutoInstruction!]!
   getCalendarEvent(id: Int!): CalendarEvent!
   getCalendarEventInvitationById(id: Int!): CalendarEventInvitation!
@@ -439,7 +483,14 @@ type Query {
   getCalendarEventInvitationsByReceiverEmail(email: String!): [CalendarEventInvitation!]!
   getCalendarEventInvitationsBySenderId(id: Int!): [CalendarEventInvitation!]!
   getCalendarEventsByToken(token: String!): [CalendarEvent!]!
+
+  getCalendarEventsByUserId(userId: Int!): [CalendarEvent!]!
+  getChronometer(id: String!): Chronometer
+  getCountdown: Chronometer
+  getCurrentTime(chronoId: String!): Int!
+
   getCalendarEventsByUserId: [CalendarEvent!]!
+
   getDailyPlan(date: String!): DailyPlan
   getDailyTaskHistory(date: String!): [DailyTaskHistory!]!
   getDailyTasks(date: String): [DailyTask!]!
@@ -448,6 +499,7 @@ type Query {
   getNotificationPreference: NotificationPreference!
   getSearchHistoryByUserId: [SearchHistory!]!
   getTasksCreatedOn(date: String!): [CombinedTask!]!
+  isCountdownFinished(chronoId: String!): Boolean!
   login(dto: AuthenticationDto!): String!
   myLinkGroups: [LinkGroup!]!
   noteTasksByUserId(dto: GetNoteTasksByUserIdDto!): [NoteTask!]!
@@ -474,6 +526,11 @@ type Relation {
   invitationId: Int!
   receiver: User!
   sender: User!
+}
+
+input RenameChronometerDto {
+  id: String!
+  newName: String!
 }
 
 input ReorderDailyTasksDto {
@@ -581,6 +638,12 @@ type Session {
   userId: Int!
 }
 
+input StartChronometerDto {
+  duration: Float
+  mode: ChronometerMode!
+  name: String!
+}
+
 type Tag {
   id: Int!
   name: String!
@@ -620,6 +683,15 @@ input UpdateCalendarEventDto {
   startDate: DateTime
   title: String
   token: String
+}
+
+input UpdateChronometerDto {
+  duration: Float
+  elapsedTime: Int
+  isRunning: Boolean
+  mode: ChronometerMode
+  name: String
+  startTime: DateTime
 }
 
 input UpdateDailyTaskDto {
