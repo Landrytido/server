@@ -19,6 +19,7 @@ import {NotificationResolver} from "./Notification/NotificationResolver";
 import LinkGroupResolver from "./Link/LinkGroupResolver";
 import LinkResolver from "./Link/LinkResolver";
 import { GoogleCalendarResolver } from "./CalendarEvent/GoogleCalendarResolver";
+import { ChronometerResolver } from "./ChronometerResolver";
 
 export const Resolvers = [
     UserResolver,
@@ -41,5 +42,6 @@ export const Resolvers = [
     AutoInstructionSuggestionResolver,
     LinkGroupResolver,
     CalendarEventInvitationResolver,
-    LinkResolver
+    LinkResolver,
+    ChronometerResolver
 ];

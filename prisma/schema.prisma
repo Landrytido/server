@@ -63,6 +63,8 @@ model User {
   NotificationPreference           NotificationPreference?
   CalendarEventInvitationsSent     CalendarEventInvitation[] @relation("CalendarEventInvitationsSent")
   CalendarEventInvitationsReceived CalendarEventInvitation[] @relation("CalendarEventInvitationsReceived")
+
+  Chronometer Chronometer[]
 }
 
 model AutoInstruction {

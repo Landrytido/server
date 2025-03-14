@@ -17,6 +17,7 @@ import {AutoInstructionSuggestionRepository} from "./AutoInstructionSuggestion/A
 import LinkGroupRepository from "./Link/LinkGroupRepository";
 import LinkRepository from "./Link/LinkRepository";
 import LinkGroupLinkRepository from "./Link/LinkGroupLinkRepository";
+import { ChronometerRepository } from "./ChronometerRepository";
 
 export const Repositories = [
     UserRepository,
@@ -39,4 +40,5 @@ export const Repositories = [
     LinkRepository,
     LinkGroupLinkRepository,
     CalendarEventInvitationRepository,
+    ChronometerRepository,
 ];
