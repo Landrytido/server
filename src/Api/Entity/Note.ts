@@ -2,8 +2,9 @@ import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import Notebook from "./Notebook";
 import { NoteCollaboration } from "./NoteCollaboration";
-import { Tag } from "./Tag";
+
 import { ContextualGraphqlRequest } from "src";
+import { Label } from "./Label";
 
 @ObjectType()
 export default class Note {
@@ -37,8 +38,9 @@ export default class Note {
   @Field(() => [NoteCollaboration])
   collaborations: NoteCollaboration[];
 
-  @Field(() => [Tag])
-  tags: Tag[];
+  @Field(() => [Label])
+  labels: Label[];
+  
 
   context?: ContextualGraphqlRequest;
 }

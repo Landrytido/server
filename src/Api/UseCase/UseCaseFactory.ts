@@ -1,7 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import ServiceFactory from "../../Core/Factory/ServiceFactory";
 import {AvailableUserUseCases} from "./User/AvailableUserUseCases";
-import {AvailableTagUseCases} from "./Tag/AvailableTagUseCases";
 import {AvailableNoteUseCases} from "./Note/AvailbaleNoteUseCases";
 import {AvailableNotebookUseCases} from "./Notebook/AvailableNotebookUseCases";
 import {AvailableInvitationUseCases} from "./Invitation/AvailableInvitationUseCases";
@@ -18,10 +17,11 @@ import {
     AvailableAutoInstructionSuggestionUseCases
 } from "./AutoInstructionSuggestion/AvailableAutoInstructionSuggestionUseCases";
 import {AvailableLinksUseCases} from "./Links/AvailableLinksUseCases";
+import { AvailableLabelUseCases } from "./Label/AvailableLabelUseCases";
 
 export type UseCases =
+	| AvailableLabelUseCases
 	| AvailableUserUseCases
-	| AvailableTagUseCases
 	| AvailableNotebookUseCases
 	| AvailableNoteUseCases
 	| AvailableInvitationUseCases

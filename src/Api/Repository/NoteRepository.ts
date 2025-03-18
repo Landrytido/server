@@ -9,6 +9,16 @@ export default class NoteRepository {
   async findById(noteId: number) {
     return await this.prisma.note.findUnique({
       where: { id: noteId },
+      include: {
+        labels: true,
+        user: true,
+        collaborations: {
+          include: {
+            note: true, 
+            user: true,   
+          },
+        },
+      }, 
     });
   }
 
@@ -17,26 +27,52 @@ export default class NoteRepository {
       where: { userId },
       include: {
         collaborations: true,
+        labels: true, 
       },
     });
   }
 
   async findMany() {
-    return await this.prisma.note.findMany();
+    return await this.prisma.note.findMany({ include: { labels: true } });
   }
 
   async save(
     data:
-      | Prisma.XOR<Prisma.NoteCreateInput, Prisma.NoteUncheckedCreateInput>
-      | Prisma.XOR<Prisma.NoteUpdateInput, Prisma.NoteUncheckedUpdateInput>
+      | Prisma.XOR<Prisma.NoteCreateInput & { labelIds?: (string | number)[] }, Prisma.NoteUncheckedCreateInput & { labelIds?: (string | number)[] }>
+      | Prisma.XOR<Prisma.NoteUpdateInput & { labelIds?: (string | number)[] }, Prisma.NoteUncheckedUpdateInput & { labelIds?: (string | number)[] }>
   ) {
     if (!data.id) {
-      return await this.prisma.note.create({
-        data: data as Prisma.XOR<
-          Prisma.NoteCreateInput,
-          Prisma.NoteUncheckedCreateInput
-        >,
-      });
+      const createData = data as Prisma.XOR<
+        Prisma.NoteCreateInput & { labelIds?: (string | number)[] },
+        Prisma.NoteUncheckedCreateInput & { labelIds?: (string | number)[] }
+      >;
+
+      if (createData.labelIds && createData.labelIds.length > 0) {
+        return await this.prisma.note.create({
+          data: {
+            ...createData,
+            labels: {
+              connect: createData.labelIds.map((id) => ({ id: String(id) })),
+            },
+          },
+          include: { labels: true },
+        });
+      } else {
+        const defaultLabel = await this.prisma.label.upsert({
+          where: { name: 'Général' },
+          update: {},
+          create: { name: 'Général' },
+        });
+        return await this.prisma.note.create({
+          data: {
+            ...createData,
+            labels: {
+              connect: [{ id: defaultLabel.id }],
+            },
+          },
+          include: { labels: true }, 
+        });
+      }
     }
 
     return await this.prisma.note.update({
@@ -44,9 +80,10 @@ export default class NoteRepository {
         id: data.id as number,
       },
       data: data as Prisma.XOR<
-        Prisma.NoteUpdateInput,
-        Prisma.NoteUncheckedUpdateInput
+        Prisma.NoteUpdateInput & { labelIds?: (string | number)[] },
+        Prisma.NoteUncheckedUpdateInput & { labelIds?: (string | number)[] }
       >,
+      include: { labels: true }, 
     });
   }
 

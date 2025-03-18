@@ -9,5 +9,8 @@ export default class SaveNoteDto {
   content: string;
 
   @Field(() => Int, { nullable: true })
-  notebookId: number;
+  notebookId?: number;
+
+  @Field(() => [String], { nullable: true })
+  labelIds?: string[];
 }

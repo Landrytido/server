@@ -1,4 +1,3 @@
-import TagResolver from "./TagResolver";
 import NotebookResolver from "./NotebookResolver";
 import NoteResolver from "./NoteResolver";
 import UserResolver from "./UserResolver";
@@ -19,11 +18,12 @@ import {NotificationResolver} from "./Notification/NotificationResolver";
 import LinkGroupResolver from "./Link/LinkGroupResolver";
 import LinkResolver from "./Link/LinkResolver";
 import { GoogleCalendarResolver } from "./CalendarEvent/GoogleCalendarResolver";
+import { LabelResolver } from "./labelResolver";
 
 export const Resolvers = [
+    LabelResolver,
     UserResolver,
     SearchHistoryResolver,
-    TagResolver,
     NotebookResolver,
     NoteResolver,
     InvitationResolver,

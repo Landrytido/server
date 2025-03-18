@@ -128,6 +128,10 @@ input CreateDailyTaskDto {
   uniqueTaskId: String
 }
 
+input CreateLabelInput {
+  name: String!
+}
+
 type DailyPlan {
   confirmed: Boolean!
   createdAt: DateTime!
@@ -201,6 +205,11 @@ input FileDto {
   uri: String!
 }
 
+input GetLabelByIdInput {
+  """ID du label à récupérer"""
+  id: ID!
+}
+
 input GetNoteTasksByUserIdDto {
   completed: Boolean
   noteId: Int!
@@ -223,6 +232,11 @@ type Invitation {
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSONObject
+
+type Label {
+  id: String!
+  name: String!
+}
 
 """Possible Level options: EASY, MEDIUM, HARD"""
 enum Level {
@@ -269,8 +283,6 @@ type MonthlyReport {
 }
 
 type Mutation {
-  RemoveById(id: Float!): Tag!
-  UpdateById(dto: SaveTagDto!, id: Int!): Tag!
   acceptCalendarEventInvitation(id: Int!): CalendarEventInvitation!
   acceptInvitation(invitationId: Int!): Invitation!
   addAutoInstruction(createAutoInstructionInput: CreateAutoInstructionInput!): AutoInstruction!
@@ -283,11 +295,11 @@ type Mutation {
   createComment(data: CommentDto!): Comment!
   createDailyTask(dto: CreateDailyTaskDto!): DailyTask!
   createInvitation(dto: SaveInvitationDto!): Invitation!
+  createLabel(dto: CreateLabelInput!): Label!
   createLink(dto: SaveLinkDto!): Link!
   createNote(dto: SaveNoteDto!): Note!
   createNotebook(dto: SaveNotebookDto!): Notebook!
   createNotificationPreference(dto: SaveNotificationPreferenceDto!): NotificationPreference!
-  createTag(dto: SaveTagDto!): Tag!
   deleteCalendarEvent(id: Int!): CalendarEvent!
   deleteCalendarEventInvitation(id: Int!): CalendarEventInvitation!
   deleteComment(commentId: Float!): Boolean!
@@ -336,9 +348,9 @@ type Note {
   content: String
   createdAt: DateTime!
   id: Int!
+  labels: [Label!]!
   notebook: Notebook
   notebookId: Int
-  tags: [Tag!]!
   title: String!
   updatedAt: DateTime!
   user: User!
@@ -428,8 +440,8 @@ type Query {
   findReceivedInvitations: [Invitation!]!
   findRelations: [Relation!]!
   findSentInvitations: [Invitation!]!
-  findTagById(id: Float!): Tag!
   getAllCalendarEvents: [CalendarEvent!]!
+  getAllLabels: [Label!]!
   getAutoInstructionSuggestionById(id: Int!): AutoInstructionSuggestion!
   getAutoInstructionSuggestions: [AutoInstructionSuggestion!]!
   getAutoInstructions(userId: Float!): [AutoInstruction!]!
@@ -443,6 +455,7 @@ type Query {
   getDailyPlan(date: String!): DailyPlan
   getDailyTaskHistory(date: String!): [DailyTaskHistory!]!
   getDailyTasks(date: String): [DailyTask!]!
+  getLabelById(dto: GetLabelByIdInput!): Label
   getLoggedUser: User!
   getMonthlyReport(month: Int!, year: Int!): MonthlyReport!
   getNotificationPreference: NotificationPreference!
@@ -510,6 +523,7 @@ input SaveLinkGroupDto {
 
 input SaveNoteDto {
   content: String
+  labelIds: [String!]
   notebookId: Int
   title: String!
 }
@@ -531,10 +545,6 @@ input SaveNotificationPreferenceDto {
   timeBefore: Int!
   timeUnit: TimeUnit!
   types: [NotificationType!]!
-}
-
-input SaveTagDto {
-  name: String!
 }
 
 input SaveUserDto {
@@ -579,12 +589,6 @@ type Session {
   updatedAt: DateTime!
   user: User!
   userId: Int!
-}
-
-type Tag {
-  id: Int!
-  name: String!
-  notes: [Note!]!
 }
 
 """Possible TimeUnit options : MINUTES, HOURS, DAYS"""

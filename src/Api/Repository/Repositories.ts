@@ -1,5 +1,4 @@
 import UserRepository from "./UserRepository";
-import TagRepository from "./TagRepository";
 import NotebookRepository from "./NotebookRepository";
 import NoteRepository from "./NoteRepository";
 import InvitationRepository from "./InvitationRepository";
@@ -17,12 +16,13 @@ import {AutoInstructionSuggestionRepository} from "./AutoInstructionSuggestion/A
 import LinkGroupRepository from "./Link/LinkGroupRepository";
 import LinkRepository from "./Link/LinkRepository";
 import LinkGroupLinkRepository from "./Link/LinkGroupLinkRepository";
+import { LabelRepository } from "./LabelRepository";
 
 export const Repositories = [
+    LabelRepository,
     UserRepository,
     SearchHistoryRepository,
     SearchHistoryRepository,
-    TagRepository,
     NotebookRepository,
     NoteRepository,
     InvitationRepository,

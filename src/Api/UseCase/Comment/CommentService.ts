@@ -1,3 +1,4 @@
+// src/Api/UseCase/Comment/CommentService.ts
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import CommentDto from '../../Dto/CommentDto'; // Assurez-vous que le chemin est correct
 import Comment from '../../Entity/Comment'; // Assurez-vous que le chemin est correct
@@ -24,7 +25,7 @@ export default class CommentService {
 
     const newComment = await this.commentRepository.save(newCommentData);
 
-    // Récupérez l'utilisateur et la note associés
+     // Récupérez l'utilisateur et la note associés
     const user = await this.userRepository.findById(newComment.userId);
     const note = await this.noteRepository.findById(newComment.noteId);
 
@@ -39,17 +40,27 @@ export default class CommentService {
     // Ajoutez les propriétés manquantes à l'objet Comment
     return {
       ...newComment,
-      user: user, // Assurez-vous que l'utilisateur existe
-      note: note, // Assurez-vous que la note existe
-    } as Comment; // Vous pouvez forcer le type ici, mais assurez-vous que c'est correct
+      user: user,
+      note: { // Reconstruire l'objet note pour s'assurer des types
+        id: note.id,
+        title: note.title,
+        content: note.content,
+        createdAt: note.createdAt,
+        updatedAt: note.updatedAt,
+        userId: note.userId,
+        notebookId: note.notebookId,
+        labels: note.labels,
+        user: note.user,
+        collaborations: note.collaborations as any, // Assertion de type ici si nécessaire
+      },
+    } as Comment;
   }
 
-  // Méthode pour supprimer un commentaire
   async deleteComment(id: number): Promise<boolean> {
     try {
       const comment = await this.commentRepository.findById(id);
 
-      // Vérifier si le commentaire existe avant de le supprimer
+       // Vérifier si le commentaire existe avant de le supprimer
       if (!comment) {
         throw new NotFoundException('Commentaire non trouvé');
       }
@@ -66,7 +77,7 @@ export default class CommentService {
 
   // Méthode pour mettre à jour un commentaire
   async updateComment(commentId: number, updateCommentInput: CommentDto, userId: number): Promise<Comment> {
-    // Vérifiez si l'utilisateur est authentifié et a le droit de mettre à jour le commentaire
+     // Vérifiez si l'utilisateur est authentifié et a le droit de mettre à jour le commentaire
     if (!userId) {
       throw new BadRequestException('Utilisateur non authentifié');
     }
@@ -85,7 +96,7 @@ export default class CommentService {
       updatedAt: new Date(), // Mettez à jour la date de modification
     };
 
-    // Enregistrez le commentaire mis à jour
+     // Enregistrez le commentaire mis à jour
     const updatedComment = await this.commentRepository.save(updatedCommentData);
 
     // Récupérez l'utilisateur et la note associés
@@ -100,15 +111,24 @@ export default class CommentService {
       throw new NotFoundException('Note non trouvée');
     }
 
-    // Ajoutez les propriétés manquantes à l'objet Comment
     return {
       ...updatedComment,
-      user: user, // Assurez-vous que l'utilisateur existe
-      note: note, // Assurez-vous que la note existe
-    } as Comment; // Vous pouvez forcer le type ici, mais assurez-vous que c'est correct
+      user: user,
+      note: { // Reconstruire l'objet note
+        id: note.id,
+        title: note.title,
+        content: note.content,
+        createdAt: note.createdAt,
+        updatedAt: note.updatedAt,
+        userId: note.userId,
+        notebookId: note.notebookId,
+        labels: note.labels,
+        user: note.user,
+        collaborations: note.collaborations as any, // Assertion de type ici si nécessaire
+      },
+    } as Comment;
   }
 
-  // Nouvelle méthode pour récupérer les commentaires par ID de note
   async findCommentsByNoteId(noteId: number): Promise<Comment[]> {
     if (!noteId) {
       throw new BadRequestException('L\'ID de la note est requis');
@@ -135,9 +155,20 @@ export default class CommentService {
 
       return {
         ...comment,
-        user: user, // Assurez-vous que l'utilisateur existe
-        note: note, // Assurez-vous que la note existe
-      } as Comment; // Vous pouvez forcer le type ici, mais assurez-vous que c'est correct
+        user: user,
+        note: { // Reconstruire l'objet note
+          id: note.id,
+          title: note.title,
+          content: note.content,
+          createdAt: note.createdAt,
+          updatedAt: note.updatedAt,
+          userId: note.userId,
+          notebookId: note.notebookId,
+          labels: note.labels,
+          user: note.user,
+          collaborations: note.collaborations as any, // Assertion de type ici si nécessaire
+        },
+      } as Comment;
     }));
   }
 }
