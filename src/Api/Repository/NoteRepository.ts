@@ -37,16 +37,19 @@ export default class NoteRepository {
   }
 
   async save(
-    data:
-      | Prisma.XOR<Prisma.NoteCreateInput & { labelIds?: (string | number)[] }, Prisma.NoteUncheckedCreateInput & { labelIds?: (string | number)[] }>
-      | Prisma.XOR<Prisma.NoteUpdateInput & { labelIds?: (string | number)[] }, Prisma.NoteUncheckedUpdateInput & { labelIds?: (string | number)[] }>
+    data: Prisma.XOR<
+      Prisma.NoteCreateInput,
+      Prisma.NoteUncheckedCreateInput
+    > & { labelIds?: (string | number)[] } |
+    Prisma.XOR<
+      Prisma.NoteUpdateInput,
+      Prisma.NoteUncheckedUpdateInput
+    > & { labelIds?: (string | number)[] }
   ) {
-    if (!data.id) {
-      const createData = data as Prisma.XOR<
-        Prisma.NoteCreateInput & { labelIds?: (string | number)[] },
-        Prisma.NoteUncheckedCreateInput & { labelIds?: (string | number)[] }
-      >;
-
+    if (!("id" in data)) {
+      // Création d'une note
+      const createData = data as Prisma.NoteCreateInput & { labelIds?: (string | number)[] };
+  
       if (createData.labelIds && createData.labelIds.length > 0) {
         return await this.prisma.note.create({
           data: {
@@ -59,10 +62,11 @@ export default class NoteRepository {
         });
       } else {
         const defaultLabel = await this.prisma.label.upsert({
-          where: { name: 'Général' },
+          where: { name: "Général" },
           update: {},
-          create: { name: 'Général' },
+          create: { name: "Général" },
         });
+  
         return await this.prisma.note.create({
           data: {
             ...createData,
@@ -70,21 +74,37 @@ export default class NoteRepository {
               connect: [{ id: defaultLabel.id }],
             },
           },
-          include: { labels: true }, 
+          include: { labels: true },
         });
       }
     }
-
-    return await this.prisma.note.update({
-      where: {
-        id: data.id as number,
-      },
-      data: data as Prisma.XOR<
-        Prisma.NoteUpdateInput & { labelIds?: (string | number)[] },
-        Prisma.NoteUncheckedUpdateInput & { labelIds?: (string | number)[] }
-      >,
-      include: { labels: true }, 
-    });
+  
+    // Mise à jour d'une note
+    const { labelIds, ...updateData } = data as Prisma.NoteUpdateInput & { labelIds?: (string | number)[] };
+  
+    if (labelIds && labelIds.length > 0) {
+      return await this.prisma.note.update({
+        where: {
+          id: data.id as number,
+        },
+        data: {
+          ...updateData,
+          labels: {
+            set: [], // Supprime les anciens labels
+            connect: labelIds.map((id) => ({ id: String(id) })), // Ajoute les nouveaux
+          },
+        },
+        include: { labels: true },
+      });
+    } else {
+      return await this.prisma.note.update({
+        where: {
+          id: data.id as number,
+        },
+        data: updateData,
+        include: { labels: true },
+      });
+    }
   }
 
   async remove(noteId: number) {
