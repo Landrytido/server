@@ -1,15 +1,12 @@
 import { Field, InputType } from "@nestjs/graphql";
 
 @InputType()
-export class CreateAutoInstructionInput {  
+export class CreateAutoInstructionInput {
   @Field()
   description: string;
 
   @Field()
   order: number;
-
-  @Field()
-  userId: number;
 }
 
 // auto-instruction.input.ts

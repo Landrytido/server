@@ -18,6 +18,7 @@ import LinkGroupRepository from "./Link/LinkGroupRepository";
 import LinkRepository from "./Link/LinkRepository";
 import LinkGroupLinkRepository from "./Link/LinkGroupLinkRepository";
 import { ChronometerRepository } from "./ChronometerRepository";
+import BlocNotesRepository from "./BlocNotes/BlocNotesRepository";
 
 export const Repositories = [
     UserRepository,
@@ -41,4 +42,5 @@ export const Repositories = [
     LinkGroupLinkRepository,
     CalendarEventInvitationRepository,
     ChronometerRepository,
+    BlocNotesRepository
 ];

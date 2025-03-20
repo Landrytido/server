@@ -257,23 +257,47 @@ export default class DailyTaskRepository {
 		    await this.moveToHistory(task);
 		} else {
 		    // Archive the not-completed task (to preserve the daily record).
-		    await this.prisma.dailyTaskHistory.create({
-			  data: {
-				uniqueTaskId: task.uniqueTaskId,
-				title: task.title,
-				description: task.description,
-				scheduledDate: task.scheduledDate,
-				originalDate: task.originalDate,
-				carriedOver: task.carriedOver,
-				order: task.order,
-				priority: task.priority,
-				completed: false,
-				completedAt: null,
-				user: {connect: {id: task.userId}},
-				archivedAt: new Date(),
-				createdAt: task.createdAt, // Preserve the original creation date.
-			  },
-		    });
+			const existingHistoryTask = await this.prisma.dailyTaskHistory.findFirst({
+				where: { uniqueTaskId: task.uniqueTaskId },
+			});
+
+			if (existingHistoryTask) {
+				// Update the existing history record
+				await this.prisma.dailyTaskHistory.update({
+					where: { id: existingHistoryTask.id },
+					data: {
+						title: task.title,
+						description: task.description,
+						scheduledDate: task.scheduledDate,
+						originalDate: task.originalDate,
+						carriedOver: task.carriedOver,
+						order: task.order,
+						priority: task.priority,
+						completed: false,
+						completedAt: null,
+						archivedAt: new Date(),
+					},
+				});
+			} else {
+				// Create a new history record
+				await this.prisma.dailyTaskHistory.create({
+					data: {
+						uniqueTaskId: task.uniqueTaskId,
+						title: task.title,
+						description: task.description,
+						scheduledDate: task.scheduledDate,
+						originalDate: task.originalDate,
+						carriedOver: task.carriedOver,
+						order: task.order,
+						priority: task.priority,
+						completed: false,
+						completedAt: null,
+						user: {connect: {id: task.userId}},
+						archivedAt: new Date(),
+						createdAt: task.createdAt,
+					},
+				});
+			}
 		    // Update the task so it is rescheduled for tomorrow,
 		    // mark it as carried over, and reset its order (to be recalculated later).
 		    await this.prisma.dailyTask.update({
@@ -381,13 +405,82 @@ export default class DailyTaskRepository {
 		    });
 		}
 	  });
-
 	  // Convert the Map values to an array and sort by createdAt (ascending).
 	  const combinedArray = Array.from(deduped.values());
 	  combinedArray.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
 	  return combinedArray;
     }
+
+	// Return the combined list of tasks
+	async getTasksCompletedOn(userId: number, date: Date): Promise<CombinedTaskDto[]> {
+		// Define the date range for the given day (from midnight to 23:59:59.999)
+		const start = new Date(date);
+		start.setHours(0, 0, 0, 0);
+		const end = new Date(date);
+		end.setHours(23, 59, 59, 999);
+
+		// Retrieve active tasks completed on the given day.
+		const activeTasks = await this.prisma.dailyTask.findMany({
+			where: {
+				userId,
+				completed: true,
+				completedAt: { gte: start, lte: end },
+			},
+		});
+
+		// Retrieve archived tasks (from DailyTaskHistory) completed on the given day.
+		const archivedTasks = await this.prisma.dailyTaskHistory.findMany({
+			where: {
+				userId,
+				completed: true,
+				completedAt: { gte: start, lte: end },
+			},
+		});
+
+		// Use a Map to deduplicate tasks by their uniqueTaskId.
+		const deduped = new Map<string, CombinedTaskDto>();
+
+		activeTasks.forEach(task => {
+			// We assume that the active task has a property 'uniqueTaskId'
+			deduped.set(task.uniqueTaskId, {
+				id: task.id,
+				title: task.title,
+				priority: task.priority,
+				description: task.description,
+				scheduledDate: task.scheduledDate,
+				createdAt: task.createdAt,
+				completed: task.completed,
+				completedAt: task.completedAt,
+				carriedOver: task.carriedOver,
+				source: 'active',
+			});
+		});
+
+		archivedTasks.forEach(task => {
+			// Only add the archived task if we haven't already seen the same uniqueTaskId
+			if (!deduped.has(task.uniqueTaskId)) {
+				deduped.set(task.uniqueTaskId, {
+					id: task.id,
+					title: task.title,
+					priority: task.priority,
+					description: task.description,
+					scheduledDate: task.scheduledDate,
+					createdAt: task.createdAt,
+					completed: task.completed,
+					completedAt: task.completedAt,
+					carriedOver: task.carriedOver,
+					source: 'archived',
+				});
+			}
+		});
+		// Convert the Map values to an array and sort by completedAt (ascending).
+		const combinedArray = Array.from(deduped.values());
+		combinedArray.sort((a, b) => a.completedAt.getTime() - b.completedAt.getTime());
+
+		return combinedArray;
+
+	}
 
 
 }

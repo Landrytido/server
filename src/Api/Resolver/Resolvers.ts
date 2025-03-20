@@ -20,6 +20,7 @@ import LinkGroupResolver from "./Link/LinkGroupResolver";
 import LinkResolver from "./Link/LinkResolver";
 import { GoogleCalendarResolver } from "./CalendarEvent/GoogleCalendarResolver";
 import { ChronometerResolver } from "./ChronometerResolver";
+import BlocNotesResolver from "./BlocNotes/BlocNotesResolver";
 
 export const Resolvers = [
     UserResolver,
@@ -43,5 +44,6 @@ export const Resolvers = [
     LinkGroupResolver,
     CalendarEventInvitationResolver,
     LinkResolver,
-    ChronometerResolver
+    ChronometerResolver,
+    BlocNotesResolver
 ];

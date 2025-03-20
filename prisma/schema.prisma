@@ -65,6 +65,8 @@ model User {
   CalendarEventInvitationsReceived CalendarEventInvitation[] @relation("CalendarEventInvitationsReceived")
 
   Chronometer Chronometer[]
+
+  BlocNote BlocNote[]
 }
 
 model AutoInstruction {
@@ -134,6 +136,15 @@ model Note {
   tags           Tag[]               @relation("NoteTags")
   comments       Comment[]           @relation("NoteComments")
   notetasks      NoteTask[]          @relation("NoteTasks")
+}
+
+model BlocNote {
+  id        Int      @id @default(autoincrement())
+  content   String?  @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Notebook {
@@ -315,14 +326,14 @@ enum TimeUnit {
 // feat (daily-tasks) >>>
 model DailyPlan {
   id        Int      @id @default(autoincrement())
-  /// La date correspondant à la journée qui vient d’être clôturée
-  date      DateTime @unique
-  /// Flag indiquant que l’utilisateur a validé la fin de journée et réalisé sa planification
+  date      DateTime
   confirmed Boolean  @default(false)
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([date, userId])
 }
 
 model DailyTask {
