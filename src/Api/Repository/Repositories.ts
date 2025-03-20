@@ -17,6 +17,8 @@ import {AutoInstructionSuggestionRepository} from "./AutoInstructionSuggestion/A
 import LinkGroupRepository from "./Link/LinkGroupRepository";
 import LinkRepository from "./Link/LinkRepository";
 import LinkGroupLinkRepository from "./Link/LinkGroupLinkRepository";
+import WeatherRepository from "./Weather/WeatherRepository";
+import CityRepository from "./Weather/CityRepository";
 import { ChronometerRepository } from "./ChronometerRepository";
 import BlocNotesRepository from "./BlocNotes/BlocNotesRepository";
 
@@ -41,6 +43,8 @@ export const Repositories = [
     LinkRepository,
     LinkGroupLinkRepository,
     CalendarEventInvitationRepository,
+    WeatherRepository,
+    CityRepository,
     ChronometerRepository,
     BlocNotesRepository
 ];

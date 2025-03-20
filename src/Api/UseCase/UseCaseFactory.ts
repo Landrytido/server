@@ -21,6 +21,7 @@ import {
     AvailableAutoInstructionSuggestionUseCases
 } from "./AutoInstructionSuggestion/AvailableAutoInstructionSuggestionUseCases";
 import {AvailableBlocNotesUseCases} from "./BlocNotes/AvailableBlocNotesUseCases";
+import { AvailableWeatherUseCases } from "./Weather/AvailableWeatherUseCases";
 
 export type UseCases =
     | AvailableUserUseCases
@@ -38,7 +39,9 @@ export type UseCases =
     | AvailableFileUseCases
     | AvailableLinksUseCases
     | AvailableChronometerUseCases
-    | AvailableBlocNotesUseCases;
+    | AvailableBlocNotesUseCases
+    | AvailableWeatherUseCases;
+
 
 @Injectable()
 export default class UseCaseFactory extends ServiceFactory<UseCases> {
