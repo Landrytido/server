@@ -27,6 +27,64 @@ export default class WeatherRepository {
     return new Date() > weather.expiresAt;
   }
 
+  async saveForecasts(cityId: number, forecasts: any[], forecastType: ForecastType, expiresAt: Date) {
+    return this.prisma.$transaction(async (tx) => {
+      // Delete old forecasts first - both expired and ones for this city/type
+      const now = new Date();
+
+      // Delete forecasts that are expired or for this specific city/type
+      await tx.forecast.deleteMany({
+        where: {
+          OR: [
+            // Delete forecasts for this city and type
+            {
+              cityId,
+              forecastType,
+            },
+            // Delete any expired forecasts
+            {
+              expiresAt: { lt: now }
+            },
+            // Delete forecasts with past forecast times
+            {
+              forecastTime: { lt: now }
+            }
+          ]
+        },
+      });
+
+      // Then create all new forecasts
+      const createdForecasts = [];
+      for (const forecast of forecasts) {
+        const created = await tx.forecast.create({
+          data: {
+            cityId,
+            forecastTime: forecast.forecastTime,
+            temperature: forecast.temperature,
+            tempMin: forecast.tempMin ?? null,
+            tempMax: forecast.tempMax ?? null,
+            feelsLike: forecast.feelsLike ?? null,
+            humidity: forecast.humidity ?? null,
+            windSpeed: forecast.windSpeed ?? null,
+            pressure: forecast.pressure ?? null,
+            visibility: forecast.visibility ?? null,
+            precipProbability: forecast.precipProbability ?? null,
+            description: forecast.description,
+            icon: forecast.icon,
+            forecastType,
+            expiresAt,
+          },
+          include: {
+            city: true,
+          },
+        });
+        createdForecasts.push(created);
+      }
+
+      return createdForecasts;
+    });
+  }
+
   async saveWeather(
     data:
       | Prisma.XOR<

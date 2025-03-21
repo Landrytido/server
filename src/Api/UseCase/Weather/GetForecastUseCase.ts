@@ -16,7 +16,7 @@ export default class GetForecastUseCase
   implements UseCase<Promise<Forecast[]>, [GetForecastDto]>
 {
   private readonly logger = new Logger(GetForecastUseCase.name);
-  private readonly CACHE_HOURS = 1;
+  private readonly CACHE_THREE_MINUTES = 3 * 60 * 1000;
 
   constructor(
     private readonly cityRepository: CityRepository,
@@ -63,45 +63,22 @@ export default class GetForecastUseCase
 
       this.logger.log(`Récupération de prévisions fraîches depuis l'API`);
       const apiForecasts = await this.weatherApiService.getForecast(
-        city.latitude,
-        city.longitude,
-        dto.forecastType,
-        limit,
-        dto.lang
+          city.latitude,
+          city.longitude,
+          dto.forecastType,
+          limit,
+          dto.lang
       );
 
       const expiresAt = new Date();
-      expiresAt.setHours(expiresAt.getHours() + this.CACHE_HOURS);
+      expiresAt.setTime(expiresAt.getTime() + this.CACHE_THREE_MINUTES);
 
-      this.logger.log(`Suppression des anciennes prévisions`);
-      await this.weatherRepository.deleteForecastByCityId(
-        dto.cityId,
-        dto.forecastType
-      );
-
-      this.logger.log(
-        `Enregistrement de ${apiForecasts.length} nouvelles prévisions`
-      );
-      const createdForecasts = await Promise.all(
-        apiForecasts.map((forecast) =>
-          this.weatherRepository.saveForecast({
-            cityId: dto.cityId,
-            forecastTime: forecast.forecastTime,
-            temperature: forecast.temperature,
-            tempMin: forecast.tempMin,
-            tempMax: forecast.tempMax,
-            feelsLike: forecast.feelsLike,
-            humidity: forecast.humidity,
-            windSpeed: forecast.windSpeed,
-            pressure: forecast.pressure,
-            visibility: forecast.visibility,
-            precipProbability: forecast.precipProbability,
-            description: forecast.description,
-            icon: forecast.icon,
-            forecastType: dto.forecastType,
-            expiresAt,
-          })
-        )
+      this.logger.log(`Traitement des prévisions avec transaction`);
+      const createdForecasts = await this.weatherRepository.saveForecasts(
+          dto.cityId,
+          apiForecasts,
+          dto.forecastType,
+          expiresAt
       );
 
       return this.mapToEntities(createdForecasts);
