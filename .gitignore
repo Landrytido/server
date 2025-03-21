@@ -39,4 +39,3 @@ lerna-debug.log*
 sendgrid.env
 sendgrid.env
 yarn.lock
-/prisma/migrations/

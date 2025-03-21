@@ -12,6 +12,10 @@
       {
         "include": "templates/**/*",
         "outDir": "./dist/src/templates"
+      },
+      {
+        "include": "src/**/*",
+        "outDir": "./dist/src/"
       }
     ],
     "watchAssets": true
