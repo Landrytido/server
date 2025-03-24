@@ -46,13 +46,13 @@ model User {
   noteTasks     NoteTask[]
   devices       Device[]
 
-  AutoInstruction        AutoInstruction[]
-  DailyTask              DailyTask[]
-  DailyPlan              DailyPlan[]
-  DailyTaskHistory       DailyTaskHistory[]
-  CalendarEvent          CalendarEvent[]
-  googleAccessToken      String?                 @db.Text // Ajout du token d'accès Google
-  googleRefreshToken     String?                 @db.Text // (Optionnel) Pour rafraîchir le token
+  AutoInstruction    AutoInstruction[]
+  DailyTask          DailyTask[]
+  DailyPlan          DailyPlan[]
+  DailyTaskHistory   DailyTaskHistory[]
+  CalendarEvent      CalendarEvent[]
+  googleAccessToken  String?            @db.Text // Ajout du token d'accès Google
+  googleRefreshToken String?            @db.Text // (Optionnel) Pour rafraîchir le token
 
   // A user owns many link groups.
   linkGroups LinkGroup[]
@@ -63,6 +63,14 @@ model User {
   NotificationPreference           NotificationPreference?
   CalendarEventInvitationsSent     CalendarEventInvitation[] @relation("CalendarEventInvitationsSent")
   CalendarEventInvitationsReceived CalendarEventInvitation[] @relation("CalendarEventInvitationsReceived")
+
+
+  weatherFavorites Favorite[]
+
+  Chronometer Chronometer[]
+
+
+  BlocNote BlocNote[]
 }
 
 model AutoInstruction {
@@ -132,6 +140,15 @@ model Note {
   tags           Tag[]               @relation("NoteTags")
   comments       Comment[]           @relation("NoteComments")
   notetasks      NoteTask[]          @relation("NoteTasks")
+}
+
+model BlocNote {
+  id        Int      @id @default(autoincrement())
+  content   String?  @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Notebook {
@@ -313,14 +330,14 @@ enum TimeUnit {
 // feat (daily-tasks) >>>
 model DailyPlan {
   id        Int      @id @default(autoincrement())
-  /// La date correspondant à la journée qui vient d’être clôturée
-  date      DateTime @unique
-  /// Flag indiquant que l’utilisateur a validé la fin de journée et réalisé sa planification
+  date      DateTime
   confirmed Boolean  @default(false)
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([date, userId])
 }
 
 model DailyTask {
@@ -418,6 +435,24 @@ model CalendarEvent {
 
 // <<< refactor (calendar)
 
+// Chronometer model
+enum ChronometerMode {
+  COUNTDOWN
+  STOPWATCH
+}
+
+model Chronometer {
+  id          String          @id @default(uuid())
+  name        String
+  mode        ChronometerMode
+  startTime   DateTime?
+  elapsedTime Int // Temps écoulé en secondes depuis le démarrage du chronomètre
+  duration    Float? // Pour le mode COUNTDOWN: durée totale configurée en secondes
+  isRunning   Boolean         @default(false)
+  userId      Int
+  user        User            @relation(fields: [userId], references: [id])
+}
+
 // feature (refactor-links) >>>
 model Link {
   id  String @id @default(cuid())
@@ -457,3 +492,91 @@ model LinkGroupLink {
 }
 
 // feature (refactor-links) <<<
+
+//feature meteo
+// Modèle City - représente une ville
+model City {
+  id        Int     @id @default(autoincrement())
+  name      String
+  country   String
+  latitude  Float
+  longitude Float
+  timezone  String?
+
+  weather   Weather?
+  forecasts Forecast[]
+  favorites Favorite[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, country])
+  @@index([name])
+}
+
+// Modèle Weather - représente les conditions météo actuelles pour une ville
+model Weather {
+  id     Int  @id @default(autoincrement())
+  cityId Int  @unique
+  city   City @relation(fields: [cityId], references: [id], onDelete: Cascade)
+
+  temperature Float
+  tempMin     Float?
+  tempMax     Float?
+  feelsLike   Float?
+  humidity    Int
+  windSpeed   Float
+  pressure    Int?
+  visibility  Int?
+  description String
+  icon        String?
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([expiresAt])
+}
+
+// Modèle Forecast - représente les prévisions météorologiques
+model Forecast {
+  id     Int  @id @default(autoincrement())
+  cityId Int
+  city   City @relation(fields: [cityId], references: [id], onDelete: Cascade)
+
+  forecastTime      DateTime
+  temperature       Float
+  tempMin           Float?
+  tempMax           Float?
+  feelsLike         Float?
+  humidity          Int?
+  windSpeed         Float?
+  pressure          Int?
+  visibility        Int?
+  precipProbability Float?
+  description       String
+  icon              String?
+  forecastType      String
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([cityId, forecastTime, forecastType])
+  @@index([expiresAt])
+}
+
+// Modèle Favorite - représente les villes favorites des utilisateurs
+model Favorite {
+  id     Int @id @default(autoincrement())
+  userId Int
+  cityId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  city City @relation(fields: [cityId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cityId])
+}
+

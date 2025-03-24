@@ -19,6 +19,7 @@ import {CombinedTask} from "../../Entity/DailyTask/CombinedTask";
 import GetTasksCreatedOnUseCase from "../../UseCase/DailyTask/GetTasksCreatedOn/GetTasksCreatedOnUseCase";
 import {DailyPlan} from "../../Entity/DailyTask/DailyPlan";
 import GetDailyPlanUseCase from "../../UseCase/DailyTask/GetDailyPlan/GetDailyPlanUseCase";
+import GetTasksCompletedOnUseCase from "../../UseCase/DailyTask/GetTasksCompletedOn/GetTasksCompletedOnUseCase";
 
 @Resolver(() => DailyTask)
 export default class DailyTaskResolver {
@@ -110,6 +111,24 @@ export default class DailyTaskResolver {
 	  return (await this.useCaseFactory.create(GetTasksCreatedOnUseCase))
 		  .handle(context, targetDate);
     }
+
+    /**
+     * Query to retrieve all tasks completed on a specific day.
+     * This returns both active tasks (from DailyTask) and archived tasks (from DailyTaskHistory).
+     * @param GraphqlAuthGuard
+     * @constructor
+     */
+    @UseGuards(GraphqlAuthGuard)
+    @Query(() => [CombinedTask])
+    async getTasksCompletedOn(
+        @ContextualRequest() context: CtxRequest,
+        @Args('date', { type: () => String }) date: string,
+    ): Promise<CombinedTask[]> {
+        const targetDate = new Date(date);
+        return (await this.useCaseFactory.create(GetTasksCompletedOnUseCase))
+            .handle(context, targetDate);
+    }
+
 
     /**
      * Query to retrieve the DailyPlan for a given day.

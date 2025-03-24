@@ -10,6 +10,10 @@
         "outDir": "./dist/src/i18n"
       },
       {
+        "include": "templates/**/*",
+        "outDir": "./dist/src/templates"
+      },
+      {
         "include": "src/**/*",
         "outDir": "./dist/src/"
       }

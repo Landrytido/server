@@ -25,6 +25,15 @@ type AutoInstructionSuggestion {
   id: Int!
 }
 
+type BlocNote {
+  content: String
+  createdAt: DateTime
+  id: Int!
+  updatedAt: DateTime
+  user: User
+  userId: Int!
+}
+
 type CalendarEvent {
   createdAt: DateTime!
   description: String
@@ -62,6 +71,41 @@ type CalendarEventInvitation {
   updatedAt: DateTime!
 }
 
+type Chronometer {
+  createdAt: DateTime
+  duration: Float
+  elapsedTime: Int!
+  id: String!
+  isRunning: Boolean!
+  mode: ChronometerMode!
+  name: String!
+  startTime: DateTime
+  updatedAt: DateTime
+  user: User
+  userId: Int!
+}
+
+"""Les modes disponibles pour le chronomètre"""
+enum ChronometerMode {
+  COUNTDOWN
+  STOPWATCH
+}
+
+type City {
+  country: String!
+  createdAt: DateTime!
+  favorites: [Favorite!]
+  forecasts: [Forecast!]
+  id: Int!
+  latitude: Float!
+  longitude: Float!
+  name: String!
+  state: String
+  timezone: String
+  updatedAt: DateTime!
+  weather: WeatherResponseDto
+}
+
 type CombinedTask {
   carriedOver: Boolean!
   completed: Boolean!
@@ -94,7 +138,6 @@ input CommentDto {
 input CreateAutoInstructionInput {
   description: String!
   order: Float!
-  userId: Float!
 }
 
 input CreateCalendarEventDto {
@@ -183,6 +226,20 @@ type Device {
   userId: Int!
 }
 
+type Favorite {
+  city: City!
+  cityId: Int!
+  createdAt: DateTime!
+  id: Int!
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
+input FavoriteCityDto {
+  cityId: Int!
+}
+
 type File {
   createdAt: DateTime!
   filename: String!
@@ -199,6 +256,55 @@ input FileDto {
   initialFilename: String!
   path: String!
   uri: String!
+}
+
+type Forecast {
+  city: City!
+  cityId: Int!
+  createdAt: DateTime!
+  description: String!
+  expiresAt: DateTime!
+  feelsLike: Float
+  forecastTime: DateTime!
+  forecastType: ForecastType!
+  humidity: Int
+  icon: String
+  id: Int!
+  precipProbability: Float
+  pressure: Int
+  tempMax: Float
+  tempMin: Float
+  temperature: Float!
+  visibility: Int
+  windSpeed: Float
+}
+
+"""Type of forecast: hourly or daily"""
+enum ForecastType {
+  DAILY
+  HOURLY
+}
+
+input GetCityByCoordinatesDto {
+  latitude: Float!
+  longitude: Float!
+}
+
+input GetCityByIdDto {
+  id: Int!
+}
+
+input GetCurrentWeatherDto {
+  cityId: Int!
+  lang: String = "fr"
+}
+
+input GetForecastDto {
+  cityId: Int!
+  days: Int
+  forecastType: ForecastType!
+  hours: Int
+  lang: String = "fr"
 }
 
 input GetNoteTasksByUserIdDto {
@@ -274,6 +380,7 @@ type Mutation {
   acceptCalendarEventInvitation(id: Int!): CalendarEventInvitation!
   acceptInvitation(invitationId: Int!): Invitation!
   addAutoInstruction(createAutoInstructionInput: CreateAutoInstructionInput!): AutoInstruction!
+  addFavoriteCity(data: FavoriteCityDto!): City!
   addScore(firstName: String!, lastName: String!, level: Level!, time: Int!, userId: Int!): Score!
   completeProfile(firstName: String!, lastName: String!): User!
   confirmEndOfDay: Boolean!
@@ -290,6 +397,7 @@ type Mutation {
   createTag(dto: SaveTagDto!): Tag!
   deleteCalendarEvent(id: Int!): CalendarEvent!
   deleteCalendarEventInvitation(id: Int!): CalendarEventInvitation!
+  deleteChronometer(id: String!): Chronometer!
   deleteComment(commentId: Float!): Boolean!
   deleteDailyTask(id: Int!): DailyTask!
   deleteInvitation(invitationId: Int!): Invitation!
@@ -305,30 +413,39 @@ type Mutation {
   loginWithGithub(dto: LoginWithGithubDto!): String!
   loginWithGoogle(accessToken: String!): String!
   markNotificationAsSent(id: Int!): CalendarEvent!
+  pauseChronometer(id: String!): Chronometer!
   register(dto: SaveUserDto!): User!
   registerDevice(platform: Platform!, token: String!): Boolean!
   removeAutoInstruction(id: Float!): AutoInstruction!
+  removeFavoriteCity(data: FavoriteCityDto!): Boolean!
   removeNoteTaskById(id: Int!): NoteTask!
+  renameChronometer(input: RenameChronometerDto!): Chronometer!
   reorderDailyTasks(dto: ReorderDailyTasksDto!): [DailyTask!]!
   reorderInstructions(instructions: [AutoInstructionInput!]!, userId: Float!): [AutoInstruction!]!
+  resetChronometer(id: String!): Chronometer!
   resetClickCounter(linkGroupId: String!, linkId: String!): LinkGroupLink!
+  resumeChronometer(id: String!): Chronometer!
   saveFile(dto: FileDto!): File!
   saveLinkGroup(dto: SaveLinkGroupDto!): LinkGroup!
   saveNoteTask(dto: SaveNoteTaskDto!): NoteTask!
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveUser(dto: SaveUserDto!): User!
   sendPushNotification(body: String!, data: JSONObject, title: String!): Boolean!
+  startChronometer(input: StartChronometerDto!): Chronometer!
+  stopChronometer(id: String!): Chronometer!
 
   """Synchronize Google Calendar events"""
   syncGoogleCalendar: Boolean!
   updateAutoInstruction(updateAutoInstructionInput: UpdateAutoInstructionInput!): AutoInstruction!
   updateCalendarEvent(dto: UpdateCalendarEventDto!, id: Int!): CalendarEvent!
+  updateChronometer(id: String!, updateData: UpdateChronometerDto!): Chronometer!
   updateComment(commentId: Float!, data: CommentDto!): Comment!
   updateDailyTask(dto: UpdateDailyTaskDto!, id: Int!): DailyTask!
   updateLinkRelation(dto: SaveLinkDto!): LinkGroupLink!
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
   updateNoteTask(dto: UpdateNoteTaskDto!): NoteTask!
   updateNotebook(dto: SaveNotebookDto!, notebookId: Int!): Notebook!
+  upsertBlocNotes(content: String!): BlocNote!
 }
 
 type Note {
@@ -415,6 +532,7 @@ enum Platform {
 }
 
 type Query {
+  findBlocNotesByUserId: BlocNote!
   findCommentsByNoteId(noteId: Float!): [Comment!]!
   findExternalEmailByToken(token: String!): String!
   findHotLinks(limit: Int!): [LinkGroupLink!]!
@@ -430,9 +548,10 @@ type Query {
   findSentInvitations: [Invitation!]!
   findTagById(id: Float!): Tag!
   getAllCalendarEvents: [CalendarEvent!]!
+  getAllChronometers: [Chronometer!]!
   getAutoInstructionSuggestionById(id: Int!): AutoInstructionSuggestion!
   getAutoInstructionSuggestions: [AutoInstructionSuggestion!]!
-  getAutoInstructions(userId: Float!): [AutoInstruction!]!
+  getAutoInstructions: [AutoInstruction!]!
   getCalendarEvent(id: Int!): CalendarEvent!
   getCalendarEventInvitationById(id: Int!): CalendarEventInvitation!
   getCalendarEventInvitationsByCalendarEventId(id: Int!): [CalendarEventInvitation!]!
@@ -440,18 +559,29 @@ type Query {
   getCalendarEventInvitationsBySenderId(id: Int!): [CalendarEventInvitation!]!
   getCalendarEventsByToken(token: String!): [CalendarEvent!]!
   getCalendarEventsByUserId: [CalendarEvent!]!
+  getChronometer(id: String!): Chronometer
+  getCityByCoordinates(data: GetCityByCoordinatesDto!): City!
+  getCityById(data: GetCityByIdDto!): City!
+  getCountdown: Chronometer
+  getCurrentTime(chronoId: String!): Int!
+  getCurrentWeather(data: GetCurrentWeatherDto!): Weather!
   getDailyPlan(date: String!): DailyPlan
   getDailyTaskHistory(date: String!): [DailyTaskHistory!]!
   getDailyTasks(date: String): [DailyTask!]!
+  getFavoriteCities: [City!]!
+  getForecast(data: GetForecastDto!): [Forecast!]!
   getLoggedUser: User!
   getMonthlyReport(month: Int!, year: Int!): MonthlyReport!
   getNotificationPreference: NotificationPreference!
   getSearchHistoryByUserId: [SearchHistory!]!
+  getTasksCompletedOn(date: String!): [CombinedTask!]!
   getTasksCreatedOn(date: String!): [CombinedTask!]!
+  isCountdownFinished(chronoId: String!): Boolean!
   login(dto: AuthenticationDto!): String!
   myLinkGroups: [LinkGroup!]!
   noteTasksByUserId(dto: GetNoteTasksByUserIdDto!): [NoteTask!]!
   refreshToken: String!
+  searchCities(data: SearchCityDto!): [City!]!
   topScores(level: Level = EASY, limit: Int = 10): [Score!]!
   topThreeScores: [Score!]!
   userScores(userId: Int!): [Score!]!
@@ -474,6 +604,11 @@ type Relation {
   invitationId: Int!
   receiver: User!
   sender: User!
+}
+
+input RenameChronometerDto {
+  id: String!
+  newName: String!
 }
 
 input ReorderDailyTasksDto {
@@ -538,13 +673,13 @@ input SaveTagDto {
 }
 
 input SaveUserDto {
-  email: String!
-  firstName: String!
+  email: String
+  firstName: String
   id: Int
   invitationToken: String
   lastLoginDate: DateTime
   lastName: String
-  password: String!
+  password: String
 }
 
 type Score {
@@ -555,6 +690,12 @@ type Score {
   level: Level!
   time: Int!
   userId: Int!
+}
+
+input SearchCityDto {
+  lang: String = "fr"
+  limit: Int = 10
+  query: String!
 }
 
 type SearchHistory {
@@ -579,6 +720,12 @@ type Session {
   updatedAt: DateTime!
   user: User!
   userId: Int!
+}
+
+input StartChronometerDto {
+  duration: Float
+  mode: ChronometerMode!
+  name: String!
 }
 
 type Tag {
@@ -622,6 +769,15 @@ input UpdateCalendarEventDto {
   token: String
 }
 
+input UpdateChronometerDto {
+  duration: Float
+  elapsedTime: Int
+  isRunning: Boolean
+  mode: ChronometerMode
+  name: String
+  startTime: DateTime
+}
+
 input UpdateDailyTaskDto {
   completed: Boolean
   description: String
@@ -663,4 +819,41 @@ type User {
   searchHistory: [SearchHistory!]!
   sessions: [Session!]!
   updatedAt: DateTime!
+}
+
+type Weather {
+  city: City!
+  cityId: Int!
+  createdAt: DateTime!
+  description: String!
+  expiresAt: DateTime!
+  feelsLike: Float
+  humidity: Int!
+  icon: String
+  id: Int!
+  pressure: Int
+  tempMax: Float
+  tempMin: Float
+  temperature: Float!
+  updatedAt: DateTime!
+  visibility: Int
+  windSpeed: Float!
+}
+
+type WeatherResponseDto {
+  cityId: Int!
+  createdAt: DateTime!
+  description: String!
+  expiresAt: DateTime!
+  feelsLike: Float
+  humidity: Int!
+  icon: String
+  id: Int!
+  pressure: Int
+  tempMax: Float
+  tempMin: Float
+  temperature: Float!
+  updatedAt: DateTime!
+  visibility: Int
+  windSpeed: Float!
 }
