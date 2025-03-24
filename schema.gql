@@ -313,6 +313,7 @@ type Mutation {
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
   denyCalendarEventInvitation(id: Int!): CalendarEventInvitation!
   incrementClickCounter(linkGroupId: String!, linkId: String!): LinkGroupLink!
+  incrementNoteClickCounter(noteId: Int!): Note!
   loginWithFacebook(accessToken: String!): String!
   loginWithGithub(dto: LoginWithGithubDto!): String!
   loginWithGoogle(accessToken: String!): String!
@@ -344,6 +345,7 @@ type Mutation {
 }
 
 type Note {
+  clickcounter: Int!
   collaborations: [NoteCollaboration!]!
   content: String
   createdAt: DateTime!
@@ -436,7 +438,7 @@ type Query {
   findNotebooks: [Notebook!]!
   findNotebooksByUserId: [Notebook!]!
   findNotes: [Note!]!
-  findNotesByUserId: [Note!]!
+  findNotesByUserId(orderBy: String = "clickcounter", orderDirection: String = "desc"): [Note!]!
   findReceivedInvitations: [Invitation!]!
   findRelations: [Relation!]!
   findSentInvitations: [Invitation!]!

@@ -126,6 +126,7 @@ model Note {
   updatedAt      DateTime            @updatedAt
   userId         Int
   notebookId     Int?
+  clickcounter   Int                 @default(0)
   user           User                @relation(fields: [userId], references: [id])
   notebook       Notebook?           @relation(fields: [notebookId], references: [id])
   collaborations NoteCollaboration[]

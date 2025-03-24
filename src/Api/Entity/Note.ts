@@ -41,6 +41,9 @@ export default class Note {
   @Field(() => [Label])
   labels: Label[];
   
+  @Field(() => Int)
+  clickcounter: number;
+  
 
   context?: ContextualGraphqlRequest;
 }

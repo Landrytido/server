@@ -51,6 +51,7 @@ export default class CommentService {
         notebookId: note.notebookId,
         labels: note.labels,
         user: note.user,
+        clickcounter:note.clickcounter,
         collaborations: note.collaborations as any, // Assertion de type ici si nécessaire
       },
     } as Comment;
@@ -124,6 +125,7 @@ export default class CommentService {
         notebookId: note.notebookId,
         labels: note.labels,
         user: note.user,
+        clickcounter:note.clickcounter,
         collaborations: note.collaborations as any, // Assertion de type ici si nécessaire
       },
     } as Comment;
@@ -166,6 +168,7 @@ export default class CommentService {
           notebookId: note.notebookId,
           labels: note.labels,
           user: note.user,
+          clickcounter:note.clickcounter,
           collaborations: note.collaborations as any, // Assertion de type ici si nécessaire
         },
       } as Comment;

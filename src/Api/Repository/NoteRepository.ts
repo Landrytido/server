@@ -22,9 +22,17 @@ export default class NoteRepository {
     });
   }
 
-  async findByUserId(userId: number) {
+  async findByUserId(userId: number, orderBy: string = "clickcounter", orderDirection: "asc" | "desc" = "desc") {
+    const validFields = ["clickcounter", "createdAt", "updatedAt", "title"];
+    if (!validFields.includes(orderBy)) {
+      orderBy = "clickcounter";
+    }
+
     return await this.prisma.note.findMany({
       where: { userId },
+      orderBy: {
+        [orderBy]: orderDirection,
+      },
       include: {
         collaborations: true,
         labels: true, 
@@ -34,6 +42,17 @@ export default class NoteRepository {
 
   async findMany() {
     return await this.prisma.note.findMany({ include: { labels: true } });
+  }
+  async incrementClickCounter(noteId: number) {
+    return await this.prisma.note.update({
+      where: { id: noteId },
+      data: {
+        clickcounter: {
+          increment: 1
+        }
+      },
+      include: { labels: true }
+    });
   }
 
   async save(
