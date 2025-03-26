@@ -345,7 +345,7 @@ type Mutation {
 }
 
 type Note {
-  clickcounter: Int!
+  clickCounter: Int!
   collaborations: [NoteCollaboration!]!
   content: String
   createdAt: DateTime!
@@ -438,6 +438,7 @@ type Query {
   findNotebooks: [Notebook!]!
   findNotebooksByUserId: [Notebook!]!
   findNotes: [Note!]!
+  findNotesByLabel(labelIds: [String!]!): [Note!]!
   findNotesByUserId(orderBy: String = "clickcounter", orderDirection: String = "desc"): [Note!]!
   findReceivedInvitations: [Invitation!]!
   findRelations: [Relation!]!

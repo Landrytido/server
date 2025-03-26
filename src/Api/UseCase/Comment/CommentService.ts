@@ -5,6 +5,7 @@ import Comment from '../../Entity/Comment'; // Assurez-vous que le chemin est co
 import CommentRepository from '../../Repository/CommentRepository'; // Assurez-vous que le chemin est correct
 import UserRepository from '../../Repository/UserRepository'; // Ajoutez si nécessaire
 import NoteRepository from '../../Repository/NoteRepository'; // Ajoutez si nécessaire
+import { NoteCollaboration } from 'src/Api/Entity/NoteCollaboration';
 
 @Injectable()
 export default class CommentService {
@@ -51,8 +52,8 @@ export default class CommentService {
         notebookId: note.notebookId,
         labels: note.labels,
         user: note.user,
-        clickcounter:note.clickcounter,
-        collaborations: note.collaborations as any, // Assertion de type ici si nécessaire
+        clickCounter:note.clickCounter,
+        collaborations: note.collaborations as NoteCollaboration[],
       },
     } as Comment;
   }
@@ -125,8 +126,8 @@ export default class CommentService {
         notebookId: note.notebookId,
         labels: note.labels,
         user: note.user,
-        clickcounter:note.clickcounter,
-        collaborations: note.collaborations as any, // Assertion de type ici si nécessaire
+        clickCounter:note.clickCounter,
+        collaborations: note.collaborations as NoteCollaboration[],
       },
     } as Comment;
   }
@@ -168,8 +169,8 @@ export default class CommentService {
           notebookId: note.notebookId,
           labels: note.labels,
           user: note.user,
-          clickcounter:note.clickcounter,
-          collaborations: note.collaborations as any, // Assertion de type ici si nécessaire
+          clickCounter:note.clickCounter,
+          collaborations: note.collaborations as NoteCollaboration[],
         },
       } as Comment;
     }));

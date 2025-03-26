@@ -42,7 +42,7 @@ export default class Note {
   labels: Label[];
   
   @Field(() => Int)
-  clickcounter: number;
+  clickCounter: number;
   
 
   context?: ContextualGraphqlRequest;

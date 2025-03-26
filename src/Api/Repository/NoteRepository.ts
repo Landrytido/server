@@ -21,11 +21,33 @@ export default class NoteRepository {
       }, 
     });
   }
+  async findNotesByLabel(labelIds: string[], userId: number) {
+  if (!labelIds.length) {
+    return [];
+  }
 
-  async findByUserId(userId: number, orderBy: string = "clickcounter", orderDirection: "asc" | "desc" = "desc") {
-    const validFields = ["clickcounter", "createdAt", "updatedAt", "title"];
+  
+
+  const result = await this.prisma.note.findMany({
+    where: {
+      labels: {
+        some: {
+          id: { in: labelIds },
+        },
+      },
+    },
+    include: {
+      labels: true,
+    },
+  });
+
+  
+  return result;
+}
+  async findByUserId(userId: number, orderBy: string = "clickCounter", orderDirection: "asc" | "desc" = "desc") {
+    const validFields = ["clickCounter", "createdAt", "updatedAt", "title"];
     if (!validFields.includes(orderBy)) {
-      orderBy = "clickcounter";
+      orderBy = "clickCounter";
     }
 
     return await this.prisma.note.findMany({
@@ -47,7 +69,7 @@ export default class NoteRepository {
     return await this.prisma.note.update({
       where: { id: noteId },
       data: {
-        clickcounter: {
+        clickCounter: {
           increment: 1
         }
       },

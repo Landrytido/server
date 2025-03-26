@@ -13,6 +13,8 @@ import GetAllNotesUseCase from "../UseCase/Note/GetAllNotes/GetAllNoteUseCase";
 import GetNoteUseCase from "../UseCase/Note/GetNote/GetNoteUseCase";
 import GetNotesByUserIdUseCase from "../UseCase/Note/GetNotesByUserId/GetNotesByUserIdUseCase";
 import IncrementNoteClickCounterUseCase from "../UseCase/Note/IncrementNoteClickCounter/IncrementNoteClickCounterUseCase";
+import GetNotesByLabelUseCase from "../UseCase/Note/GetNotesByLabel/GetNotesByLabelUseCase";
+
 
 @Resolver(Note)
 @UseGuards(GraphqlAuthGuard)
@@ -95,4 +97,14 @@ export default class NoteResolver {
       noteId
     );
   }
+  @Query(() => [Note])
+  async findNotesByLabel(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("labelIds", { type: () => [String] }) labelIds: string[]
+) {
+  return (await this.serviceFactory.create(GetNotesByLabelUseCase)).handle(
+    context,
+    labelIds,
+  );
+}
 }

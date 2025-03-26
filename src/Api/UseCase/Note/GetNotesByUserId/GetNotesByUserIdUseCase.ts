@@ -11,7 +11,7 @@ export default class GetNotesByUserIdUseCase
   constructor(private readonly noteRepository: NoteRepository, private readonly userRepository: UserRepository) {}
   async handle(
     context: ContextualGraphqlRequest,
-    orderBy: string = "clickcounter",
+    orderBy: string = "clickCounter",
     orderDirection: "asc" | "desc" = "desc"
   ) {
     const user = await this.userRepository.findById(context.userId);
