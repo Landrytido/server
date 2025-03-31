@@ -20,7 +20,7 @@ import WeatherRepository from "./Weather/WeatherRepository";
 import CityRepository from "./Weather/CityRepository";
 import { ChronometerRepository } from "./ChronometerRepository";
 import BlocNotesRepository from "./BlocNotes/BlocNotesRepository";
-import LabelRepository from "./labelRepository";
+import { LabelRepository } from "./LabelRepository";
 
 export const Repositories = [
     LabelRepository,

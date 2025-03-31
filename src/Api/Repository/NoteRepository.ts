@@ -96,7 +96,6 @@ export default class NoteRepository {
           data: {
             ...createData,
             labels: {
-              set: [], 
               connect: createData.labelIds.map((id) => ({ id: String(id) })),
             },
           },
@@ -121,7 +120,6 @@ export default class NoteRepository {
       }
     }
   
-    // Mise à jour d'une note
     const { labelIds, ...updateData } = data as Prisma.NoteUpdateInput & { labelIds?: (string | number)[] };
   
     if (labelIds && labelIds.length > 0) {
@@ -132,8 +130,8 @@ export default class NoteRepository {
         data: {
           ...updateData,
           labels: {
-            set: [], // Supprime les anciens labels
-            connect: labelIds.map((id) => ({ id: String(id) })), // Ajoute les nouveaux
+            set: [],
+            connect: labelIds.map((id) => ({ id: String(id) })),
           },
         },
         include: { labels: true },

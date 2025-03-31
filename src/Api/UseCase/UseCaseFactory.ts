@@ -21,10 +21,10 @@ import {
 } from "./AutoInstructionSuggestion/AvailableAutoInstructionSuggestionUseCases";
 import {AvailableBlocNotesUseCases} from "./BlocNotes/AvailableBlocNotesUseCases";
 import { AvailableWeatherUseCases } from "./Weather/AvailableWeatherUseCases";
+import {AvailableLabelUseCases} from "./Label/AvailableLabelUseCases";
 
 export type UseCases =
     | AvailableUserUseCases
-    | AvailableTagUseCases
     | AvailableNotebookUseCases
     | AvailableNoteUseCases
     | AvailableInvitationUseCases
@@ -39,8 +39,8 @@ export type UseCases =
     | AvailableLinksUseCases
     | AvailableChronometerUseCases
     | AvailableBlocNotesUseCases
-    | AvailableWeatherUseCases;
-
+    | AvailableWeatherUseCases
+    | AvailableLabelUseCases;
 
 
 @Injectable()
