@@ -2,7 +2,9 @@ import CreateNoteUseCase from "./CreateNote/CreateNoteUseCase";
 import DeleteNoteUseCase from "./DeleteNote/DeleteNoteUseCase";
 import GetAllNotesUseCase from "./GetAllNotes/GetAllNoteUseCase";
 import GetNoteUseCase from "./GetNote/GetNoteUseCase";
+import GetNotesByLabelUseCase from "./GetNotesByLabel/GetNotesByLabelUseCase";
 import GetNotesByUserIdUseCase from "./GetNotesByUserId/GetNotesByUserIdUseCase";
+import IncrementNoteClickCounterUseCase from "./IncrementNoteClickCounter/IncrementNoteClickCounterUsecase";
 import UpdateNoteUseCase from "./UpdateNote/UpdateNoteUseCase";
 
 export type AvailableNoteUseCases =
@@ -10,5 +12,7 @@ export type AvailableNoteUseCases =
   | UpdateNoteUseCase
   | DeleteNoteUseCase
   | GetNoteUseCase
+  | IncrementNoteClickCounterUseCase
   | GetAllNotesUseCase
+  | GetNotesByLabelUseCase
   | GetNotesByUserIdUseCase;

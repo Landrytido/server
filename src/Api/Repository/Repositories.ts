@@ -1,5 +1,4 @@
 import UserRepository from "./UserRepository";
-import TagRepository from "./TagRepository";
 import NotebookRepository from "./NotebookRepository";
 import NoteRepository from "./NoteRepository";
 import InvitationRepository from "./InvitationRepository";
@@ -23,10 +22,10 @@ import { ChronometerRepository } from "./ChronometerRepository";
 import BlocNotesRepository from "./BlocNotes/BlocNotesRepository";
 
 export const Repositories = [
+    LabelRepository,
     UserRepository,
     SearchHistoryRepository,
     SearchHistoryRepository,
-    TagRepository,
     NotebookRepository,
     NoteRepository,
     InvitationRepository,

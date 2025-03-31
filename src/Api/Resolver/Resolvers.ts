@@ -1,4 +1,3 @@
-import TagResolver from "./TagResolver";
 import NotebookResolver from "./NotebookResolver";
 import NoteResolver from "./NoteResolver";
 import UserResolver from "./UserResolver";
