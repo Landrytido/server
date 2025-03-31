@@ -8,6 +8,7 @@ import GetDailyHistoryUseCase from "./GetDailyHistory/GetDailyHistoryUseCase";
 import GetMonthlyReportUseCase from "./GetMonthlyReport/GetMonthlyReportUseCase";
 import GetTasksCreatedOnUseCase from "./GetTasksCreatedOn/GetTasksCreatedOnUseCase";
 import GetDailyPlanUseCase from "./GetDailyPlan/GetDailyPlanUseCase";
+import GetTasksCompletedOnUseCase from "./GetTasksCompletedOn/GetTasksCompletedOnUseCase";
 
 export type AvailableDailyTaskUseCases =
 	| CreateDailyTaskUseCase
@@ -19,5 +20,6 @@ export type AvailableDailyTaskUseCases =
 	| GetDailyHistoryUseCase
 	| GetMonthlyReportUseCase
 	| GetTasksCreatedOnUseCase
+	| GetTasksCompletedOnUseCase
 	| GetDailyPlanUseCase
 

@@ -29,25 +29,30 @@ export default class LinkGroupRepository {
     }
 
     /**
-     * Retrieve all LinkGroups associated with a given user.
+     * Retrieve all LinkGroups associated with a given user, organized by total clickCounter.
      */
     async findByUserId(userId: number): Promise<LinkGroup[]> {
-        return this.prisma.linkGroup.findMany({
-            where: {userId},
+        const linkGroups = await this.prisma.linkGroup.findMany({
+            where: { userId },
             include: {
                 user: true,
-                // Include the join relation with its fields (linkName, clickCounter) and the embedded Link
                 links: {
                     include: {
                         link: {
-                            include : {
-                                image : true
-                            }
-                        }
-                    }
-                }
+                            include: {
+                                image: true,
+                            },
+                        },
+                    },
+                },
             },
         });
+        const linkGroupsWithClickCounter = linkGroups.map(group => {
+            const totalClickCounter = group.links.reduce((sum, groupLink) => sum + groupLink.clickCounter, 0);
+            return { ...group, totalClickCounter };
+        });
+        linkGroupsWithClickCounter.sort((a, b) => b.totalClickCounter - a.totalClickCounter);
+        return linkGroupsWithClickCounter;
     }
 
     /**
