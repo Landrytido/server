@@ -1,4 +1,3 @@
-import TagResolver from "./TagResolver";
 import NotebookResolver from "./NotebookResolver";
 import NoteResolver from "./NoteResolver";
 import UserResolver from "./UserResolver";
@@ -23,11 +22,12 @@ import CityResolver from "./Weather/CityResolver";
 import WeatherResolver from "./Weather/WeatherResolver";
 import { ChronometerResolver } from "./ChronometerResolver";
 import BlocNotesResolver from "./BlocNotes/BlocNotesResolver";
+import { LabelResolver } from "./labelResolver";
 
 export const Resolvers = [
+  LabelResolver,
   UserResolver,
   SearchHistoryResolver,
-  TagResolver,
   NotebookResolver,
   NoteResolver,
   InvitationResolver,

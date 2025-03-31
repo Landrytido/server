@@ -1,5 +1,4 @@
 import UserRepository from "./UserRepository";
-import TagRepository from "./TagRepository";
 import NotebookRepository from "./NotebookRepository";
 import NoteRepository from "./NoteRepository";
 import InvitationRepository from "./InvitationRepository";
@@ -21,12 +20,13 @@ import WeatherRepository from "./Weather/WeatherRepository";
 import CityRepository from "./Weather/CityRepository";
 import { ChronometerRepository } from "./ChronometerRepository";
 import BlocNotesRepository from "./BlocNotes/BlocNotesRepository";
+import { LabelRepository } from "./LabelRepository";
 
 export const Repositories = [
+    LabelRepository,
     UserRepository,
     SearchHistoryRepository,
     SearchHistoryRepository,
-    TagRepository,
     NotebookRepository,
     NoteRepository,
     InvitationRepository,
