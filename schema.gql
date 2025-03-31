@@ -554,7 +554,7 @@ type Query {
   findNotebooksByUserId: [Notebook!]!
   findNotes: [Note!]!
   findNotesByLabel(labelIds: [String!]!): [Note!]!
-  findNotesByUserId(orderBy: String = "clickcounter", orderDirection: String = "desc"): [Note!]!
+  findNotesByUserId(orderBy: String = "clickCounter", orderDirection: String = "desc"): [Note!]!
   findReceivedInvitations: [Invitation!]!
   findRelations: [Relation!]!
   findSentInvitations: [Invitation!]!

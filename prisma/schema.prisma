@@ -486,9 +486,8 @@ model LinkGroupLink {
   @@id([linkGroupId, linkId])
 }
 
-// feature (refactor-links) <<<
 
-=======
+
 //feature meteo
 // Modèle City - représente une ville
 model City {
@@ -575,4 +574,12 @@ model Favorite {
 
   @@unique([userId, cityId])
 }
+model Label {
+    id          String      @id @default(uuid())
+    name        String      @unique
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+    notes       Note[]      @relation("NoteLabels") 
+}
+
 

@@ -96,6 +96,7 @@ export default class NoteRepository {
           data: {
             ...createData,
             labels: {
+              set: [], 
               connect: createData.labelIds.map((id) => ({ id: String(id) })),
             },
           },

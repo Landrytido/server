@@ -77,7 +77,7 @@ export default class NoteResolver {
   @Query(() => [Note])
   async findNotesByUserId(
     @ContextualRequest() context: ContextualGraphqlRequest,
-    @Args("orderBy", { type: () => String, nullable: true, defaultValue: "clickcounter" }) orderBy: string,
+    @Args("orderBy", { type: () => String, nullable: true, defaultValue: "clickCounter" }) orderBy: string,
     @Args("orderDirection", { type: () => String, nullable: true, defaultValue: "desc" }) orderDirection: "asc" | "desc"
   ) {
     return (await this.serviceFactory.create(GetNotesByUserIdUseCase)).handle(

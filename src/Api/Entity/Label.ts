@@ -1,4 +1,4 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, GraphQLISODateTime } from '@nestjs/graphql';
 
 @ObjectType()
 export class Label {
@@ -7,4 +7,10 @@ export class Label {
 
   @Field()
   name: string;
+  
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  createdAt?: Date;
+
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  updatedAt?: Date;
 }

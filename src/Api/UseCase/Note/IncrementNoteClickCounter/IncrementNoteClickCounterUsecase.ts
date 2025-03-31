@@ -1,11 +1,13 @@
 // src/UseCase/Note/IncrementNoteClickCounter/IncrementNoteClickCounterUseCase.ts
 import { Injectable } from "@nestjs/common";
-import { ContextualGraphqlRequest } from "src";
+import { Note } from "@prisma/client";
+import { ContextualGraphqlRequest, UseCase } from "src";
 import NoteRepository from "../../../Repository/NoteRepository";
 import UserRepository from "../../../Repository/UserRepository";
 
 @Injectable()
-export default class IncrementNoteClickCounterUseCase {
+export default class IncrementNoteClickCounterUseCase
+  implements UseCase<Promise<Note>, [number]> {
   constructor(
     private readonly noteRepository: NoteRepository,
     private readonly userRepository: UserRepository
@@ -18,17 +20,11 @@ export default class IncrementNoteClickCounterUseCase {
     }
 
     const note = await this.noteRepository.findById(noteId);
-    if (!note) {
-      throw new Error(`Note with ID ${noteId} not found`);
-    }
-
-    const isOwner = note.userId === user.id;
-    const isCollaborator = note.collaborations.some(
-      (collab) => collab.userId === user.id
-    );
-
-    if (!isOwner && !isCollaborator) {
-      throw new Error("You do not have permission to access this note");
+    const hasAccess = note?.userId === user.id || 
+                      note?.collaborations.some(c => c.userId === user.id);
+    
+    if (!note || !hasAccess) {
+      throw new Error("Note introuvable ou non autorisée");
     }
 
     return this.noteRepository.incrementClickCounter(noteId);
