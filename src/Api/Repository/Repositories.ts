@@ -23,6 +23,7 @@ import BlocNotesRepository from "./BlocNotes/BlocNotesRepository";
 import AesCypher from "src/Core/Security/AesCypher";
 import { PrismaService } from "src/Core/Datasource/Prisma";
 
+
 export const Repositories = [
     UserRepository,
     SearchHistoryRepository,

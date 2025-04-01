@@ -43,6 +43,7 @@ export type UseCases =
     | AvailableLabelUseCases;
 
 
+
 @Injectable()
 export default class UseCaseFactory extends ServiceFactory<UseCases> {
 }

@@ -487,7 +487,6 @@ model LinkGroupLink {
 }
 
 
-
 //feature meteo
 // Modèle City - représente une ville
 model City {
@@ -574,6 +573,7 @@ model Favorite {
 
   @@unique([userId, cityId])
 }
+
 model Label {
     id          String      @id @default(uuid())
     name        String      @unique
@@ -581,5 +581,4 @@ model Label {
     updatedAt   DateTime    @updatedAt
     notes       Note[]      @relation("NoteLabels") 
 }
-
 

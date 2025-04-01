@@ -48,6 +48,7 @@ export default class DailyPlanRepository {
                 confirmed,
                 user: { connect: { id: userId } },
             },
+
         });
     }
 

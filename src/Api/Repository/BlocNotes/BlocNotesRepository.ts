@@ -5,9 +5,6 @@ import AesCypher from "src/Core/Security/AesCypher";
 // import BlocNote from "src/Api/Entity/BlocNote";
 import {BlocNote} from "@prisma/client";
 
-
-
-
 @Injectable()
 export default class BlocNotesRepository {
     constructor(

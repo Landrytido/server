@@ -29,7 +29,6 @@ import { PuppeteerService } from "./Services/PupeteerService";
 import { S3UploadService } from "./Services/S3UploadService";
 import WeatherApiService from "./Services/WeatherService";
 
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
