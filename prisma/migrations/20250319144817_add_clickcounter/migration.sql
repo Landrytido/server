@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `Note` ADD COLUMN `clickcounter` INTEGER NOT NULL DEFAULT 0;
