@@ -20,10 +20,10 @@ import WeatherRepository from "./Weather/WeatherRepository";
 import CityRepository from "./Weather/CityRepository";
 import { ChronometerRepository } from "./ChronometerRepository";
 import BlocNotesRepository from "./BlocNotes/BlocNotesRepository";
-import { LabelRepository } from "./LabelRepository";
+import AesCypher from "src/Core/Security/AesCypher";
+import { PrismaService } from "src/Core/Datasource/Prisma";
 
 export const Repositories = [
-    LabelRepository,
     UserRepository,
     SearchHistoryRepository,
     SearchHistoryRepository,
@@ -46,5 +46,7 @@ export const Repositories = [
     WeatherRepository,
     CityRepository,
     ChronometerRepository,
-    BlocNotesRepository
+    BlocNotesRepository,
+    AesCypher,
+    PrismaService,
 ];
