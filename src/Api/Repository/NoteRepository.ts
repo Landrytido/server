@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "src/Core/Datasource/Prisma";
-import { Prisma } from "@prisma/client";
+import { Note, Prisma } from "@prisma/client";
 import AesCypherService from "src/Core/Security/AesCypher";
 
 @Injectable()
@@ -11,7 +11,7 @@ export default class NoteRepository {
     private readonly aesCypher: AesCypherService
   ) {}
 
-  async findById(noteId: number) {
+  async findById(noteId: number): Promise<Note | null> {
     const note = await this.prisma.note.findUnique({
       where: { id: noteId },
     });
@@ -26,7 +26,7 @@ export default class NoteRepository {
     return note;
   }
 
-  async findByUserId(userId: number) {
+  async findByUserId(userId: number): Promise<Note[]> {
     const notes = await this.prisma.note.findMany({
       where: { userId },
       include: {
@@ -47,7 +47,7 @@ export default class NoteRepository {
     });
   }
 
-  async findMany() {
+  async findMany(): Promise<Note[]> {
     const notes = await this.prisma.note.findMany();
     return notes.map(note => {
       if (note.content) {
@@ -66,7 +66,7 @@ export default class NoteRepository {
     data:
       | Prisma.XOR<Prisma.NoteCreateInput, Prisma.NoteUncheckedCreateInput>
       | Prisma.XOR<Prisma.NoteUpdateInput, Prisma.NoteUncheckedUpdateInput>
-  ) {
+  ): Promise<Note> {
     const dataCopy = { ...data };
     // Encrypt 
     if (dataCopy.content) {
@@ -120,7 +120,7 @@ export default class NoteRepository {
   }
 
   // Méthode privée pour chiffrer le contenu de la note
-  private encryptNoteContent(content: any): string {
+  private encryptNoteContent(content: string | object | unknown): string {
     // Si le contenu est un objet, nous le convertissons en chaîne
     const contentStr = typeof content === 'object' ? JSON.stringify(content) : String(content);
     return this.aesCypher.encryptData(contentStr);
