@@ -28,6 +28,9 @@ import { NotificationModule } from "../Core/Notification/notification.module";
 import { PuppeteerService } from "./Services/PupeteerService";
 import { S3UploadService } from "./Services/S3UploadService";
 import WeatherApiService from "./Services/WeatherService";
+import  AesCypher  from '../Core/Security/AesCypher';
+import { PrismaService } from '../Core/Datasource/Prisma';
+import BlocNotesRepository from './Repository/BlocNotes/BlocNotesRepository';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -69,6 +72,9 @@ import WeatherApiService from "./Services/WeatherService";
   ],
   controllers: [],
   providers: [
+    AesCypher,
+    BlocNotesRepository,
+    PrismaService,
     UseCaseFactory,
     UncontextualUseCaseFactory,
     GetLoggedUserUseCase,
