@@ -12,6 +12,10 @@ import UpdateNoteUseCase from "../UseCase/Note/UpdateNote/UpdateNoteUseCase";
 import GetAllNotesUseCase from "../UseCase/Note/GetAllNotes/GetAllNoteUseCase";
 import GetNoteUseCase from "../UseCase/Note/GetNote/GetNoteUseCase";
 import GetNotesByUserIdUseCase from "../UseCase/Note/GetNotesByUserId/GetNotesByUserIdUseCase";
+import IncrementNoteClickCounterUseCase
+  from "../UseCase/Note/IncrementNoteClickCounter/IncrementNoteClickCounterUsecase";
+import GetNotesByLabelUseCase from "../UseCase/Note/GetNotesByLabel/GetNotesByLabelUsecase";
+
 
 @Resolver(Note)
 @UseGuards(GraphqlAuthGuard)
@@ -73,10 +77,35 @@ export default class NoteResolver {
 
   @Query(() => [Note])
   async findNotesByUserId(
-    @ContextualRequest() context: ContextualGraphqlRequest
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("orderBy", { type: () => String, nullable: true, defaultValue: "clickCounter" }) orderBy: string,
+    @Args("orderDirection", { type: () => String, nullable: true, defaultValue: "desc" }) orderDirection: "asc" | "desc"
   ) {
     return (await this.serviceFactory.create(GetNotesByUserIdUseCase)).handle(
-      context
+      context,
+      orderBy,
+      orderDirection
     );
   }
+
+  @Mutation(() => Note)
+  async incrementNoteClickCounter(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("noteId", { type: () => Int }) noteId: number
+  ) {
+    return (await this.serviceFactory.create(IncrementNoteClickCounterUseCase)).handle(
+      context,
+      noteId
+    );
+  }
+  @Query(() => [Note])
+  async findNotesByLabel(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args("labelIds", { type: () => [String] }) labelIds: string[]
+) {
+  return (await this.serviceFactory.create(GetNotesByLabelUseCase)).handle(
+    context,
+    labelIds,
+  );
+}
 }

@@ -2,7 +2,6 @@ import {Injectable} from "@nestjs/common";
 import ServiceFactory from "../../Core/Factory/ServiceFactory";
 
 import {AvailableUserUseCases} from "./User/AvailableUserUseCases";
-import {AvailableTagUseCases} from "./Tag/AvailableTagUseCases";
 import {AvailableNoteUseCases} from "./Note/AvailbaleNoteUseCases";
 import {AvailableNotebookUseCases} from "./Notebook/AvailableNotebookUseCases";
 import {AvailableInvitationUseCases} from "./Invitation/AvailableInvitationUseCases";
@@ -22,10 +21,10 @@ import {
 } from "./AutoInstructionSuggestion/AvailableAutoInstructionSuggestionUseCases";
 import {AvailableBlocNotesUseCases} from "./BlocNotes/AvailableBlocNotesUseCases";
 import { AvailableWeatherUseCases } from "./Weather/AvailableWeatherUseCases";
+import {AvailableLabelUseCases} from "./Label/AvailableLabelUseCases";
 
 export type UseCases =
     | AvailableUserUseCases
-    | AvailableTagUseCases
     | AvailableNotebookUseCases
     | AvailableNoteUseCases
     | AvailableInvitationUseCases
@@ -40,7 +39,9 @@ export type UseCases =
     | AvailableLinksUseCases
     | AvailableChronometerUseCases
     | AvailableBlocNotesUseCases
-    | AvailableWeatherUseCases;
+    | AvailableWeatherUseCases
+    | AvailableLabelUseCases;
+
 
 
 @Injectable()

@@ -11,22 +11,44 @@ export default class DailyPlanRepository {
     /**
      * Crée ou met à jour le DailyPlan pour une date donnée en indiquant si la journée est confirmée.
      */
-    async confirmDay(userId: number, date: Date, confirmed: boolean = true): Promise<DailyPlan> {
-        return this.prisma.dailyPlan.upsert({
-            where: {
-                date_userId: {  // This matches the compound unique constraint
-                    date: date,
-                    userId
-                }
-            },
-            update: {
-                confirmed
-            },
-            create: {
-                date: date,
+    async confirmDay(userId: number, date: Date | string, confirmed: boolean = true): Promise<DailyPlan> {
+        // Convert input to YYYY-MM-DD string if it's a Date
+        const dateString = typeof date === 'string'
+            ? date
+            : date.toISOString().split('T')[0];
+
+        console.log(`Confirming day for user: ${userId} on date string: ${dateString} with confirmed status: ${confirmed}`);
+
+        // Find any existing plans for this date string
+        const plans = await this.prisma.dailyPlan.findMany({
+            where: { userId },
+        });
+
+        // Find a matching plan based on the date string
+        const existingPlan = plans.find(plan => {
+            const planDateString = plan.date.toISOString().split('T')[0];
+            return planDateString === dateString;
+        });
+
+        if (existingPlan) {
+            console.log(`Updating existing plan for ${dateString} with ID: ${existingPlan.id}`);
+            return this.prisma.dailyPlan.update({
+                where: { id: existingPlan.id },
+                data: { confirmed },
+            });
+        }
+
+        // Create a date object at UTC midnight for storage
+        const storageDate = new Date(`${dateString}T00:00:00.000Z`);
+
+        console.log(`Creating new plan for date: ${dateString} (storage format: ${storageDate.toISOString()})`);
+        return this.prisma.dailyPlan.create({
+            data: {
+                date: storageDate, // Store as UTC midnight
                 confirmed,
-                userId  // Directly set userId instead of using connect
-            }
+                user: { connect: { id: userId } },
+            },
+
         });
     }
 
@@ -47,15 +69,24 @@ export default class DailyPlanRepository {
      * @returns The DailyPlan record, or null if none exists.
      */
     async getPlanByUserAndDate(userId: number, date: Date): Promise<DailyPlan | null> {
-        // Normalize the date to midnight.
-        const normalizedDate = new Date(date);
-        normalizedDate.setHours(0, 0, 0, 0);
+        // Convert to YYYY-MM-DD format for the specific day
+        const dateString = date.toISOString().split('T')[0]; // Gets "YYYY-MM-DD"
 
-        return this.prisma.dailyPlan.findFirst({
+        console.log("Looking for daily plan on date:", dateString);
+
+        // Find plans where the date's YYYY-MM-DD string matches
+        const plans = await this.prisma.dailyPlan.findMany({
             where: {
                 userId,
-                date: normalizedDate,
             },
         });
+
+        // Filter plans to find one that matches the target date string
+        const matchingPlan = plans.find(plan => {
+            const planDateString = plan.date.toISOString().split('T')[0];
+            return planDateString === dateString;
+        });
+
+        return matchingPlan || null;
     }
 }

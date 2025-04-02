@@ -1,5 +1,4 @@
 import UserRepository from "./UserRepository";
-import TagRepository from "./TagRepository";
 import NotebookRepository from "./NotebookRepository";
 import NoteRepository from "./NoteRepository";
 import InvitationRepository from "./InvitationRepository";
@@ -30,7 +29,6 @@ export const Repositories = [
     UserRepository,
     SearchHistoryRepository,
     SearchHistoryRepository,
-    TagRepository,
     NotebookRepository,
     NoteRepository,
     InvitationRepository,
@@ -54,4 +52,5 @@ export const Repositories = [
     AesCypher,
     PrismaService,
     LabelRepository,
+
 ];

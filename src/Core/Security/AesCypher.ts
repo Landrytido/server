@@ -28,6 +28,7 @@ export default class AesCypherService {
   }
 
   decryptData(encryptedData: string): string {
+
     const key = crypto
       .createHash('sha512')
       .update(this.config.get('AES_SECRET_KEY'))
@@ -44,6 +45,7 @@ export default class AesCypherService {
       key,
       encryptionIV
     );
+
     return (
       decipher.update(buff.toString('utf8'), 'hex', 'utf8') +
       decipher.final('utf8')

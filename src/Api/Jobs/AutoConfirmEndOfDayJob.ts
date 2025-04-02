@@ -4,7 +4,6 @@ import {Cron, CronExpression} from '@nestjs/schedule';
 import DailyTaskRepository from '../Repository/DailyTask/DailyTaskRepository';
 import DailyPlanRepository from '../Repository/DailyTask/DailyPlanRepository';
 import {PrismaService} from '../../Core/Datasource/Prisma';
-import User from "../Entity/User";
 
 @Injectable()
 export class AutoConfirmEndOfDayJob {
@@ -17,32 +16,40 @@ export class AutoConfirmEndOfDayJob {
     ) {
     }
 
-    @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-    async handleAutoConfirmEndOfDay(): Promise<void> {
-	  const today = new Date();
-	  today.setHours(0, 0, 0, 0);
-	  const tomorrow = new Date(today);
-	  tomorrow.setDate(tomorrow.getDate() + 1);
+	@Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+	async handleAutoConfirmEndOfDay(): Promise<void> {
+		console.log('Auto-confirm end of day job started');
 
-	  try {
-		// Récupère tous les utilisateurs (pour simplifier, on traite tous les utilisateurs)
-		const allUsers = await this.prisma.user.findMany({
-		    select: {id: true},
-		});
+		// Get current date as YYYY-MM-DD string
+		const now = new Date();
+		const todayString = now.toISOString().split('T')[0];
+		const today = new Date(`${todayString}T00:00:00.000Z`);
 
-		for (const user of allUsers) {
-		    // Vérifie si un DailyPlan existe pour aujourd'hui et si la journée est confirmée.
-		    const plan = await this.dailyPlanRepository.findPlanByUserAndDate(user.id, today);
-		    if (!plan || plan.confirmed === false) {
-			  // Si non confirmé, on auto-traite la fin de journée.
-			  await this.dailyTaskRepository.confirmEndOfDay(user.id, today, tomorrow);
-			  // Crée ou met à jour le DailyPlan pour indiquer que la confirmation s'est faite automatiquement.
-			  await this.dailyPlanRepository.confirmDay(user.id, today, true);
-			  this.logger.log(`Auto-confirmed end of day for user ${user.id}`);
-		    }
+		// Calculate tomorrow's date string
+		const tomorrowDate = new Date(now);
+		tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+		const tomorrowString = tomorrowDate.toISOString().split('T')[0];
+
+		console.log(`Auto-confirming day: ${todayString}, preparing for: ${tomorrowString}`);
+
+		try {
+			const allUsers = await this.prisma.user.findMany({
+				select: {id: true},
+			});
+
+			for (const user of allUsers) {
+				// Check if a DailyPlan exists for today and if it's confirmed
+				const plan = await this.dailyPlanRepository.findPlanByUserAndDate(user.id, new Date(todayString));
+				if (!plan || plan.confirmed === false) {
+					// If not confirmed, process end of day
+					await this.dailyTaskRepository.confirmEndOfDay(user.id, today, tomorrowDate);
+					// Create or update DailyPlan to mark the day as automatically confirmed
+					await this.dailyPlanRepository.confirmDay(user.id, todayString, true);
+					this.logger.log(`Auto-confirmed end of day for user ${user.id}`);
+				}
+			}
+		} catch (error) {
+			this.logger.error('Error during auto confirm end of day', error.stack);
 		}
-	  } catch (error) {
-		this.logger.error('Error during auto confirm end of day', error.stack);
-	  }
-    }
+	}
 }

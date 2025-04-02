@@ -134,10 +134,11 @@ model Note {
   updatedAt      DateTime            @updatedAt
   userId         Int
   notebookId     Int?
+  clickCounter   Int                 @default(0)
   user           User                @relation(fields: [userId], references: [id])
   notebook       Notebook?           @relation(fields: [notebookId], references: [id])
   collaborations NoteCollaboration[]
-  tags           Tag[]               @relation("NoteTags")
+  labels         Label[]             @relation("NoteLabels")
   comments       Comment[]           @relation("NoteComments")
   notetasks      NoteTask[]          @relation("NoteTasks")
 }
@@ -157,12 +158,6 @@ model Notebook {
   userId Int
   user   User   @relation(fields: [userId], references: [id])
   notes  Note[]
-}
-
-model Tag {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  notes Note[] @relation("NoteTags")
 }
 
 model NoteCollaboration {
@@ -491,7 +486,6 @@ model LinkGroupLink {
   @@id([linkGroupId, linkId])
 }
 
-// feature (refactor-links) <<<
 
 //feature meteo
 // Modèle City - représente une ville
@@ -578,5 +572,13 @@ model Favorite {
   city City @relation(fields: [cityId], references: [id], onDelete: Cascade)
 
   @@unique([userId, cityId])
+}
+
+model Label {
+    id          String      @id @default(uuid())
+    name        String      @unique
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+    notes       Note[]      @relation("NoteLabels") 
 }
 
