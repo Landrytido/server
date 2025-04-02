@@ -3,11 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import * as crypto from 'node:crypto';
 
 @Injectable()
-export default class AesCypher {
-// export class AesCypher {
+export default class AesCypherService {
   constructor(private readonly config: ConfigService) {}
 
-  encryptData(data) {
+  encryptData(data: string): string {
     const key = crypto
       .createHash('sha512')
       .update(this.config.get('AES_SECRET_KEY'))
@@ -18,15 +17,18 @@ export default class AesCypher {
       .update(this.config.get('AES_IV'))
       .digest('hex')
       .substring(0, 16);
-
-    const cipher = crypto.createCipheriv(this.config.get('AES_ENCRYPTION_METHOD'), key, encryptionIV);
-
+    const cipher = crypto.createCipheriv(
+      this.config.get('AES_ENCRYPTION_METHOD'),
+      key,
+      encryptionIV
+    );
     return Buffer.from(
       cipher.update(data, 'utf8', 'hex') + cipher.final('hex')
     ).toString('base64');
   }
 
-  decryptData(encryptedData) {
+  decryptData(encryptedData: string): string {
+
     const key = crypto
       .createHash('sha512')
       .update(this.config.get('AES_SECRET_KEY'))
@@ -37,10 +39,12 @@ export default class AesCypher {
       .update(this.config.get('AES_IV'))
       .digest('hex')
       .substring(0, 16);
-
     const buff = Buffer.from(encryptedData, 'base64');
-
-    const decipher = crypto.createDecipheriv(this.config.get('AES_ENCRYPTION_METHOD'), key, encryptionIV);
+    const decipher = crypto.createDecipheriv(
+      this.config.get('AES_ENCRYPTION_METHOD'),
+      key,
+      encryptionIV
+    );
 
     return (
       decipher.update(buff.toString('utf8'), 'hex', 'utf8') +

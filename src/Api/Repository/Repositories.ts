@@ -22,6 +22,7 @@ import { ChronometerRepository } from "./ChronometerRepository";
 import BlocNotesRepository from "./BlocNotes/BlocNotesRepository";
 import AesCypher from "src/Core/Security/AesCypher";
 import { PrismaService } from "src/Core/Datasource/Prisma";
+import LabelRepository from "./LabelRepository";
 
 
 export const Repositories = [
@@ -50,4 +51,6 @@ export const Repositories = [
     BlocNotesRepository,
     AesCypher,
     PrismaService,
+    LabelRepository,
+
 ];

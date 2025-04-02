@@ -1,13 +1,19 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "src/Core/Datasource/Prisma";
 import { Prisma } from "@prisma/client";
+import AesCypherService from "src/Core/Security/AesCypher";
 
 @Injectable()
 export default class NoteRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(NoteRepository.name);
+  
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly aesCypher: AesCypherService
+  ) {}
 
   async findById(noteId: number) {
-    return await this.prisma.note.findUnique({
+    const note = await this.prisma.note.findUnique({
       where: { id: noteId },
       include: {
         labels: true,
@@ -20,32 +26,55 @@ export default class NoteRepository {
         },
       },
     });
-  }
-  async findNotesByLabel(labelIds: string[]) {
-  if (!labelIds.length) {
-    return [];
+
+    if (note && note.content) {
+      try {
+        note.content = this.decryptNoteContent(note.content);
+      } catch (error) {
+        this.logger.error(`Erreur lors du déchiffrement de la note ${noteId}:`, error);
+      }
+    }
+
+    return note;
   }
 
-  return await this.prisma.note.findMany({
-    where: {
-      labels: {
-        some: {
-          id: { in: labelIds },
+  async findNotesByLabel(labelIds: string[]) {
+    if (!labelIds.length) {
+      return [];
+    }
+
+    const notes = await this.prisma.note.findMany({
+      where: {
+        labels: {
+          some: {
+            id: { in: labelIds },
+          },
         },
       },
-    },
-    include: {
-      labels: true,
-    },
-  });
-}
+      include: {
+        labels: true,
+      },
+    });
+
+    return notes.map(note => {
+      if (note.content) {
+        try {
+          note.content = this.decryptNoteContent(note.content);
+        } catch (error) {
+          this.logger.error(`Erreur lors du déchiffrement d'une note par label:`, error);
+        }
+      }
+      return note;
+    });
+  }
+
   async findByUserId(userId: number, orderBy: string = "clickCounter", orderDirection: "asc" | "desc" = "desc") {
     const validFields = ["clickCounter", "createdAt", "updatedAt", "title"];
     if (!validFields.includes(orderBy)) {
       orderBy = "clickCounter";
     }
 
-    return await this.prisma.note.findMany({
+    const notes = await this.prisma.note.findMany({
       where: { userId },
       orderBy: {
         [orderBy]: orderDirection,
@@ -55,13 +84,36 @@ export default class NoteRepository {
         labels: true,
       },
     });
+
+    return notes.map(note => {
+      if (note.content) {
+        try {
+          note.content = this.decryptNoteContent(note.content);
+        } catch (error) {
+          this.logger.error(`Erreur lors du déchiffrement d'une note de l'utilisateur ${userId}:`, error);
+        }
+      }
+      return note;
+    });
   }
 
   async findMany() {
-    return await this.prisma.note.findMany({ include: { labels: true } });
+    const notes = await this.prisma.note.findMany({ include: { labels: true } });
+    
+    return notes.map(note => {
+      if (note.content) {
+        try {
+          note.content = this.decryptNoteContent(note.content);
+        } catch (error) {
+          this.logger.error(`Erreur lors du déchiffrement d'une note:`, error);
+        }
+      }
+      return note;
+    });
   }
+
   async incrementClickCounter(noteId: number) {
-    return await this.prisma.note.update({
+    const note = await this.prisma.note.update({
       where: { id: noteId },
       data: {
         clickCounter: {
@@ -70,6 +122,16 @@ export default class NoteRepository {
       },
       include: { labels: true }
     });
+
+    if (note && note.content) {
+      try {
+        note.content = this.decryptNoteContent(note.content);
+      } catch (error) {
+        this.logger.error(`Erreur lors du déchiffrement après incrémentation du compteur:`, error);
+      }
+    }
+
+    return note;
   }
 
   async save(
@@ -82,12 +144,24 @@ export default class NoteRepository {
       Prisma.NoteUncheckedUpdateInput
     > & { labelIds?: (string | number)[] }
   ) {
-    if (!("id" in data)) {
+    const dataCopy = { ...data };
+    
+    // Encrypt content if present
+    if (dataCopy.content) {
+      try {
+        dataCopy.content = this.encryptNoteContent(dataCopy.content as string);
+      } catch (error) {
+        this.logger.error(`Erreur lors du chiffrement d'une note:`, error);
+      }
+    }
+
+    if (!("id" in dataCopy)) {
       // Création d'une note
-      const createData = data as Prisma.NoteCreateInput & { labelIds?: (string | number)[] };
+      const createData = dataCopy as Prisma.NoteCreateInput & { labelIds?: (string | number)[] };
+      let note;
 
       if (createData.labelIds && createData.labelIds.length > 0) {
-        return await this.prisma.note.create({
+        note = await this.prisma.note.create({
           data: {
             ...createData,
             labels: {
@@ -103,7 +177,7 @@ export default class NoteRepository {
           create: { name: "Général" },
         });
 
-        return await this.prisma.note.create({
+        note = await this.prisma.note.create({
           data: {
             ...createData,
             labels: {
@@ -113,14 +187,26 @@ export default class NoteRepository {
           include: { labels: true },
         });
       }
+
+      // Decrypt before returning
+      if (note.content) {
+        try {
+          note.content = this.decryptNoteContent(note.content);
+        } catch (error) {
+          this.logger.error(`Erreur lors du déchiffrement d'une note nouvellement créée:`, error);
+        }
+      }
+      
+      return note;
     }
 
-    const { labelIds, ...updateData } = data as Prisma.NoteUpdateInput & { labelIds?: (string | number)[] };
+    const { labelIds, ...updateData } = dataCopy as Prisma.NoteUpdateInput & { labelIds?: (string | number)[] };
+    let note;
 
     if (labelIds && labelIds.length > 0) {
-      return await this.prisma.note.update({
+      note = await this.prisma.note.update({
         where: {
-          id: data.id as number,
+          id: dataCopy.id as number,
         },
         data: {
           ...updateData,
@@ -132,17 +218,41 @@ export default class NoteRepository {
         include: { labels: true },
       });
     } else {
-      return await this.prisma.note.update({
+      note = await this.prisma.note.update({
         where: {
-          id: data.id as number,
+          id: dataCopy.id as number,
         },
         data: updateData,
         include: { labels: true },
       });
     }
+
+    // Decrypt before returning
+    if (note.content) {
+      try {
+        note.content = this.decryptNoteContent(note.content);
+      } catch (error) {
+        this.logger.error(`Erreur lors du déchiffrement d'une note mise à jour:`, error);
+      }
+    }
+    
+    return note;
   }
 
   async remove(noteId: number) {
     return this.prisma.note.delete({ where: { id: noteId } });
+  }
+
+  // Méthode privée pour chiffrer le contenu de la note
+  private encryptNoteContent(content: string | object | unknown): string {
+    // Si le contenu est un objet, nous le convertissons en chaîne
+    const contentStr = typeof content === 'object' ? JSON.stringify(content) : String(content);
+    return this.aesCypher.encryptData(contentStr);
+  }
+
+  // Méthode privée pour déchiffrer le contenu de la note
+  private decryptNoteContent(encryptedContent: string): string {
+    const decryptedContent = this.aesCypher.decryptData(encryptedContent);
+    return decryptedContent;
   }
 }
