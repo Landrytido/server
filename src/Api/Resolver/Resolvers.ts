@@ -23,6 +23,7 @@ import WeatherResolver from "./Weather/WeatherResolver";
 import { ChronometerResolver } from "./ChronometerResolver";
 import BlocNotesResolver from "./BlocNotes/BlocNotesResolver";
 import { LabelResolver } from "./labelResolver";
+import GoogleAccountResolver from "./GoogleAccount/GoogleAccountResolver";
 
 export const Resolvers = [
   LabelResolver,
@@ -49,8 +50,6 @@ export const Resolvers = [
   CityResolver,
   WeatherResolver,
   ChronometerResolver,
-  BlocNotesResolver
-  
+  BlocNotesResolver,
+  GoogleAccountResolver,
 ];
-
-

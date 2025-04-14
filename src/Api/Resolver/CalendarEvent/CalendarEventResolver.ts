@@ -27,10 +27,11 @@ export default class CalendarEventResolver {
   async createCalendarEvent(
     @ContextualRequest() context: CtxRequest,
     @Args("dto") dto: CreateCalendarEventDto,
+    @Args("googleEmail", { nullable: true }) googleEmail?: string
   ): Promise<CalendarEvent> {
     return (await (
       await this.useCaseFactory.create(CreateCalendarEventUseCase)
-    ).handle(context, dto)) as CalendarEvent;
+    ).handle(context, dto, googleEmail)) as CalendarEvent;
   }
 
   @UseGuards(GraphqlAuthGuard)
@@ -39,10 +40,11 @@ export default class CalendarEventResolver {
     @ContextualRequest() context: CtxRequest,
     @Args("id", { type: () => Int }) id: number,
     @Args("dto") dto: UpdateCalendarEventDto,
+    @Args("googleEmail", { nullable: true }) googleEmail?: string
   ): Promise<CalendarEvent> {
     return (await (
       await this.useCaseFactory.create(UpdateCalendarEventUseCase)
-    ).handle(context, id, dto)) as CalendarEvent;
+    ).handle(context, id, dto, googleEmail)) as CalendarEvent;
   }
 
   @UseGuards(GraphqlAuthGuard)
@@ -50,16 +52,17 @@ export default class CalendarEventResolver {
   async deleteCalendarEvent(
     @ContextualRequest() context: CtxRequest,
     @Args("id", { type: () => Int }) id: number,
+    @Args("googleEmail", { nullable: true }) googleEmail?: string
   ): Promise<CalendarEvent> {
     return (await (
       await this.useCaseFactory.create(DeleteCalendarEventUseCase)
-    ).handle(context, id)) as CalendarEvent;
+    ).handle(context, id, googleEmail)) as CalendarEvent;
   }
 
   @UseGuards(GraphqlAuthGuard)
   @Query(() => [CalendarEvent])
   async getAllCalendarEvents(
-    @ContextualRequest() context: CtxRequest,
+    @ContextualRequest() context: CtxRequest
   ): Promise<CalendarEvent[]> {
     return (await (
       await this.useCaseFactory.create(GetAllCalendarEventsUseCase)
@@ -70,7 +73,7 @@ export default class CalendarEventResolver {
   @Query(() => CalendarEvent)
   async getCalendarEvent(
     @ContextualRequest() context: CtxRequest,
-    @Args("id", { type: () => Int }) id: number,
+    @Args("id", { type: () => Int }) id: number
   ): Promise<CalendarEvent> {
     return (await (
       await this.useCaseFactory.create(GetOneCalendarEventUseCase)
@@ -80,7 +83,7 @@ export default class CalendarEventResolver {
   @UseGuards(GraphqlAuthGuard)
   @Query(() => [CalendarEvent])
   async getCalendarEventsByUserId(
-    @ContextualRequest() context: CtxRequest,
+    @ContextualRequest() context: CtxRequest
   ): Promise<CalendarEvent[]> {
     return (await (
       await this.useCaseFactory.create(GetCalendarEventsByUserIdUseCase)
@@ -91,7 +94,7 @@ export default class CalendarEventResolver {
   @Query(() => [CalendarEvent])
   async getCalendarEventsByToken(
     @ContextualRequest() context: CtxRequest,
-    @Args("token") token: string,
+    @Args("token") token: string
   ): Promise<CalendarEvent> {
     return (await (
       await this.useCaseFactory.create(GetCalendarEventByTokenUseCase)
@@ -102,7 +105,7 @@ export default class CalendarEventResolver {
   @Mutation(() => CalendarEvent)
   async markNotificationAsSent(
     @ContextualRequest() context: CtxRequest,
-    @Args("id", { type: () => Int }) id: number,
+    @Args("id", { type: () => Int }) id: number
   ): Promise<CalendarEvent> {
     return (await (
       await this.useCaseFactory.create(MarkNotificationAsSentUseCase)

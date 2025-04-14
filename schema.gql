@@ -175,6 +175,13 @@ input CreateLabelInput {
   name: String!
 }
 
+input CreateUserGoogleAccountDto {
+  accessToken: String!
+  email: String!
+  isDefault: Boolean = false
+  refreshToken: String
+}
+
 type DailyPlan {
   confirmed: Boolean!
   createdAt: DateTime!
@@ -399,7 +406,7 @@ type Mutation {
   completeProfile(firstName: String!, lastName: String!): User!
   confirmEndOfDay: Boolean!
   convertExternalInvitation(dto: SaveUserDto!): Invitation!
-  createCalendarEvent(dto: CreateCalendarEventDto!): CalendarEvent!
+  createCalendarEvent(dto: CreateCalendarEventDto!, googleEmail: String): CalendarEvent!
   createCalendarEventInvitation(dto: CreateCalendarEventInvitationDto!, invitedEmails: [String!]!): [CalendarEventInvitation!]!
   createComment(data: CommentDto!): Comment!
   createDailyTask(dto: CreateDailyTaskDto!): DailyTask!
@@ -409,7 +416,8 @@ type Mutation {
   createNote(dto: SaveNoteDto!): Note!
   createNotebook(dto: SaveNotebookDto!): Notebook!
   createNotificationPreference(dto: SaveNotificationPreferenceDto!): NotificationPreference!
-  deleteCalendarEvent(id: Int!): CalendarEvent!
+  createUserGoogleAccount(dto: CreateUserGoogleAccountDto!): UserGoogleAccount!
+  deleteCalendarEvent(googleEmail: String, id: Int!): CalendarEvent!
   deleteCalendarEventInvitation(id: Int!): CalendarEventInvitation!
   deleteChronometer(id: String!): Chronometer!
   deleteComment(commentId: Float!): Boolean!
@@ -421,6 +429,7 @@ type Mutation {
   deleteNotebook(notebookId: Int!): Notebook!
   deleteNotificationPreference(notificationPreferenceId: Int!): NotificationPreference!
   deleteSearchHistory(searchHistoryId: Int!): Boolean!
+  deleteUserGoogleAccount(email: String!): UserGoogleAccount!
   denyCalendarEventInvitation(id: Int!): CalendarEventInvitation!
   incrementClickCounter(linkGroupId: String!, linkId: String!): LinkGroupLink!
   incrementNoteClickCounter(noteId: Int!): Note!
@@ -446,13 +455,14 @@ type Mutation {
   saveSearchHistory(dto: SearchHistoryDto!): SearchHistory!
   saveUser(dto: SaveUserDto!): User!
   sendPushNotification(body: String!, data: JSONObject, title: String!): Boolean!
+  setDefaultUserGoogleAccount(email: String!): UserGoogleAccount!
   startChronometer(input: StartChronometerDto!): Chronometer!
   stopChronometer(id: String!): Chronometer!
 
   """Synchronize Google Calendar events"""
-  syncGoogleCalendar: Boolean!
+  syncGoogleCalendar(email: String): Boolean!
   updateAutoInstruction(updateAutoInstructionInput: UpdateAutoInstructionInput!): AutoInstruction!
-  updateCalendarEvent(dto: UpdateCalendarEventDto!, id: Int!): CalendarEvent!
+  updateCalendarEvent(dto: UpdateCalendarEventDto!, googleEmail: String, id: Int!): CalendarEvent!
   updateChronometer(id: String!, updateData: UpdateChronometerDto!): Chronometer!
   updateComment(commentId: Float!, data: CommentDto!): Comment!
   updateDailyTask(dto: UpdateDailyTaskDto!, id: Int!): DailyTask!
@@ -594,6 +604,7 @@ type Query {
   getSearchHistoryByUserId: [SearchHistory!]!
   getTasksCompletedOn(date: String!): [CombinedTask!]!
   getTasksCreatedOn(date: String!): [CombinedTask!]!
+  getUserGoogleAccounts: [UserGoogleAccount!]!
   isCountdownFinished(chronoId: String!): Boolean!
   login(dto: AuthenticationDto!): String!
   myLinkGroups: [LinkGroup!]!
@@ -828,6 +839,15 @@ type User {
   searchHistory: [SearchHistory!]!
   sessions: [Session!]!
   updatedAt: DateTime!
+}
+
+type UserGoogleAccount {
+  createdAt: DateTime!
+  email: String!
+  id: Int!
+  isDefault: Boolean!
+  updatedAt: DateTime!
+  userId: Int!
 }
 
 type Weather {

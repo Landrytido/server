@@ -11,10 +11,15 @@ import { PrismaService } from "../../Core/Datasource/Prisma";
 @Injectable()
 export default class GoogleCalendarService {
   private readonly logger = new Logger(GoogleCalendarService.name);
+  private currentAccessToken: string | null = null;
+
+  setAccessToken(accessToken: string | null): void {
+    this.currentAccessToken = accessToken;
+  }
 
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly prisma: PrismaService,
+    private readonly prisma: PrismaService
   ) {}
 
   // ===============================
@@ -46,7 +51,7 @@ export default class GoogleCalendarService {
    * Parses recurring data from a Google Calendar event.
    */
   async parseRecurringData(
-    event: any,
+    event: any
   ): Promise<{ isRecurring: boolean; recurringType: Recurrence }> {
     if (event.recurrence && Array.isArray(event.recurrence)) {
       const recurrenceRule: string = event.recurrence[0];
@@ -81,8 +86,10 @@ export default class GoogleCalendarService {
    * Retrieves Google Calendar events for a given user.
    */
   async getEventsForUser(userId: number): Promise<GoogleCalendarEventDto[]> {
-    const user = await this.userRepository.findById(userId);
-    const accessToken = user.googleAccessToken;
+    const accessToken =
+      this.currentAccessToken ||
+      (await this.userRepository.findById(userId)).googleAccessToken;
+
     if (!accessToken) {
       throw new Error("User does not have a valid Google access token.");
     }
@@ -97,7 +104,7 @@ export default class GoogleCalendarService {
 
       if (!response.data || !Array.isArray(response.data.items)) {
         this.logger.warn(
-          'Google Calendar response does not include an "items" array.',
+          'Google Calendar response does not include an "items" array.'
         );
         return [];
       }
@@ -111,7 +118,7 @@ export default class GoogleCalendarService {
             description: item.description,
             due: this.formatDateTime(item.start?.dateTime || item.start?.date),
             start: this.formatDateTime(
-              item.start?.dateTime || item.start?.date,
+              item.start?.dateTime || item.start?.date
             ),
             end: this.formatDateTime(item.end?.dateTime || item.end?.date),
             link: item?.hangoutLink,
@@ -119,7 +126,7 @@ export default class GoogleCalendarService {
             isRecurring: recurringData.isRecurring,
             recurringType: recurringData.recurringType,
           } as GoogleCalendarEventDto;
-        }),
+        })
       );
     } catch (error) {
       this.logger.error("Error fetching events from Google Calendar", error);
@@ -131,10 +138,12 @@ export default class GoogleCalendarService {
    * Retrieves Google Tasks for a given user and maps them as CalendarEvent DTOs.
    */
   async getTasksForUserAsEvents(
-    userId: number,
+    userId: number
   ): Promise<GoogleCalendarEventDto[]> {
-    const user = await this.userRepository.findById(userId);
-    const accessToken = user.googleAccessToken;
+    const accessToken =
+      this.currentAccessToken ||
+      (await this.userRepository.findById(userId)).googleAccessToken;
+
     if (!accessToken) {
       throw new Error("User does not have a valid Google access token.");
     }
@@ -147,7 +156,7 @@ export default class GoogleCalendarService {
 
       if (!response.data || !Array.isArray(response.data.items)) {
         this.logger.warn(
-          'Google Tasks response does not include an "items" array.',
+          'Google Tasks response does not include an "items" array.'
         );
         return [];
       }
@@ -182,11 +191,16 @@ export default class GoogleCalendarService {
    * This method handles both creation and update.
    */
   async pushCalendarEvent(userId: number, event: CalendarEvent): Promise<void> {
-    const user = await this.userRepository.findById(userId);
-    const accessToken = user.googleAccessToken;
+    let accessToken = this.currentAccessToken;
+
+    if (!accessToken) {
+      const user = await this.userRepository.findById(userId);
+      accessToken = user.googleAccessToken;
+    }
+
     if (!accessToken) {
       this.logger.warn(
-        `User ${userId} does not have a valid Google access token.`,
+        `User ${userId} does not have a valid Google access token.`
       );
       return;
     }
@@ -212,14 +226,14 @@ export default class GoogleCalendarService {
         await axios.put(
           `https://www.googleapis.com/calendar/v3/calendars/primary/events/${event.googleEventId}`,
           payload,
-          { headers: { Authorization: `Bearer ${accessToken}` } },
+          { headers: { Authorization: `Bearer ${accessToken}` } }
         );
       } else {
         // Create a new event on Google Calendar.
         const response = await axios.post(
           "https://www.googleapis.com/calendar/v3/calendars/primary/events",
           payload,
-          { headers: { Authorization: `Bearer ${accessToken}` } },
+          { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         const googleEventId = response.data.id;
         // Update the local record with the new Google event ID.
@@ -231,7 +245,7 @@ export default class GoogleCalendarService {
     } catch (error) {
       this.logger.error(
         `Error pushing calendar event (ID: ${event.id}) to Google:`,
-        error,
+        error
       );
       // Optionally mark the event as unsynced for later retry.
     }
@@ -242,11 +256,16 @@ export default class GoogleCalendarService {
    * This method handles both creation and update.
    */
   async pushTask(userId: number, task: CalendarEvent): Promise<void> {
-    const user = await this.userRepository.findById(userId);
-    const accessToken = user.googleAccessToken;
+    let accessToken = this.currentAccessToken;
+
+    if (!accessToken) {
+      const user = await this.userRepository.findById(userId);
+      accessToken = user.googleAccessToken;
+    }
+
     if (!accessToken) {
       this.logger.warn(
-        `User ${userId} does not have a valid Google access token.`,
+        `User ${userId} does not have a valid Google access token.`
       );
       return;
     }
@@ -260,17 +279,16 @@ export default class GoogleCalendarService {
     try {
       if (task.googleEventId) {
         // FIX: Problem here, requesst doesn't work
-        console.log("Updating task", task.googleEventId);
         await axios.put(
           `https://www.googleapis.com/tasks/v1/lists/@default/tasks/${task.googleEventId}`,
           { ...payload, id: task.googleEventId },
-          { headers: { Authorization: `Bearer ${accessToken}` } },
+          { headers: { Authorization: `Bearer ${accessToken}` } }
         );
       } else {
         const response = await axios.post(
           "https://www.googleapis.com/tasks/v1/lists/@default/tasks",
           payload,
-          { headers: { Authorization: `Bearer ${accessToken}` } },
+          { headers: { Authorization: `Bearer ${accessToken}` } }
         );
 
         const googleTaskId = response.data.id;
@@ -286,7 +304,7 @@ export default class GoogleCalendarService {
       //   error,
       // );
       this.logger.error(
-        `Error pushing task (ID: ${task.id}) to Google Tasks: ${error.response?.status} - ${error.response?.data}`,
+        `Error pushing task (ID: ${task.id}) to Google Tasks: ${error.response?.status} - ${error.response?.data}`
       );
 
       // Optionally mark the task as unsynced.
@@ -303,7 +321,7 @@ export default class GoogleCalendarService {
    */
   async updateGoogleCalendarEvent(
     userId: number,
-    event: CalendarEvent,
+    event: CalendarEvent
   ): Promise<void> {
     // Reuse pushCalendarEvent, which handles update vs. creation.
     await this.pushCalendarEvent(userId, event);
@@ -326,19 +344,26 @@ export default class GoogleCalendarService {
    */
   async deleteGoogleCalendarEvent(
     userId: number,
-    event: CalendarEvent,
+    event: CalendarEvent
   ): Promise<void> {
     if (!event.googleEventId) {
       this.logger.warn(
-        `Event ID ${event.id} does not have a googleEventId; nothing to delete on Google.`,
+        `Event ID ${event.id} does not have a googleEventId; nothing to delete on Google.`
       );
       return;
     }
-    const user = await this.userRepository.findById(userId);
-    const accessToken = user.googleAccessToken;
+
+    // Utiliser d'abord le token défini par setAccessToken, puis utiliser celui de l'utilisateur si non défini
+    let accessToken = this.currentAccessToken;
+
+    if (!accessToken) {
+      const user = await this.userRepository.findById(userId);
+      accessToken = user.googleAccessToken;
+    }
+
     if (!accessToken) {
       this.logger.warn(
-        `User ${userId} does not have a valid Google access token.`,
+        `User ${userId} does not have a valid Google access token.`
       );
       return;
     }
@@ -346,12 +371,12 @@ export default class GoogleCalendarService {
     try {
       await axios.delete(
         `https://www.googleapis.com/calendar/v3/calendars/primary/events/${event.googleEventId}`,
-        { headers: { Authorization: `Bearer ${accessToken}` } },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
       );
     } catch (error) {
       this.logger.error(
         `Error deleting calendar event (ID: ${event.id}) on Google:`,
-        error,
+        error
       );
       // Optionally handle error or mark for a retry.
     }
@@ -363,15 +388,20 @@ export default class GoogleCalendarService {
   async deleteGoogleTask(userId: number, task: CalendarEvent): Promise<void> {
     if (!task.googleEventId) {
       this.logger.warn(
-        `Task ID ${task.id} does not have a googleEventId; nothing to delete on Google.`,
+        `Task ID ${task.id} does not have a googleEventId; nothing to delete on Google.`
       );
       return;
     }
-    const user = await this.userRepository.findById(userId);
-    const accessToken = user.googleAccessToken;
+    let accessToken = this.currentAccessToken;
+
+    if (!accessToken) {
+      const user = await this.userRepository.findById(userId);
+      accessToken = user.googleAccessToken;
+    }
+
     if (!accessToken) {
       this.logger.warn(
-        `User ${userId} does not have a valid Google access token.`,
+        `User ${userId} does not have a valid Google access token.`
       );
       return;
     }
@@ -379,12 +409,12 @@ export default class GoogleCalendarService {
     try {
       await axios.delete(
         `https://www.googleapis.com/tasks/v1/lists/@default/tasks/${task.googleEventId}`,
-        { headers: { Authorization: `Bearer ${accessToken}` } },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
       );
     } catch (error) {
       this.logger.error(
         `Error deleting task (ID: ${task.id}) on Google Tasks:`,
-        error,
+        error
       );
       // Optionally handle error or mark for a retry.
     }
@@ -409,7 +439,7 @@ export default class GoogleCalendarService {
       } catch (error) {
         this.logger.error(
           `Error during force push sync for event ID ${event.id}:`,
-          error,
+          error
         );
       }
     }
