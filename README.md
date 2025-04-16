@@ -1,88 +1,72 @@
-# To deploy the project, you need to follow the steps below:
-
-## Prerequisites
-1. Clone the backend repository:
+# 🚀 MyWebCompanion Backend
+##🗒️ Prerequisites
+### Step 1: Clone the repository
 ```bash
 git clone https://github.com/hdmnetwork/MyWebCompanion-Server-NGQL.git
 ```
-
-2. Clone the frontend repository:
-```bash
-git clone https://github.com/hdmnetwork/MyWebCompanion-Client-React.git
-```
-
-3. Install the dependencies for the backend:
+### Step 2: Navigate to the project directory
 ```bash
 cd MyWebCompanion-Server-NGQL
+```
+### Step 3: Install dependencies
+```bash
 yarn
 ```
-
-4. Copy the `.env.example` file to `.env`:
+### Step 4: Set up environment variables
 ```bash
 cp .env.example .env
 ```
-
-5. Set the environment variables in the `.env` file:  
-Complete the `.env` file with the necessary information.
-
-6. Install the dependencies for the frontend:
-```bash
-cd MyWebCompanion-Client-React
-yarn
-```
-
-7. Copy the `.env.example` file to `.env`:
-```bash
-cp .env.example .env
-```
-
-8. Set the environment variables in the `.env` file:  
-Complete the `.env` file with the necessary information.
-
-
-## Docker deployment
-
-1. Create a network:
+### Step 5: Complete the .env file
+Fill in the `.env` file with the necessary information.
+> 💡 **Tip**: Ask your colleagues for any missing access keys or information.
+## 🐋 Docker Deployment
+### Option 1: Recommended Method
+1. Create a Docker network:
 ```bash
 docker network create mwc-network
 ```
-
-2. Docker compose the backend:
+2. Install Docker extension for VS Code
+3. Open the `docker-compose.yml` file and use the play button next to the `hdm-mwc-api` and `mysql` services to run them individually.
+### Option 2: Command Line Method
+1. Create a Docker network:
+```bash
+docker network create mwc-network
+```
+2. Deploy the backend using Docker Compose:
 ```bash
 cd MyWebCompanion-Server-NGQL
 docker-compose up -d
 ```
-
-3. Docker compose the frontend:
+3. Deploy the frontend using Docker Compose:
 ```bash
 cd MyWebCompanion-Client-React
 docker-compose up -d
 ```
-
-## Import DAVID'S data
-
-1. Create david account on the frontend !!!!
-
-2. Go to the backend folder:
+## 📊 Import David's Data (Optional)
+1. First, create a David account on the frontend!
+2. Navigate to the backend folder:
 ```bash
 cd MyWebCompanion-Server-NGQL
 ```
-
 3. Run the script to import the data:
 ```bash
 yarn start:cli -- importLegacy -e <email>
 ```
-You can pass the option `-k` to keep the existing data, if not, the data (notes, links, link groups) will be deleted before importing.
-
-## Setup your reverse proxy
-
-1. Setup your reverse proxy to redirect the requests to the backend and frontend containers.
-
-## Access the application
-
-1. Access the application in your browser with the URL you set up in the reverse proxy.
-
-
-
-
-
+> **Note**: You can pass the `-k` option to keep existing data. Without this option, existing data (notes, links, link groups) will be deleted before importing.
+## 💻 Development Commands
+### Start the development server (if not using hdm-mwc-api service):
+```bash
+yarn run start
+```
+### Access the database:
+```bash
+npx prisma studio
+```
+### After merging (to avoid errors):
+```bash
+npx prisma migrate dev
+npx prisma generate
+```
+## 🔎 Need Help?
+Don't hesitate to contact the development team if you encounter any difficulties!
+## 💻 Happy coding!
