@@ -2,7 +2,7 @@ import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import User from "./User";
 import Notebook from "./Notebook";
 import { NoteCollaboration } from "./NoteCollaboration";
-
+import SharedNote from "./SharedNote";
 import { ContextualGraphqlRequest } from "src";
 import { Label } from "./Label";
 
@@ -44,6 +44,10 @@ export default class Note {
   @Field(() => Int)
   clickCounter: number;
   
+
+  @Field(() => [SharedNote])
+  sharedNotes?: SharedNote[];
+
 
   context?: ContextualGraphqlRequest;
 }

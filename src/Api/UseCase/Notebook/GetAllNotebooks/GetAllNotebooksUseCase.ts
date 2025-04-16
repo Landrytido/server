@@ -10,7 +10,10 @@ export default class GetAllNotebooksUseCase
   constructor(private readonly notebookRepository: NotebookRepository) {}
   async handle(context: ContextualGraphqlRequest): Promise<Notebook[]> {
     try {
-      return await this.notebookRepository.findMany();
+      const notebooks = await this.notebookRepository.findMany();
+      return notebooks.map(notebook => ({
+        ...notebook,
+      }));
     } catch (error) {
       throw new BadRequestException(
         "GetAllNotebooksUseCaseFailed",

@@ -23,6 +23,7 @@ import { Jobs } from "./Jobs/Jobs";
 import { ReminderProcessor } from "./Services/ReminderProcessor";
 import { AutoInstructionGateway } from "./WebSocket/InstructionCardGateway";
 import GoogleCalendarService from "./Services/GoogleCalendarService";
+import { SharingService } from "./Services/SharingService";
 import { CalendarEventNotificationService } from "./Services/CalendarEventNotificationService";
 import { NotificationModule } from "../Core/Notification/notification.module";
 import { PuppeteerService } from "./Services/PupeteerService";
@@ -78,6 +79,7 @@ import WeatherApiService from "./Services/WeatherService";
     SaveFileUseCase,
     PuppeteerService,
     S3UploadService,
+    SharingService,
     ConvertExternalInvitationUseCase,
     GetExternalEmailByTokenUseCase,
     WeatherApiService,

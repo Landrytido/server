@@ -13,10 +13,13 @@ import GetNotebooksByUserIdUseCase from "../UseCase/Notebook/GetNotebooksByUserI
 import UpdateNotebookUseCase from "../UseCase/Notebook/UpdateNotebook/UpdateNotebookUseCase";
 import CreateNotebookUseCase from "../UseCase/Notebook/CreateNotebook/CreateNotebookUseCase";
 
+
 @Resolver(Notebook)
 @UseGuards(GraphqlAuthGuard)
 export default class NotebookResolver {
-  constructor(private readonly serviceFactory: UseCaseFactory) {}
+  constructor(
+    private readonly serviceFactory: UseCaseFactory,
+  ) {}
 
   @Mutation(() => Notebook)
   async createNotebook(
@@ -81,4 +84,5 @@ export default class NotebookResolver {
       await this.serviceFactory.create(GetNotebooksByUserIdUseCase)
     ).handle(context);
   }
+
 }

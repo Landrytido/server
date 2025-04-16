@@ -5,6 +5,7 @@ import GetNoteUseCase from "./GetNote/GetNoteUseCase";
 import GetNotesByUserIdUseCase from "./GetNotesByUserId/GetNotesByUserIdUseCase";
 import IncrementNoteClickCounterUseCase from "./IncrementNoteClickCounter/IncrementNoteClickCounterUsecase";
 import UpdateNoteUseCase from "./UpdateNote/UpdateNoteUseCase";
+import ShareNoteUseCase from "./ShareNote/ShareNoteUseCase";
 import GetNotesByLabelUseCase from "./GetNotesByLabel/GetNotesByLabelUsecase";
 
 export type AvailableNoteUseCases =
@@ -14,5 +15,7 @@ export type AvailableNoteUseCases =
   | GetNoteUseCase
   | IncrementNoteClickCounterUseCase
   | GetAllNotesUseCase
+  | GetNotesByUserIdUseCase
+  | ShareNoteUseCase
   | GetNotesByLabelUseCase
   | GetNotesByUserIdUseCase;

@@ -76,7 +76,7 @@ async function bootstrapApi() {
 
   app.useGlobalFilters(new ExceptionCatcher(app.get(ConsoleLogger)));
 
-  await app.listen(process.env.API_PORT);
+  await app.listen(process.env.API_PORT || 3000);
 }
 
 if (!process.env.APPLICATION_ENVIRONMENT) {

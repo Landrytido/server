@@ -21,9 +21,12 @@ import { GoogleCalendarResolver } from "./CalendarEvent/GoogleCalendarResolver";
 import CityResolver from "./Weather/CityResolver";
 import WeatherResolver from "./Weather/WeatherResolver";
 import { ChronometerResolver } from "./ChronometerResolver";
+import SharingResolver from "./SharingNoteResolver/SharingResolver";
+import { UserPreferencesResolver } from "./UserPreferences/UserPreferncesResolver";
 import BlocNotesResolver from "./BlocNotes/BlocNotesResolver";
 import { LabelResolver } from "./labelResolver";
 import GoogleAccountResolver from "./GoogleAccount/GoogleAccountResolver";
+
 
 export const Resolvers = [
   LabelResolver,
@@ -51,5 +54,7 @@ export const Resolvers = [
   WeatherResolver,
   ChronometerResolver,
   BlocNotesResolver,
+  SharingResolver,
+  UserPreferencesResolver,  
   GoogleAccountResolver,
 ];

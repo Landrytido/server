@@ -456,6 +456,7 @@ type Mutation {
   saveUser(dto: SaveUserDto!): User!
   sendPushNotification(body: String!, data: JSONObject, title: String!): Boolean!
   setDefaultUserGoogleAccount(email: String!): UserGoogleAccount!
+  shareNote(dto: ShareNoteDto!): SharedNote!
   startChronometer(input: StartChronometerDto!): Chronometer!
   stopChronometer(id: String!): Chronometer!
 
@@ -470,6 +471,7 @@ type Mutation {
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
   updateNoteTask(dto: UpdateNoteTaskDto!): NoteTask!
   updateNotebook(dto: SaveNotebookDto!, notebookId: Int!): Notebook!
+  updateUserPreferences(preferences: UserPreferencesInput!): User!
   upsertBlocNotes(content: String!): BlocNote!
 }
 
@@ -482,6 +484,7 @@ type Note {
   labels: [Label!]!
   notebook: Notebook
   notebookId: Int
+  sharedNotes: [SharedNote!]!
   title: String!
   updatedAt: DateTime!
   user: User!
@@ -600,17 +603,21 @@ type Query {
   getLabelById(dto: GetLabelByIdInput!): Label
   getLoggedUser: User!
   getMonthlyReport(month: Int!, year: Int!): MonthlyReport!
+  getNotesSharedWithMe: [SharedNote!]!
   getNotificationPreference: NotificationPreference!
   getSearchHistoryByUserId: [SearchHistory!]!
+  getSharedNotesHistory: [SharedNote!]!
   getTasksCompletedOn(date: String!): [CombinedTask!]!
   getTasksCreatedOn(date: String!): [CombinedTask!]!
   getUserGoogleAccounts: [UserGoogleAccount!]!
+  getUserPreferences: User!
   isCountdownFinished(chronoId: String!): Boolean!
   login(dto: AuthenticationDto!): String!
   myLinkGroups: [LinkGroup!]!
   noteTasksByUserId(dto: GetNoteTasksByUserIdDto!): [NoteTask!]!
   refreshToken: String!
   searchCities(data: SearchCityDto!): [City!]!
+  searchUsersByEmail(query: String!): [User!]!
   topScores(level: Level = EASY, limit: Int = 10): [Score!]!
   topThreeScores: [Score!]!
   userScores(userId: Int!): [Score!]!
@@ -748,6 +755,18 @@ type Session {
   userId: Int!
 }
 
+input ShareNoteDto {
+  noteId: Int!
+  sharedWithUserId: Int!
+}
+
+type SharedNote {
+  id: Int!
+  note: Note!
+  sharedByUser: User!
+  sharedWith: User!
+}
+
 input StartChronometerDto {
   duration: Float
   mode: ChronometerMode!
@@ -819,6 +838,7 @@ type User {
   collaborations: [NoteCollaboration!]!
   comments: [Comment!]!
   createdAt: DateTime!
+  deleteSharedNotesOnRelationEnd: Boolean!
   devices: [Device!]!
   email: String!
   firstName: String
@@ -838,6 +858,8 @@ type User {
   resetTokens: [ResetToken!]!
   searchHistory: [SearchHistory!]!
   sessions: [Session!]!
+  sharedNotes: [SharedNote!]!
+  sharedNotesByMe: [SharedNote!]!
   updatedAt: DateTime!
 }
 
@@ -848,6 +870,10 @@ type UserGoogleAccount {
   isDefault: Boolean!
   updatedAt: DateTime!
   userId: Int!
+}
+
+input UserPreferencesInput {
+  deleteSharedNotesOnRelationEnd: Boolean
 }
 
 type Weather {

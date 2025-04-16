@@ -38,6 +38,7 @@ model User {
   invitationsSent     Invitation[]        @relation("InvitationsSent")
   invitationsReceived Invitation[]        @relation("InvitationsReceived")
 
+
   events        Event[]
   eventsShared  EventSharedWithMember[]
   resetTokens   ResetToken[]
@@ -68,6 +69,11 @@ model User {
 
   Chronometer Chronometer[]
 
+
+  sharedNotes           SharedNote[]     @relation("SharedWithUser")
+  sharedNotesByMe       SharedNote[]     @relation("SharedByUser")
+
+  deleteSharedNotesOnRelationEnd Boolean @default(false)
   BlocNote          BlocNote[]
   UserGoogleAccount UserGoogleAccount[]
 }
@@ -140,6 +146,7 @@ model Note {
   labels         Label[]             @relation("NoteLabels")
   comments       Comment[]           @relation("NoteComments")
   notetasks      NoteTask[]          @relation("NoteTasks")
+  sharedNotes     SharedNote[]
 }
 
 model BlocNote {
@@ -157,6 +164,16 @@ model Notebook {
   userId Int
   user   User   @relation(fields: [userId], references: [id])
   notes  Note[]
+}
+
+model SharedNote {
+  id              Int              @id @default(autoincrement())
+  noteId          Int
+  sharedWithUserId Int
+  sharedBy        Int
+  note            Note             @relation(fields: [noteId], references: [id])
+  sharedWith      User             @relation("SharedWithUser", fields: [sharedWithUserId], references: [id])
+  sharedByUser    User             @relation("SharedByUser", fields: [sharedBy], references: [id])
 }
 
 model NoteCollaboration {

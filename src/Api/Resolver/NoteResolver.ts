@@ -12,6 +12,10 @@ import UpdateNoteUseCase from "../UseCase/Note/UpdateNote/UpdateNoteUseCase";
 import GetAllNotesUseCase from "../UseCase/Note/GetAllNotes/GetAllNoteUseCase";
 import GetNoteUseCase from "../UseCase/Note/GetNote/GetNoteUseCase";
 import GetNotesByUserIdUseCase from "../UseCase/Note/GetNotesByUserId/GetNotesByUserIdUseCase";
+import ShareNoteUseCase from '../UseCase/Note/ShareNote/ShareNoteUseCase';
+import SharedNote from '../Entity/SharedNote';
+import SharedNoteRepository from "../Repository/ShareNoteRepository";
+import { ShareNoteDto } from '../Dto/ShareNoteDto/ShareNoteDto';
 import IncrementNoteClickCounterUseCase
   from "../UseCase/Note/IncrementNoteClickCounter/IncrementNoteClickCounterUsecase";
 import GetNotesByLabelUseCase from "../UseCase/Note/GetNotesByLabel/GetNotesByLabelUsecase";
@@ -20,7 +24,10 @@ import GetNotesByLabelUseCase from "../UseCase/Note/GetNotesByLabel/GetNotesByLa
 @Resolver(Note)
 @UseGuards(GraphqlAuthGuard)
 export default class NoteResolver {
-  constructor(private readonly serviceFactory: UseCaseFactory) {}
+  constructor(
+    private readonly serviceFactory: UseCaseFactory,
+    private readonly sharedNoteRepository: SharedNoteRepository
+  ) {}
 
   @Mutation(() => Note)
   async createNote(
@@ -88,6 +95,36 @@ export default class NoteResolver {
     );
   }
 
+  @Mutation(() => SharedNote)
+  async shareNote(
+    @ContextualRequest() context: ContextualGraphqlRequest,
+    @Args('dto') dto: ShareNoteDto
+  ) {
+    return (await this.serviceFactory.create(ShareNoteUseCase)).handle(
+      context,
+      dto
+    );
+    
+  }
+
+  @Query(() => [SharedNote])
+  async getSharedNotesHistory(
+    @ContextualRequest() context: ContextualGraphqlRequest
+  ): Promise<SharedNote[]> {
+    const sharedNotes = await this.sharedNoteRepository.findManyByUserId(context.userId);
+    
+    return sharedNotes.map(sharedNote => ({
+      id: sharedNote.id,
+      note: {
+        ...sharedNote.note,
+        collaborations: [],
+        labels: [],
+        clickCounter: (sharedNote.note as any).clickCounter || 0,
+      },
+      sharedWith: sharedNote.sharedWith,
+      sharedByUser: sharedNote.sharedByUser,
+    }));
+  }
   @Mutation(() => Note)
   async incrementNoteClickCounter(
     @ContextualRequest() context: ContextualGraphqlRequest,

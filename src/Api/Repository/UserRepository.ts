@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../../Core/Datasource/Prisma";
-import {NotificationType, Prisma, TimeUnit} from "@prisma/client";
+import {NotificationType, Prisma, TimeUnit, User} from "@prisma/client";
 import Bcrypt from "../../Core/Security/Service/encryption/Bcrypt";
 import NotificationPreferenceRepository from "./NotificationPreferenceRepository";
 import {NotificationPreferenceType} from "../Entity/NotificationPreferenceType";
@@ -86,4 +86,11 @@ export default class UserRepository {
 	  const user = await this.findById(userId);
 	  return user && user.password === null;
     }
+
+	async update(userId: number, data: Partial<User>) {
+		return this.prisma.user.update({
+		  where: { id: userId },
+		  data
+		});
+	  }
 }

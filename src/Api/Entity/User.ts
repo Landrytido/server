@@ -14,6 +14,7 @@ import CalendarEvent from "./CalendarEvent/CalendarEvent";
 import Device from "./Device/Device";
 import Link from "./Link/Link";
 import LinkGroup from "./Link/LinkGroup";
+import SharedNote from "./SharedNote";
 
 @ObjectType()
 export default class User {
@@ -90,6 +91,17 @@ export default class User {
 
     @Field({nullable: true})
     googleRefreshToken?: string;
+
+    @Field(() => [SharedNote])
+    sharedNotes?: SharedNote[];
+
+
+    @Field(() => [SharedNote])
+    sharedNotesByMe?: SharedNote[];
+
+
+    @Field(() => Boolean, { defaultValue: false })
+    deleteSharedNotesOnRelationEnd: boolean;
 
     context?: ContextualGraphqlRequest;
 }
