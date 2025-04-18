@@ -24,8 +24,7 @@ import GetNotesByLabelUseCase from "../UseCase/Note/GetNotesByLabel/GetNotesByLa
 @Resolver(Note)
 @UseGuards(GraphqlAuthGuard)
 export default class NoteResolver {
-  constructor(
-    private readonly serviceFactory: UseCaseFactory,
+  constructor(private readonly serviceFactory: UseCaseFactory,
     private readonly sharedNoteRepository: SharedNoteRepository
   ) {}
 
@@ -94,7 +93,6 @@ export default class NoteResolver {
       orderDirection
     );
   }
-
   @Mutation(() => SharedNote)
   async shareNote(
     @ContextualRequest() context: ContextualGraphqlRequest,
@@ -125,6 +123,7 @@ export default class NoteResolver {
       sharedByUser: sharedNote.sharedByUser,
     }));
   }
+
   @Mutation(() => Note)
   async incrementNoteClickCounter(
     @ContextualRequest() context: ContextualGraphqlRequest,

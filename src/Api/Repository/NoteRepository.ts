@@ -156,9 +156,25 @@ export default class NoteRepository {
     }
 
     if (!("id" in dataCopy)) {
-      // Création d'une note
-      const createData = dataCopy as Prisma.NoteCreateInput & { labelIds?: (string | number)[] };
+
+      const createData = dataCopy as (Prisma.NoteCreateInput | Prisma.NoteUncheckedCreateInput) & { labelIds?: (string | number)[] };
       let note;
+
+  
+      let userId: number | undefined;
+      if ('userId' in createData) {
+        userId = createData.userId as number;
+      } else if ('user' in createData && createData.user && typeof createData.user === 'object') {
+        const userInput = createData.user as any;
+        if (userInput.connect && userInput.connect.id) {
+          userId = userInput.connect.id;
+        }
+      }
+
+      if (!userId) {
+        this.logger.error("Impossible de déterminer l'utilisateur pour la note");
+        throw new Error("L'identifiant de l'utilisateur est requis pour créer une note");
+      }
 
       if (createData.labelIds && createData.labelIds.length > 0) {
         note = await this.prisma.note.create({
@@ -170,23 +186,25 @@ export default class NoteRepository {
           },
           include: { labels: true },
         });
-      } else {
-        const defaultLabel = await this.prisma.label.upsert({
-          where: { name: "Général" },
-          update: {},
-          create: { name: "Général" },
-        });
-
-        note = await this.prisma.note.create({
-          data: {
-            ...createData,
-            labels: {
-              connect: [{ id: defaultLabel.id }],
-            },
-          },
-          include: { labels: true },
-        });
+     
+      if (note.content) {
+        try {
+          note.content = this.decryptNoteContent(note.content);
+        } catch (error) {
+          this.logger.error(`Erreur lors du déchiffrement d'une note nouvellement créée:`, error);
+        }
       }
+      
+      return note;
+    }else {
+     
+       const note = await this.prisma.note.create({
+        data: {
+          ...createData,
+         
+        },
+        include: { labels: true },
+      });
 
       // Decrypt before returning
       if (note.content) {
@@ -199,11 +217,11 @@ export default class NoteRepository {
       
       return note;
     }
-
+  }
     const { labelIds, ...updateData } = dataCopy as Prisma.NoteUpdateInput & { labelIds?: (string | number)[] };
     let note;
 
-    if (labelIds && labelIds.length > 0) {
+    if (labelIds !== undefined) {
       note = await this.prisma.note.update({
         where: {
           id: dataCopy.id as number,
@@ -212,7 +230,7 @@ export default class NoteRepository {
           ...updateData,
           labels: {
             set: [],
-            connect: labelIds.map((id) => ({ id: String(id) })),
+            connect: labelIds?.length ? labelIds.map((id) => ({ id: String(id) })) : [],
           },
         },
         include: { labels: true },
