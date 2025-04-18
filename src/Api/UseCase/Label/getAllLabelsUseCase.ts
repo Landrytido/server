@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { LabelRepository} from '../../Repository/LabelRepository';
+import { LabelRepository } from '../../Repository/LabelRepository';
 import { Label } from '../../Entity/Label';
 import { ContextualGraphqlRequest, UseCase } from 'src';
 
@@ -9,7 +9,8 @@ export default class GetAllLabelsUseCase
 {
     constructor(private readonly labelRepository: LabelRepository) {}
 
-    async handle(_context: ContextualGraphqlRequest): Promise<Label[]> {
-        return this.labelRepository.findAll();
+    async handle(context: ContextualGraphqlRequest): Promise<Label[]> {
+        const userId = context.userId;
+        return await this.labelRepository.findAll(userId);
     }
 }

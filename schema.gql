@@ -227,6 +227,16 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input DeleteLabelInput {
+  forceDelete: Boolean = false
+  id: String!
+}
+
+type DeleteLabelResponse {
+  hasAssociatedNotes: Boolean!
+  label: Label!
+}
+
 type Device {
   createdAt: DateTime!
   id: Int!
@@ -351,6 +361,7 @@ type Label {
   id: String!
   name: String!
   updatedAt: DateTime
+  userId: Float!
 }
 
 """Possible Level options: EASY, MEDIUM, HARD"""
@@ -423,6 +434,7 @@ type Mutation {
   deleteComment(commentId: Float!): Boolean!
   deleteDailyTask(id: Int!): DailyTask!
   deleteInvitation(invitationId: Int!): Invitation!
+  deleteLabel(dto: DeleteLabelInput!): DeleteLabelResponse!
   deleteLinkFromGroup(linkGroupId: String!, linkId: String!): Boolean!
   deleteLinkGroup(id: String!): LinkGroup!
   deleteNote(noteId: Int!): Note!
@@ -467,6 +479,7 @@ type Mutation {
   updateChronometer(id: String!, updateData: UpdateChronometerDto!): Chronometer!
   updateComment(commentId: Float!, data: CommentDto!): Comment!
   updateDailyTask(dto: UpdateDailyTaskDto!, id: Int!): DailyTask!
+  updateLabel(dto: UpdateLabelInput!): Label!
   updateLinkRelation(dto: SaveLinkDto!): LinkGroupLink!
   updateNote(dto: SaveNoteDto!, noteId: Int!): Note!
   updateNoteTask(dto: UpdateNoteTaskDto!): NoteTask!
@@ -824,6 +837,11 @@ input UpdateDailyTaskDto {
   priority: Int
   scheduledDate: DateTime
   title: String
+}
+
+input UpdateLabelInput {
+  id: String!
+  name: String!
 }
 
 input UpdateNoteTaskDto {

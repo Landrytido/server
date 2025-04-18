@@ -8,6 +8,9 @@ export class Label {
   @Field()
   name: string;
   
+  @Field()
+  userId: number;
+  
   @Field(() => GraphQLISODateTime, { nullable: true })
   createdAt?: Date;
 
